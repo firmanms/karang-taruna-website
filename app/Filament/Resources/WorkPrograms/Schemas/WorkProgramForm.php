@@ -67,9 +67,23 @@ class WorkProgramForm
                                 ->numeric()
                                 ->prefix('Rp')
                                 ->default(0.00),
-                            TextInput::make('budget_source')
+                            Select::make('budget_source_id')
                                 ->label('Sumber Anggaran')
-                                ->default('APBD / Swadana'),
+                                ->relationship('budgetSource', 'name', fn (Builder $query) => $query->where('is_active', true)->orderBy('order_index'))
+                                ->searchable()
+                                ->preload()
+                                ->createOptionForm([
+                                    TextInput::make('name')
+                                        ->label('Nama Sumber Anggaran')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('code')
+                                        ->label('Kode Sumber (Opsional)')
+                                        ->maxLength(50),
+                                    Textarea::make('description')
+                                        ->label('Keterangan'),
+                                ])
+                                ->placeholder('-- Pilih / Tambah Sumber Anggaran --'),
                             TextInput::make('execution_time')
                                 ->label('Waktu / Jadwal Pelaksanaan')
                                 ->required()

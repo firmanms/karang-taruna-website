@@ -57,12 +57,14 @@
                     <small>{{ $prog->location ?? 'Kabupaten Bandung' }}</small>
                   </td>
                   <td>
-                    @if($prog->budget_estimate)
+                    @if($prog->budget_amount)
+                      <span class="cost-badge">Rp {{ number_format($prog->budget_amount, 0, ',', '.') }}</span>
+                    @elseif($prog->budget_estimate)
                       <span class="cost-badge">Rp {{ number_format($prog->budget_estimate, 0, ',', '.') }}</span>
                     @else
                       <span class="cost-badge">Swadaya</span>
                     @endif
-                    <small>{{ $prog->budget_source ?? 'Kas/Mitra' }}</small>
+                    <small>{{ $prog->budgetSource->name ?? ($prog->budget_source ?? 'Kas/Mitra') }}</small>
                   </td>
                   <td>{{ $prog->division->division_name ?? ($prog->unit->unit_name ?? 'Pengurus Harian') }}</td>
                   <td>

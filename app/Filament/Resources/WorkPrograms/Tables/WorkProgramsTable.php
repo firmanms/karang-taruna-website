@@ -37,6 +37,11 @@ class WorkProgramsTable
                     ->label('Anggaran')
                     ->money('IDR')
                     ->sortable(),
+                TextColumn::make('budgetSource.name')
+                    ->label('Sumber Anggaran')
+                    ->badge()
+                    ->color('success')
+                    ->placeholder(fn ($record) => $record->budget_source ?: '-'),
                 TextColumn::make('execution_time')
                     ->label('Waktu')
                     ->searchable(),
@@ -66,6 +71,9 @@ class WorkProgramsTable
                 SelectFilter::make('division_id')
                     ->label('Bidang')
                     ->relationship('division', 'division_name'),
+                SelectFilter::make('budget_source_id')
+                    ->label('Sumber Anggaran')
+                    ->relationship('budgetSource', 'name'),
                 SelectFilter::make('progress_status')
                     ->label('Progres')
                     ->options([

@@ -23,6 +23,7 @@ class WorkProgram extends Model
         'target_participants',
         'output_indicators',
         'budget_amount',
+        'budget_source_id',
         'budget_source',
         'execution_time',
         'poster_image',
@@ -48,6 +49,11 @@ class WorkProgram extends Model
     public function division(): BelongsTo
     {
         return $this->belongsTo(ProgramDivision::class, 'division_id');
+    }
+
+    public function budgetSource(): BelongsTo
+    {
+        return $this->belongsTo(BudgetSource::class, 'budget_source_id');
     }
 
     public function unit(): BelongsTo
