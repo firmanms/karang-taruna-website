@@ -1,58 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏛️ Website Resmi & Sistem Informasi Karang Taruna Kabupaten Bandung
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Portal Resmi dan Sistem Informasi Manajemen Terpadu Pengurus Karang Taruna Kabupaten Bandung, menjangkau **31 Karang Taruna Kecamatan** dan **280 Karang Taruna Desa/Kelurahan**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌟 Fitur Utama Sistem
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **Website Publik Modern & Responsif**: Menggunakan Blade, Vanilla CSS kustom dari template `desainforntend/`, ApexCharts, dan Leaflet GIS.
+2. **Filament CMS Admin Panel**: Panel administrasi berbasis Filament 5 dengan 20+ modul konten.
+3. **Multi-Tenancy & Data Isolation Scope**: Hak akses terisolasi berjenjang (Kabupaten, Kecamatan, Desa).
+4. **Approval Engine & Workflow Moderasi**: Alur peninjauan konten berjenjang (`Draft` ➔ `Submit` ➔ `Revisi/Tolak/Setujui` ➔ `Terbit`).
+5. **Modul PPKS & Proteksi NIK**: Usulan warga Pemerlu Pelayanan Kesejahteraan Sosial (PPKS) 26 kategori Kemensos dengan form cek mandiri publik yang dilengkapi verifikasi Captcha & data masking.
+6. **Peta Interaktif GIS & Statistik**: Pemetaan titik koordinat lembaga Karang Taruna se-Kabupaten Bandung dengan filter wilayah.
+7. **REST API v1 (`/api/v1`)**: API terstruktur dengan otentikasi Laravel Sanctum dan rate limiting untuk integrasi aplikasi mobile Android.
+8. **Asynchronous Notifications & Queue**: Notifikasi real-time in-app Filament dan antrean email/database.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ⚙️ Persyaratan Sistem
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.3+ (Ekstensi: `pdo_mysql`, `mbstring`, `xml`, `curl`, `gd`, `zip`, `bcmath`, `redis`)
+- Composer 2.7+
+- Node.js 18+ & NPM
+- Database MySQL 8.0+ atau MariaDB 10.11+
+- Web Server: Nginx atau Apache (Laragon / Herd / Docker)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🚀 Panduan Instalasi Lokal (Development)
 
-## Agentic Development
+1. **Clone repositori dan masuk ke direktori**:
+   ```bash
+   git clone <repo-url> karang-taruna-website
+   cd karang-taruna-website
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+2. **Install Dependensi Composer**:
+   ```bash
+   composer install
+   ```
 
-```bash
-composer require laravel/boost --dev
+3. **Konfigurasi Environment**:
+   Salin `.env.example` ke `.env` dan atur kredensial database lokal Anda:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-php artisan boost:install
-```
+4. **Migrasi Database & Seeder Data Awal**:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+5. **Generate Storage Symlink**:
+   ```bash
+   php artisan storage:link
+   ```
 
-## Contributing
+6. **Jalankan Server Development**:
+   ```bash
+   php artisan serve
+   ```
+   - **Portal Publik**: `http://localhost:8000`
+   - **Admin Panel CMS**: `http://localhost:8000/admin`
+   - **REST API v1**: `http://localhost:8000/api/v1/news`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🔑 Akun Demo Pengujian (Hasil Seeder)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+> [!WARNING]
+> Akun di bawah ini hanya untuk keperluan development/demo lokal. Ganti seluruh password pada environment produksi.
 
-## Security Vulnerabilities
+| Tingkatan / Peran | Email Login | Password | Cakupan Hak Akses |
+| :--- | :--- | :--- | :--- |
+| **Superadmin (Kabupaten)** | `superadmin@karangtaruna.id` | `password` | Akses penuh seluruh modul, approval konten, dan wilayah |
+| **Admin Kecamatan (Soreang)** | `kecamatan.soreang@karangtaruna.id` | `password` | Mengelola data & liputan di wilayah Kec. Soreang |
+| **Admin Desa (Soreang)** | `desa.soreang@karangtaruna.id` | `password` | Mengelola data desa, pengurus, dan usulan warga PPKS |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📚 Indeks Dokumentasi Proyek
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Untuk rincian teknis lengkap, silakan merujuk pada dokumen berikut:
+- 🏗️ [ARCHITECTURE.md](file:///d:/laragon/www/karang-taruna-website/ARCHITECTURE.md) — Arsitektur teknis, Clean Domain structure, dan alur request.
+- 🗄️ [DATABASE.md](file:///d:/laragon/www/karang-taruna-website/DATABASE.md) — Skema tabel database, kamus data, dan indexing.
+- 👥 [ROLES-PERMISSIONS.md](file:///d:/laragon/www/karang-taruna-website/ROLES-PERMISSIONS.md) — Matriks hak akses RBAC dan aturan isolasi wilayah.
+- 🔄 [APPROVAL-WORKFLOW.md](file:///d:/laragon/www/karang-taruna-website/APPROVAL-WORKFLOW.md) — Alur kerja moderasi dan notifikasi antrean.
+- 🌐 [API.md](file:///d:/laragon/www/karang-taruna-website/API.md) — Panduan integrasi REST API v1 dan otentikasi Sanctum.
+- 🚀 [DEPLOYMENT.md](file:///d:/laragon/www/karang-taruna-website/DEPLOYMENT.md) — Panduan deployment produksi Ubuntu, Nginx, Redis & Supervisor.
+- 🛡️ [BACKUP-RESTORE.md](file:///d:/laragon/www/karang-taruna-website/BACKUP-RESTORE.md) — Prosedur pencadangan, pemulihan database, dan disaster recovery.
