@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440">
+  <rect width="760" height="440" rx="32" fill="#ecfdf5"/>
+  <path d="M130 250 180 140 260 120 300 75 380 110 435 92 520 150 610 155 650 220 590 270 620 330 530 350 470 315 410 370 330 340 285 375 210 335 145 345 115 295Z"
+    fill="#4ade80" stroke="#047857" stroke-width="8"/>
+  <g fill="#fff" stroke="#047857" stroke-width="4">
+    <circle cx="220" cy="210" r="11"/><circle cx="330" cy="180" r="11"/><circle cx="430" cy="210" r="11"/>
+    <circle cx="520" cy="225" r="11"/><circle cx="285" cy="285" r="11"/><circle cx="390" cy="305" r="11"/>
+    <circle cx="500" cy="300" r="11"/>
+  </g>
+  <circle cx="380" cy="230" r="14" fill="#ef4444"/>
+  <text x="40" y="55" font-family="Arial" font-size="28" font-weight="700" fill="#065f46">Peta Sebaran Karang Taruna</text>
+</svg>

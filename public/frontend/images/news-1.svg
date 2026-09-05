@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+    <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#dcfce7"/><stop offset="1" stop-color="#86efac"/></linearGradient></defs>
+    <rect width="800" height="500" fill="url(#g)"/>
+    <circle cx="620" cy="150" r="120" fill="#fff" opacity=".45"/>
+    <circle cx="170" cy="360" r="150" fill="#fff" opacity=".25"/>
+    <rect x="70" y="90" width="180" height="180" rx="90" fill="#065f46" opacity=".9"/>
+    <path d="M160 215c-8-48 8-88 49-119 8 48-7 88-49 119Z" fill="#dcfce7"/>
+    <text x="70" y="355" font-family="Arial" font-size="42" font-weight="700" fill="#064e3b">Aksi Tanam 1.000 Pohon</text>
+    <text x="70" y="405" font-family="Arial" font-size="25" fill="#166534">Kegiatan Lingkungan</text>
+  </svg>

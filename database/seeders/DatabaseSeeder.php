@@ -2,10 +2,17 @@
 
 namespace Database\Seeders;
 
+use App\Domain\Content\Models\Achievement;
+use App\Domain\Content\Models\Announcement;
+use App\Domain\Content\Models\Article;
+use App\Domain\Content\Models\Event;
 use App\Domain\Content\Models\EventCategory;
 use App\Domain\Content\Models\NewsCategory;
 use App\Domain\Content\Models\ProgramDivision;
+use App\Domain\Content\Models\WorkProgram;
 use App\Domain\PPKS\Models\PpksCategory;
+use App\Domain\Settings\Models\Faq;
+use App\Domain\Settings\Models\HeroSlider;
 use App\Domain\Settings\Models\ProfileOrganization;
 use App\Domain\Settings\Models\SiteSetting;
 use App\Domain\Territory\Models\RefDistrict;
@@ -276,16 +283,438 @@ class DatabaseSeeder extends Seeder
         ProfileOrganization::create([
             'org_name' => 'Karang Taruna Kabupaten Bandung',
             'legal_basis' => 'Permensos No. 25 Tahun 2019 tentang Karang Taruna',
-            'vision' => 'Terwujudnya Generasi Muda Kabupaten Bandung yang Berkarakter, Berdaya Saing, Kreatif, dan Berjiwa Sosial Luhur Menuju Masyarakat yang Mandiri dan Sejahtera.',
+            'vision' => 'Mewujudkan Generasi Muda Kabupaten Bandung yang Berkarakter, Mandiri, Berdaya Saing, dan Berjiwa Sosial Menuju Bandung BEDAS (Bangkit, Edukatif, Dinamis, Agamis, dan Sejahtera).',
             'period_years' => 'Masa Bakti 2024 - 2029',
-            'address_office' => 'Jl. Raya Soreang No. 123, Kabupaten Bandung, Jawa Barat',
-            'email_official' => 'kontak@karangtarunabandungkab.or.id',
-            'phone_official' => '+62 821-2345-6789',
+            'address_office' => 'Jl. Al Fathu Soreang, Kabupaten Bandung',
+            'email_official' => 'info@karangtarunabandung.or.id',
+            'phone_official' => '(022) 5897 1234',
         ]);
 
         SiteSetting::create(['setting_key' => 'site_name', 'setting_value' => 'Karang Taruna Kabupaten Bandung', 'description' => 'Nama Website']);
         SiteSetting::create(['setting_key' => 'site_tagline', 'setting_value' => 'Bersama Berkarya, Berdaya, dan Berdampak', 'description' => 'Tagline Utama']);
-        SiteSetting::create(['setting_key' => 'contact_email', 'setting_value' => 'kontak@karangtarunabandungkab.or.id', 'description' => 'Email Kontak']);
-        SiteSetting::create(['setting_key' => 'contact_phone', 'setting_value' => '+62 821-2345-6789', 'description' => 'Nomor Telepon']);
+        SiteSetting::create(['setting_key' => 'contact_email', 'setting_value' => 'info@karangtarunabandung.or.id', 'description' => 'Email Kontak']);
+        SiteSetting::create(['setting_key' => 'contact_phone', 'setting_value' => '(022) 5897 1234', 'description' => 'Nomor Telepon']);
+
+        // 8. Seed Hero Sliders
+        HeroSlider::create([
+            'title' => "Bersama Berkarya,\nBerdaya, dan Berdampak",
+            'subtitle_eyebrow' => 'Pemuda hari ini, bangun masa depan Bandung',
+            'description' => 'Karang Taruna Kabupaten Bandung hadir untuk menggerakkan potensi pemuda, memperkuat solidaritas sosial, dan mewujudkan masyarakat yang lebih maju, mandiri, dan sejahtera.',
+            'image_path' => 'frontend/images/hero.svg',
+            'order_index' => 1,
+            'is_active' => true,
+        ]);
+
+        HeroSlider::create([
+            'title' => "Gerakan Sosial &\nKepedulian Lingkungan",
+            'subtitle_eyebrow' => 'Aksi Nyata Pemuda Kabupaten Bandung',
+            'description' => 'Mulai dari aksi tanam 1.000 pohon hingga bantuan sosial tanggap bencana, pemuda bergerak bersama menghadirkan perubahan positif bagi bumi Tatar Pasundan.',
+            'image_path' => 'frontend/images/gallery-1.svg',
+            'order_index' => 2,
+            'is_active' => true,
+        ]);
+
+        HeroSlider::create([
+            'title' => "Pelatihan Digital &\nKewirausahaan Mandiri",
+            'subtitle_eyebrow' => 'Inovasi & Kemandirian Generasi Muda',
+            'description' => 'Membekali pemuda dengan keterampilan digital masa kini, UMKM modern, dan inkubasi kepemimpinan muda berintegritas tinggi.',
+            'image_path' => 'frontend/images/gallery-2.svg',
+            'order_index' => 3,
+            'is_active' => true,
+        ]);
+
+        // 9. Seed Berita Utama & Berita Daerah
+        $catPusat = NewsCategory::first();
+        $catDaerah = NewsCategory::skip(1)->first();
+        $adminUser = User::first();
+
+        Article::create([
+            'title' => 'Karang Taruna Gelar Aksi Tanam 1.000 Pohon',
+            'slug' => 'karang-taruna-gelar-aksi-tanam-1000-pohon',
+            'category_id' => $catPusat->id,
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Wujud kepedulian pemuda terhadap lingkungan dan masa depan yang lebih hijau.',
+            'content' => '<p>Pengurus Karang Taruna Kabupaten Bandung bersama ratusan relawan pemuda lintas kecamatan menggelar gerakan pelestarian alam dan konservasi hulu daerah aliran sungai Citarum.</p>',
+            'featured_image' => 'frontend/images/news-1.svg',
+            'news_scope' => 'pusat',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(2),
+            'views_count' => 1240,
+        ]);
+
+        Article::create([
+            'title' => 'Pelatihan Kewirausahaan Pemuda di Kecamatan Soreang',
+            'slug' => 'pelatihan-kewirausahaan-pemuda-di-kecamatan-soreang',
+            'category_id' => $catPusat->id,
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Mendorong kemandirian ekonomi pemuda melalui pelatihan dan pendampingan usaha.',
+            'content' => '<p>Mendorong kemandirian ekonomi generasi muda melalui pendampingan legalitas NIB, sertifikasi produk, dan pemasaran digital.</p>',
+            'featured_image' => 'frontend/images/news-2.svg',
+            'news_scope' => 'pusat',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(4),
+            'views_count' => 890,
+        ]);
+
+        Article::create([
+            'title' => 'Karang Taruna Salurkan Bantuan untuk Warga',
+            'slug' => 'karang-taruna-salurkan-bantuan-untuk-warga',
+            'category_id' => $catPusat->id,
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Pemuda hadir dan bergerak cepat untuk masyarakat yang membutuhkan.',
+            'content' => '<p>Penyaluran 250 paket sembako dan santunan pendidikan bagi anak yatim piatu di lingkungan wilayah Kabupaten Bandung.</p>',
+            'featured_image' => 'frontend/images/news-3.svg',
+            'news_scope' => 'pusat',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(6),
+            'views_count' => 670,
+        ]);
+
+        Article::create([
+            'title' => 'Pemuda Bandung Raih Juara Tingkat Provinsi',
+            'slug' => 'pemuda-bandung-raih-juara-tingkat-provinsi',
+            'category_id' => $catPusat->id,
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Apresiasi bagi karya dan inovasi pemuda Kabupaten Bandung.',
+            'content' => '<p>Penghargaan Aditya Karya Mahatva Yodha Award atas konsistensi program mitigasi kebencanaan dan bakti sosial masyarakat.</p>',
+            'featured_image' => 'frontend/images/news-4.svg',
+            'news_scope' => 'pusat',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(8),
+            'views_count' => 1540,
+        ]);
+
+        // Berita Daerah
+        $cileunyi = $districtMap['Cileunyi'] ?? $soreang;
+        $ciwidey = $districtMap['Ciwidey'] ?? $soreang;
+
+        Article::create([
+            'title' => 'Pemberdayaan Sentra UMKM Pemuda di Kawasan Soreang',
+            'slug' => 'pemberdayaan-sentra-umkm-pemuda-di-kawasan-soreang',
+            'category_id' => $catDaerah->id,
+            'unit_id' => $unitKecamatanSoreang->id,
+            'district_id' => $soreang->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Kolaborasi pemuda desa dalam memperluas jangkauan pasar produk lokal.',
+            'content' => '<p>Mendorong produk unggulan UMKM binaan pemuda desa menjangkau marketplace nasional.</p>',
+            'featured_image' => 'frontend/images/news-2.svg',
+            'news_scope' => 'daerah',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(1),
+            'views_count' => 420,
+        ]);
+
+        Article::create([
+            'title' => 'Aksi Tanggap Darurat & Penyaluran Logistik Pemuda',
+            'slug' => 'aksi-tanggap-darurat-dan-penyaluran-logistik-pemuda',
+            'category_id' => $catDaerah->id,
+            'unit_id' => $unitKabupaten->id,
+            'district_id' => $cileunyi->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Respon cepat relawan muda membantu pemukiman warga yang terdampak genangan.',
+            'content' => '<p>Penyaluran bantuan makanan siap saji dan peralatan pembersihan pasca bencana.</p>',
+            'featured_image' => 'frontend/images/news-3.svg',
+            'news_scope' => 'daerah',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(3),
+            'views_count' => 580,
+        ]);
+
+        Article::create([
+            'title' => 'Gerakan Pemuda Pelopor Wisata & Konservasi Hijau',
+            'slug' => 'gerakan-pemuda-pelopor-wisata-dan-konservasi-hijau',
+            'category_id' => $catDaerah->id,
+            'unit_id' => $unitKabupaten->id,
+            'district_id' => $ciwidey->id,
+            'user_id' => $adminUser->id,
+            'excerpt' => 'Edukasi lingkungan hidup dan pengembangan potensi ekowisata berbasis komunitas pemuda.',
+            'content' => '<p>Inisiasi jalur trekking wisata ramah lingkungan dan budidaya tanaman endemik.</p>',
+            'featured_image' => 'frontend/images/news-1.svg',
+            'news_scope' => 'daerah',
+            'approval_status' => 'approved',
+            'is_published' => true,
+            'published_at' => now()->subDays(5),
+            'views_count' => 310,
+        ]);
+
+        // 10. Seed Program Kerja Unggulan
+        $div1 = ProgramDivision::first();
+        $div2 = ProgramDivision::skip(1)->first();
+        $div3 = ProgramDivision::skip(2)->first();
+
+        WorkProgram::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'division_id' => $div2->id,
+            'program_name' => 'Bakti Sosial & Kemanusiaan',
+            'slug' => 'bakti-sosial-kemanusiaan',
+            'target_participants' => 'Masyarakat Rentan & Prasejahtera',
+            'output_indicators' => 'Penyaluran sembako & tanggap bencana',
+            'budget_amount' => 10000000,
+            'budget_source' => 'Swadaya / BAZNAS',
+            'execution_time' => 'Tahunan / Insidental',
+            'short_description' => 'Gerakan gotong royong tanggap bencana, santunan, dan solidaritas pemuda bagi masyarakat.',
+            'detailed_description' => 'Program berkala bantuan sosial dan tanggap bencana di seluruh wilayah Kabupaten Bandung.',
+            'poster_image' => 'frontend/images/gallery-1.svg',
+            'progress_status' => 'Rencana',
+            'is_featured_home' => true,
+            'approval_status' => 'approved',
+        ]);
+
+        WorkProgram::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'division_id' => $div3->id,
+            'program_name' => 'Kewirausahaan & UMKM Pemuda',
+            'slug' => 'kewirausahaan-umkm-pemuda',
+            'target_participants' => 'Wirausaha Muda Desa',
+            'output_indicators' => 'Pendampingan 100 NIB & Sertifikasi Halal',
+            'budget_amount' => 6000000,
+            'budget_source' => 'Dinas Koperasi / Swadaya',
+            'execution_time' => 'Mei – Agustus 2026',
+            'short_description' => 'Inkubasi usaha mandiri, pendampingan legalitas, serta akses permodalan bagi pemuda Bandung.',
+            'detailed_description' => 'Pendampingan legalitas NIB, sertifikasi halal, dan foto produk gratis.',
+            'poster_image' => 'frontend/images/gallery-2.svg',
+            'progress_status' => 'Rencana',
+            'is_featured_home' => true,
+            'approval_status' => 'approved',
+        ]);
+
+        WorkProgram::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'division_id' => $div2->id,
+            'program_name' => 'Bandung Resik & Hijau',
+            'slug' => 'bandung-resik-hijau',
+            'target_participants' => 'Pemuda & Komunitas Lingkungan',
+            'output_indicators' => '1.000 Pohon Ditanam di DAS Citarum',
+            'budget_amount' => 7500000,
+            'budget_source' => 'CSR / DLH',
+            'execution_time' => '12 April 2026',
+            'short_description' => 'Aksi penanaman pohon, edukasi pengelolaan sampah pemuda desa, dan konservasi alam.',
+            'detailed_description' => 'Gerakan menanam 1.000 pohon di sepanjang hulu daerah aliran sungai Citarum.',
+            'poster_image' => 'frontend/images/news-1.svg',
+            'progress_status' => 'Rencana',
+            'is_featured_home' => true,
+            'approval_status' => 'approved',
+        ]);
+
+        WorkProgram::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'division_id' => $div1->id,
+            'program_name' => 'Literasi & Talenta Digital',
+            'slug' => 'literasi-talenta-digital',
+            'target_participants' => 'Remaja & Pemuda Putus Sekolah',
+            'output_indicators' => '50 Pemuda Terampil Digital',
+            'budget_amount' => 3000000,
+            'budget_source' => 'Swadaya / Kemitraan',
+            'execution_time' => 'Oktober 2026',
+            'short_description' => 'Bootcamp pemrograman, content creation, dan digital marketing untuk pemuda desa.',
+            'detailed_description' => 'Pelatihan teknologi dan digitalisasi administrasi kepengurusan unit.',
+            'poster_image' => 'frontend/images/gallery-3.svg',
+            'progress_status' => 'Rencana',
+            'is_featured_home' => true,
+            'approval_status' => 'approved',
+        ]);
+
+        WorkProgram::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'division_id' => $div1->id,
+            'program_name' => 'Akademi Pemimpin Masa Depan',
+            'slug' => 'akademi-pemimpin-masa-depan',
+            'target_participants' => 'Pengurus Unit & Kader Baru',
+            'output_indicators' => 'Kader Pemimpin Berkarakter',
+            'budget_amount' => 5000000,
+            'budget_source' => 'Sponsorship / Swadaya',
+            'execution_time' => '26 September 2026',
+            'short_description' => 'Mencetak kader kepemimpinan pemuda yang kritis, adaptif, beretika, dan siap membangun daerah.',
+            'detailed_description' => 'Latihan dasar kepemimpinan pemuda (LDKP) dan outbound pembentukan karakter.',
+            'poster_image' => 'frontend/images/gallery-4.svg',
+            'progress_status' => 'Rencana',
+            'is_featured_home' => true,
+            'approval_status' => 'approved',
+        ]);
+
+        // 11. Seed Pengumuman Resmi
+        Announcement::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'title' => 'Open Recruitment Duta Kepemudaan Kabupaten Bandung 2026',
+            'slug' => 'open-recruitment-duta-kepemudaan-kabupaten-bandung-2026',
+            'announcement_number' => '042/SE/KT-KAB/IV/2026',
+            'category' => 'Seleksi',
+            'excerpt' => 'Pendaftaran seleksi duta pemuda pelopor terbuka untuk pemuda/i usia 17-25 tahun ber-KTP Kabupaten Bandung.',
+            'content' => 'Seleksi duta kepemudaan membuka peluang pengembangan kepemimpinan dan jejaring pemuda.',
+            'is_pinned' => true,
+            'approval_status' => 'approved',
+            'valid_until' => now()->addDays(30),
+        ]);
+
+        Announcement::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'title' => 'Jadwal Temu Karya Karang Taruna Tingkat Kecamatan',
+            'slug' => 'jadwal-temu-karya-karang-taruna-tingkat-kecamatan',
+            'announcement_number' => '038/SE/KT-KAB/IV/2026',
+            'category' => 'Edaran Resmi',
+            'excerpt' => 'Pemberitahuan agenda konsolidasi kepengurusan dan pemilihan ketua karang taruna tingkat unit & desa.',
+            'content' => 'Seluruh unit diharapkan segera mempersiapkan berkas evaluasi pertanggungjawaban program.',
+            'is_pinned' => false,
+            'approval_status' => 'approved',
+            'valid_until' => now()->addDays(15),
+        ]);
+
+        Announcement::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'title' => 'Bantuan Pelatihan Keterampilan Vokasi & Sertifikasi Digital',
+            'slug' => 'bantuan-pelatihan-keterampilan-vokasi-dan-sertifikasi-digital',
+            'announcement_number' => '031/KOMINFO-KT/III/2026',
+            'category' => 'Beasiswa',
+            'excerpt' => 'Kuota terbatas untuk 150 pemuda terpilih mengikuti sertifikasi gratis bidang IT & Multimedia.',
+            'content' => 'Program peningkatan keahlian kerja bagi generasi muda yang membutuhkan vokasi mandiri.',
+            'is_pinned' => false,
+            'approval_status' => 'approved',
+            'valid_until' => now()->addDays(20),
+        ]);
+
+        // 12. Seed Agenda & Kegiatan
+        $catEvent1 = EventCategory::first();
+        $catEvent2 = EventCategory::skip(1)->first();
+
+        Event::create([
+            'title' => 'Bakti Sosial Pemuda',
+            'slug' => 'bakti-sosial-pemuda',
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'category_id' => $catEvent2->id,
+            'event_date' => now()->addDays(15),
+            'start_time' => '08:00',
+            'location_venue' => 'Kec. Cileunyi, Kabupaten Bandung',
+            'organizer' => 'Karang Taruna Kabupaten Bandung',
+            'description' => 'Penyaluran 250 paket sembako, pemeriksaan kesehatan gratis, dan santunan yatim piatu.',
+            'event_status' => 'Mendatang',
+            'approval_status' => 'approved',
+        ]);
+
+        Event::create([
+            'title' => 'Pelatihan Digital Marketing',
+            'slug' => 'pelatihan-digital-marketing',
+            'unit_id' => $unitKecamatanSoreang->id,
+            'user_id' => $adminUser->id,
+            'category_id' => $catEvent1->id,
+            'event_date' => now()->addDays(22),
+            'start_time' => '09:00',
+            'location_venue' => 'Aula Kecamatan Soreang',
+            'organizer' => 'Karang Taruna Kec. Soreang',
+            'description' => 'Workshop intensif promosi produk UMKM pemuda desa di marketplace dan media sosial.',
+            'event_status' => 'Mendatang',
+            'approval_status' => 'approved',
+        ]);
+
+        Event::create([
+            'title' => 'Seminar Kepemudaan',
+            'slug' => 'seminar-kepemudaan',
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'category_id' => $catEvent1->id,
+            'event_date' => now()->addDays(28),
+            'start_time' => '08:30',
+            'location_venue' => 'Gedung Moh. Toha, Soreang',
+            'organizer' => 'Karang Taruna Kabupaten Bandung',
+            'description' => 'Membangun karakter kepemimpinan pemuda tangguh di era kecerdasan buatan.',
+            'event_status' => 'Mendatang',
+            'approval_status' => 'approved',
+        ]);
+
+        // 13. Seed Prestasi Pemuda
+        Achievement::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'title' => 'Juara Inovasi Sosial',
+            'slug' => 'juara-inovasi-sosial',
+            'recipient_name' => 'Karang Taruna Kab. Bandung',
+            'category_field' => 'Inovasi Sosial',
+            'year' => 2026,
+            'achievement_level' => 'Provinsi',
+            'rank_position' => 'Juara 1',
+            'awarded_by' => 'Dinas Sosial Provinsi Jawa Barat',
+            'description' => 'Program percontohan inkubasi digital ekonomi kreatif pemuda desa.',
+            'certificate_image' => 'frontend/images/gallery-6.svg',
+            'approval_status' => 'approved',
+        ]);
+
+        Achievement::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'title' => 'Top 5 Karang Taruna',
+            'slug' => 'top-5-karang-taruna',
+            'recipient_name' => 'Karang Taruna Kab. Bandung',
+            'category_field' => 'Kelembagaan & Relawan',
+            'year' => 2025,
+            'achievement_level' => 'Provinsi',
+            'rank_position' => 'Top 5 Terbaik',
+            'awarded_by' => 'Pengurus Karang Taruna Jawa Barat',
+            'description' => 'Apresiasi atas konsistensi program mitigasi bencana dan bakti sosial masyarakat.',
+            'certificate_image' => 'frontend/images/gallery-4.svg',
+            'approval_status' => 'approved',
+        ]);
+
+        Achievement::create([
+            'unit_id' => $unitKabupaten->id,
+            'user_id' => $adminUser->id,
+            'title' => 'Penghargaan Pemuda',
+            'slug' => 'penghargaan-pemuda',
+            'recipient_name' => 'Ahmad Fauzi & Tim',
+            'category_field' => 'Lingkungan Hidup',
+            'year' => 2025,
+            'achievement_level' => 'Kabupaten',
+            'rank_position' => 'Pemuda Pelopor Lingkungan',
+            'awarded_by' => 'Pemerintah Kabupaten Bandung',
+            'description' => 'Apresiasi Bupati Bandung atas gerakan konservasi mata air dan bank sampah.',
+            'certificate_image' => 'frontend/images/news-4.svg',
+            'approval_status' => 'approved',
+        ]);
+
+        // 14. Seed FAQ
+        Faq::create([
+            'question' => 'Bagaimana cara bergabung menjadi anggota Karang Taruna?',
+            'answer' => 'Pemuda/i usia 13–45 tahun di wilayah Kabupaten Bandung dapat mendaftar langsung melalui pengurus Karang Taruna di tingkat RT/RW atau Desa/Kelurahan domisili setempat.',
+            'order_index' => 1,
+            'is_active' => true,
+        ]);
+
+        Faq::create([
+            'question' => 'Apakah program pelatihan kewirausahaan gratis?',
+            'answer' => 'Ya, seluruh program pelatihan kerja, UMKM, dan sertifikasi talenta digital yang diselenggarakan Karang Taruna Kabupaten Bandung tidak dipungut biaya (100% Gratis).',
+            'order_index' => 2,
+            'is_active' => true,
+        ]);
+
+        Faq::create([
+            'question' => 'Bagaimana cara mengajukan proposal kolaborasi kegiatan?',
+            'answer' => 'Proposal dapat dikirimkan melalui email resmi info@karangtarunabandung.or.id atau langsung ke Sekretariat Karang Taruna di Jl. Al Fathu Soreang.',
+            'order_index' => 3,
+            'is_active' => true,
+        ]);
+
+        Faq::create([
+            'question' => 'Apa saja peran utama Karang Taruna di masyarakat?',
+            'answer' => 'Sebagai wadah pembinaan generasi muda dalam penanganan masalah kesejahteraan sosial, pemberdayaan potensi ekonomi produktif, dan pelestarian lingkungan.',
+            'order_index' => 4,
+            'is_active' => true,
+        ]);
     }
 }
