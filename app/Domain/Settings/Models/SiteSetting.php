@@ -22,4 +22,14 @@ class SiteSetting extends Model
     {
         return static::where('setting_key', $key)->value('setting_value') ?? $default;
     }
+
+    public static function isEnabled(string $key, bool $default = true): bool
+    {
+        $val = static::where('setting_key', $key)->value('setting_value');
+        if ($val === null) {
+            return $default;
+        }
+
+        return in_array(strtolower(trim((string) $val)), ['1', 'true', 'yes', 'on', 'aktif', 'enable', 'enabled'], true);
+    }
 }

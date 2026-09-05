@@ -342,6 +342,7 @@ class DatabaseSeeder extends Seeder
         SiteSetting::create(['setting_key' => 'site_tagline', 'setting_value' => 'Bersama Berkarya, Berdaya, dan Berdampak', 'description' => 'Tagline Utama']);
         SiteSetting::create(['setting_key' => 'contact_email', 'setting_value' => 'info@karangtarunabandung.or.id', 'description' => 'Email Kontak']);
         SiteSetting::create(['setting_key' => 'contact_phone', 'setting_value' => '(022) 5897 1234', 'description' => 'Nomor Telepon']);
+        SiteSetting::create(['setting_group' => 'features', 'setting_key' => 'enable_ppks_service', 'setting_value' => '1', 'description' => 'Aktifkan Layanan Cek Data PPKS di Publik (1 = Aktif, 0 = Nonaktif)']);
 
         // 8. Seed Hero Sliders
         HeroSlider::create([

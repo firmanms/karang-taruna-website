@@ -72,7 +72,9 @@
             <i class="ti ti-chevron-down dropdown-arrow"></i>
           </button>
           <div class="dropdown-menu slide-dropdown">
-            <a href="{{ route('public.ppks') }}" class="dropdown-link">Cek Data PPKS</a>
+            @if(\App\Domain\Settings\Models\SiteSetting::isEnabled('enable_ppks_service', true))
+              <a href="{{ route('public.ppks') }}" class="dropdown-link">Cek Data PPKS</a>
+            @endif
             <a href="{{ route('public.downloads') }}" class="dropdown-link">Pusat Unduhan</a>
           </div>
         </div>

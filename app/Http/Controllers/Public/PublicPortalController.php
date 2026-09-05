@@ -17,6 +17,7 @@ use App\Domain\Settings\Models\Faq;
 use App\Domain\Settings\Models\HeroSlider;
 use App\Domain\Settings\Models\OrganizationValue;
 use App\Domain\Settings\Models\ProfileOrganization;
+use App\Domain\Settings\Models\SiteSetting;
 use App\Domain\Territory\Models\RefDistrict;
 use App\Domain\Territory\Models\RefVillage;
 use App\Domain\Units\Models\KarangTarunaUnit;
@@ -387,6 +388,11 @@ class PublicPortalController extends Controller
      */
     public function checkPpks(Request $request)
     {
+        // Cek pengaturan apakah layanan Cek PPKS diaktifkan
+        if (! SiteSetting::isEnabled('enable_ppks_service', true)) {
+            abort(404, 'Layanan pengecekan data PPKS sedang dinonaktifkan.');
+        }
+
         $result = null;
         $searched = false;
 
