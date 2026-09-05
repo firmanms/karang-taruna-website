@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="id">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="@yield('meta_description', 'Portal Karang Taruna Kabupaten Bandung')">
   <title>@yield('title', 'Karang Taruna Kabupaten Bandung')</title>
-  
+
   <!-- Favicon / Web Icon -->
   <link rel="icon" type="image/png" href="{{ asset('frontend/images/logo.png') }}">
   <link rel="apple-touch-icon" href="{{ asset('frontend/images/logo.png') }}">
@@ -18,7 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
   <!-- Leaflet CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <link href="https://unpkg.com/@idds/styles@latest/dist/index.min.css" rel="stylesheet">
@@ -73,7 +74,7 @@
           </button>
           <div class="dropdown-menu slide-dropdown">
             @if(\App\Domain\Settings\Models\SiteSetting::isEnabled('enable_ppks_service', true))
-              <a href="{{ route('public.ppks') }}" class="dropdown-link">Cek Data PPKS</a>
+            <a href="{{ route('public.ppks') }}" class="dropdown-link">Cek Data PPKS</a>
             @endif
             <a href="{{ route('public.downloads') }}" class="dropdown-link">Pusat Unduhan</a>
           </div>
@@ -106,7 +107,7 @@
           </div>
         </div>
 
-        <a href="#kontak" class="nav-item">Kontak</a>
+        <!-- <a href="#kontak" class="nav-item">Kontak</a> -->
       </nav>
       <button class="menu-btn" aria-label="Buka menu"><i class="ti ti-menu-2"></i></button>
     </div>
@@ -187,5 +188,5 @@
   <script src="{{ asset('frontend/js/app.js') }}"></script>
   @stack('scripts')
 </body>
-</html>
 
+</html>

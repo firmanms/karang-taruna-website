@@ -9,7 +9,7 @@ Portal Resmi dan Sistem Informasi Manajemen Terpadu Pengurus Karang Taruna Kabup
 1. **Website Publik Modern & Responsif**: Menggunakan Blade, Vanilla CSS kustom dari template `desainforntend/`, ApexCharts, dan Leaflet GIS.
 2. **Sub-Site Unit Terintegrasi**: Halaman sub-site interaktif untuk setiap unit Kecamatan (`/kecamatan/{slug}`) dan Desa/Kelurahan (`/desa/{kecamatan}-{desa}`) yang menampilkan warta, program kerja, agenda, dan struktur pengurus masing-masing.
 3. **Peta Interaktif GIS OpenStreetMap**: Pemetaan koordinat seluruh unit Karang Taruna se-Kabupaten Bandung dengan pembedaan warna pin (Merah: Kabupaten, Biru: Kecamatan, Hijau: Desa), popup info, tautan langsung ke sub-site, serta filter wilayah.
-4. **Filament CMS Admin Panel**: Panel administrasi berbasis Filament 5 dengan 20+ modul konten.
+4. **Filament CMS Admin Panel**: Panel administrasi berbasis Filament 5 dengan 20+ modul konten dan verifikasi Captcha keamanan saat login.
 5. **Multi-Tenancy & Data Isolation Scope**: Hak akses terisolasi berjenjang (Kabupaten, Kecamatan, Desa).
 6. **Approval Engine & Workflow Moderasi**: Alur peninjauan konten berjenjang (`Draft` ➔ `Submit` ➔ `Revisi/Tolak/Setujui` ➔ `Terbit`).
 7. **Modul PPKS & Proteksi NIK**: Usulan warga Pemerlu Pelayanan Kesejahteraan Sosial (PPKS) 26 kategori Kemensos dengan sakelar aktif/nonaktif dari pengaturan situs dan form cek mandiri publik yang terlindungi Captcha & data masking.
