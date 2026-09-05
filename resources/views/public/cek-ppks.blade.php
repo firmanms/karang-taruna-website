@@ -42,7 +42,7 @@
               <label for="nikInput"><i class="ti ti-id"></i> Nomor Induk Kependudukan (NIK)</label>
               <div class="input-with-icon">
                 <i class="ti ti-credit-card"></i>
-                <input type="text" id="nikInput" name="nik" value="{{ old('nik') }}" placeholder="Contoh: 3204xxxxxxxxxxxx" maxlength="16" required autocomplete="off">
+                <input type="text" id="nikInput" name="nik" placeholder="Contoh: 3204xxxxxxxxxxxx" maxlength="16" required autocomplete="off">
               </div>
               @error('nik')
                 <small class="text-red-500 font-semibold mt-1 block">{{ $message }}</small>

@@ -4,6 +4,7 @@ namespace App\Domain\Content\Models;
 
 use App\Domain\Units\Models\KarangTarunaUnit;
 use App\Models\User;
+use App\Traits\HasTenantScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Announcement extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTenantScope;
 
     protected $fillable = [
         'user_id',
