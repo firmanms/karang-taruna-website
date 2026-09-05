@@ -51,4 +51,8 @@ karang-taruna-website/
 1. **Separation of Concerns**: Logika bisnis domain dipisahkan dari controller tampilan dan Filament form schemas.
 2. **Multi-Tenancy Hierarchy**: Isolasi data otomatis menggunakan trait `HasTenantScope`.
 3. **Approval State Machine**: Seluruh konten daerah dimoderasi oleh `ApprovalWorkflowService` sebelum dapat berstatus `published`.
-4. **Performance by Default**: Penggunaan eager loading (`with()`), database indexing komposit, pagination, dan query scoping.
+4. **Fast & Memory-Efficient Excel Processing**: Layanan `ExcelImportExportService` berbasis OpenSpout untuk template & impor XLSX tanpa duplikasi data.
+5. **Realtime Analytics Tracking**: Pencatatan pengunjung non-bot unik berbasis hash IP harian dan durasi sesi aktif.
+6. **Global Media Security**: Konfigurasi batas upload global 512 KB per file dengan sanitasi format dan pemberitahuan langsung pada form Filament.
+7. **Dynamic Referential Masters**: Master Sumber Anggaran (`BudgetSource`) dan Sub-Site Terintegrasi per Kecamatan & Desa.
+8. **Performance by Default**: Penggunaan eager loading (`with()`), database indexing komposit, pagination, dan query scoping.

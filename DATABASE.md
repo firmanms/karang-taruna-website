@@ -20,22 +20,24 @@ Basis data sistem dirancang dengan relasi integritas referensial kuat (`Foreign 
 | 9 | `event_categories` | Content | Master kategori kegiatan |
 | 10 | `events` | Content | Agenda kegiatan & event daerah |
 | 11 | `program_divisions` | Content | Master bidang program kerja |
-| 12 | `work_programs` | Content | Program kerja unggulan & anggaran |
-| 13 | `announcements` | Content | Pengumuman resmi & surat edaran |
-| 14 | `photo_categories` | Content | Album foto kegiatan |
-| 15 | `photo_galleries` | Content | Dokumentasi foto |
-| 16 | `video_galleries` | Content | Arsip video dokumentasi |
-| 17 | `achievements` | Content | Prestasi pemuda & penghargaan |
-| 18 | `download_categories`| Content | Master kategori unduhan berkas |
-| 19 | `downloads` | Content | Berkas & dokumen unduhan publik |
-| 20 | `ppks_categories` | PPKS | 26 Jenis kategori PPKS Kemensos |
-| 21 | `ppks_beneficiaries`| PPKS | Basis data warga PPKS hasil usulan desa |
-| 22 | `ppks_check_logs` | PPKS | Log audit penelusuran form cek NIK publik |
-| 23 | `content_approval_logs`| Content | Log audit riwayat moderasi konten |
-| 24 | `hero_sliders` | Settings | Banner hero slider portal beranda |
-| 25 | `faqs` | Settings | Pertanyaan dan jawaban umum |
-| 26 | `profile_organizations`| Settings | Profil visi, misi, dan kontak legalitas |
-| 27 | `site_settings` | Settings | Key-value settings website |
+| 12 | `budget_sources` | Content | Master referensi sumber anggaran program kerja |
+| 13 | `work_programs` | Content | Program kerja unggulan & anggaran berelasi |
+| 14 | `announcements` | Content | Pengumuman resmi & surat edaran |
+| 15 | `photo_categories` | Content | Album foto kegiatan |
+| 16 | `photo_galleries` | Content | Dokumentasi foto |
+| 17 | `video_galleries` | Content | Arsip video dokumentasi |
+| 18 | `achievements` | Content | Prestasi pemuda & penghargaan |
+| 19 | `download_categories`| Content | Master kategori unduhan berkas |
+| 20 | `downloads` | Content | Berkas & dokumen unduhan publik |
+| 21 | `ppks_categories` | PPKS | 26 Jenis kategori PPKS Kemensos |
+| 22 | `ppks_beneficiaries`| PPKS | Basis data warga PPKS hasil usulan desa |
+| 23 | `ppks_check_logs` | PPKS | Log audit penelusuran form cek NIK publik |
+| 24 | `content_approval_logs`| Content | Log audit riwayat moderasi konten |
+| 25 | `hero_sliders` | Settings | Banner hero slider portal beranda |
+| 26 | `faqs` | Settings | Pertanyaan dan jawaban umum |
+| 27 | `profile_organizations`| Settings | Profil visi, misi, dan kontak legalitas |
+| 28 | `site_settings` | Settings | Key-value settings website (termasuk toggle Layanan Cek PPKS) |
+| 29 | `site_visitor_logs` | Statistics | Log pencatatan kunjungan website realtime |
 
 ---
 
