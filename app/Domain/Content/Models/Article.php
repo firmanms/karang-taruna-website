@@ -6,6 +6,7 @@ use App\Domain\Territory\Models\RefDistrict;
 use App\Domain\Territory\Models\RefVillage;
 use App\Domain\Units\Models\KarangTarunaUnit;
 use App\Models\User;
+use App\Traits\HasTenantScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Article extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTenantScope;
 
     protected $fillable = [
         'category_id',
