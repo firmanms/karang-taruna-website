@@ -323,8 +323,19 @@ class PublicPortalController extends Controller
         $searched = false;
 
         if ($request->isMethod('post')) {
+            $expectedCaptcha = session('ppks_captcha_answer');
+
             $request->validate([
                 'nik' => ['required', 'digits:16'],
+                'captcha' => ['required', 'numeric', function ($attribute, $value, $fail) use ($expectedCaptcha) {
+                    if ((int) $value !== (int) $expectedCaptcha) {
+                        $fail('Jawaban keamanan (Captcha) salah.');
+                    }
+                }],
+            ], [
+                'nik.required' => 'Nomor Induk Kependudukan (NIK) wajib diisi.',
+                'nik.digits' => 'NIK harus berjumlah 16 digit angka.',
+                'captcha.required' => 'Hasil hitung keamanan wajib diisi.',
             ]);
 
             $searched = true;
@@ -336,7 +347,7 @@ class PublicPortalController extends Controller
                 ->with(['category', 'district', 'village', 'unit'])
                 ->first();
 
-            // Log pencarian
+            // Log pencarian audit
             PpksCheckLog::create([
                 'searched_nik_masked' => $maskedNik,
                 'ip_address' => $request->ip(),
@@ -347,6 +358,12 @@ class PublicPortalController extends Controller
             $result = $beneficiary;
         }
 
-        return view('public.cek-ppks', compact('result', 'searched'));
+        // Generate dynamic math captcha for security
+        $num1 = rand(1, 9);
+        $num2 = rand(1, 9);
+        session(['ppks_captcha_answer' => $num1 + $num2]);
+        $captchaQuestion = "{$num1} + {$num2} = ?";
+
+        return view('public.cek-ppks', compact('result', 'searched', 'captchaQuestion'));
     }
 }

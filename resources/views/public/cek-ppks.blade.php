@@ -51,6 +51,18 @@
               @enderror
             </div>
 
+            <!-- Keamanan Captcha -->
+            <div class="form-group">
+              <label for="captchaInput"><i class="ti ti-shield-check"></i> Verifikasi Keamanan: Hitung <strong>{{ $captchaQuestion }}</strong></label>
+              <div class="input-with-icon">
+                <i class="ti ti-calculator"></i>
+                <input type="number" id="captchaInput" name="captcha" placeholder="Tulis hasil hitungan di sini" required autocomplete="off">
+              </div>
+              @error('captcha')
+                <small class="text-red-500 font-semibold mt-1 block">{{ $message }}</small>
+              @enderror
+            </div>
+
             <!-- Submit Button -->
             <div class="form-actions">
               <button type="submit" class="btn-ppks-submit">
@@ -89,7 +101,7 @@
                   </div>
                   <div class="result-item">
                     <span>Status Program Bantuan</span>
-                    <strong class="text-green-700">{{ $result->assistance_status ?? 'Terverifikasi Penerima Manfaat' }}</strong>
+                    <strong class="text-green-700">{{ $result->social_assistance_status ?? 'Terverifikasi Penerima Manfaat' }}</strong>
                   </div>
                   <div class="result-item">
                     <span>Unit Pendamping</span>

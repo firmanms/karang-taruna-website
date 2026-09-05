@@ -10,6 +10,7 @@ use App\Domain\Content\Models\EventCategory;
 use App\Domain\Content\Models\NewsCategory;
 use App\Domain\Content\Models\ProgramDivision;
 use App\Domain\Content\Models\WorkProgram;
+use App\Domain\PPKS\Models\PpksBeneficiary;
 use App\Domain\PPKS\Models\PpksCategory;
 use App\Domain\Settings\Models\Faq;
 use App\Domain\Settings\Models\HeroSlider;
@@ -716,5 +717,66 @@ class DatabaseSeeder extends Seeder
             'order_index' => 4,
             'is_active' => true,
         ]);
+
+        // 15. Seed Sample Data Warga PPKS
+        $ppksCatBalita = PpksCategory::where('category_code', 'PPKS-01')->first();
+        $ppksCatDisabilitas = PpksCategory::where('category_code', 'PPKS-09')->first();
+        $ppksCatLansia = PpksCategory::where('category_code', 'PPKS-08')->first();
+        $ppksCatFakir = PpksCategory::where('category_code', 'PPKS-24')->first();
+
+        if ($ppksCatDisabilitas) {
+            PpksBeneficiary::create([
+                'nik' => '3204051203990001',
+                'full_name' => 'Ahmad Suhendar',
+                'category_id' => $ppksCatDisabilitas->id,
+                'district_id' => $soreang->id,
+                'village_id' => $desaSoreang->id,
+                'unit_id' => $unitDesaSoreang->id,
+                'submitted_by' => $adminUser->id,
+                'address_detail' => 'Kp. Cikambuy RT 02 RW 04, Desa Soreang',
+                'social_assistance_status' => 'Bantuan Kursi Roda & Pelatihan Usaha Mandiri',
+                'mentor_unit' => 'Karang Taruna Satria Muda Desa Soreang',
+                'last_survey_date' => now()->subDays(10),
+                'verification_status' => 'verified',
+                'verified_by' => $adminUser->id,
+                'verified_at' => now()->subDays(5),
+            ]);
+        }
+
+        if ($ppksCatLansia) {
+            PpksBeneficiary::create([
+                'nik' => '3204055508500002',
+                'full_name' => 'Siti Rohani',
+                'category_id' => $ppksCatLansia->id,
+                'district_id' => $soreang->id,
+                'village_id' => $desaSoreang->id,
+                'unit_id' => $unitDesaSoreang->id,
+                'submitted_by' => $adminUser->id,
+                'address_detail' => 'Jl. Soreang Indah RT 01 RW 08',
+                'social_assistance_status' => 'Bantuan Sembako Lansia & Kartu Sehat',
+                'mentor_unit' => 'Karang Taruna Satria Muda Desa Soreang',
+                'last_survey_date' => now()->subDays(12),
+                'verification_status' => 'verified',
+                'verified_by' => $adminUser->id,
+                'verified_at' => now()->subDays(6),
+            ]);
+        }
+
+        if ($ppksCatFakir) {
+            PpksBeneficiary::create([
+                'nik' => '3204052109880003',
+                'full_name' => 'Ujang Permana',
+                'category_id' => $ppksCatFakir->id,
+                'district_id' => $soreang->id,
+                'village_id' => $desaSoreang->id,
+                'unit_id' => $unitDesaSoreang->id,
+                'submitted_by' => $adminUser->id,
+                'address_detail' => 'Kp. Babakan RT 04 RW 02',
+                'social_assistance_status' => 'Usulan Bantuan Modal Usaha Karang Taruna',
+                'mentor_unit' => 'Karang Taruna Satria Muda Desa Soreang',
+                'last_survey_date' => now()->subDays(2),
+                'verification_status' => 'pending_verification',
+            ]);
+        }
     }
 }
