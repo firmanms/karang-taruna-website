@@ -158,19 +158,19 @@
             <div class="visitor-stats">
               <div class="visitor-item">
                 <span>Hari Ini:</span>
-                <strong id="visitorToday">342</strong>
+                <strong id="visitorToday">{{ $visitorStats['today'] ?? '1' }}</strong>
               </div>
               <div class="visitor-item">
                 <span>Bulan Ini:</span>
-                <strong id="visitorMonth">8.920</strong>
+                <strong id="visitorMonth">{{ $visitorStats['month'] ?? '1' }}</strong>
               </div>
               <div class="visitor-item">
                 <span>Total Pengunjung:</span>
-                <strong id="visitorTotal">124.580</strong>
+                <strong id="visitorTotal">{{ $visitorStats['total'] ?? '1' }}</strong>
               </div>
               <div class="visitor-item online-status">
                 <span>Online Saat Ini:</span>
-                <strong id="visitorOnline"><span class="pulse-dot"></span> 18 User</strong>
+                <strong id="visitorOnline"><span class="pulse-dot"></span> {{ $visitorStats['online'] ?? 1 }} User</strong>
               </div>
             </div>
           </div>

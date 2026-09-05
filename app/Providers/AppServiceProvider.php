@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Settings\Models\SiteVisitorLog;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('layouts.public', function ($view) {
+            $view->with('visitorStats', SiteVisitorLog::getVisitorStats());
+        });
     }
 }
