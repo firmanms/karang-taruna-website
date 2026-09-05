@@ -17,6 +17,7 @@ class ProfileOrganization extends Model
         'legal_basis',
         'history_content',
         'vision',
+        'missions',
         'logo_path',
         'sk_number',
         'sk_file_path',
@@ -32,6 +33,7 @@ class ProfileOrganization extends Model
     protected function casts(): array
     {
         return [
+            'missions' => 'array',
             'latitude' => 'float',
             'longitude' => 'float',
         ];

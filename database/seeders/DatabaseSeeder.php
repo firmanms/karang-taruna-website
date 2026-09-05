@@ -14,6 +14,7 @@ use App\Domain\PPKS\Models\PpksBeneficiary;
 use App\Domain\PPKS\Models\PpksCategory;
 use App\Domain\Settings\Models\Faq;
 use App\Domain\Settings\Models\HeroSlider;
+use App\Domain\Settings\Models\OrganizationValue;
 use App\Domain\Settings\Models\ProfileOrganization;
 use App\Domain\Settings\Models\SiteSetting;
 use App\Domain\Territory\Models\RefDistrict;
@@ -289,14 +290,49 @@ class DatabaseSeeder extends Seeder
         ProgramDivision::create(['division_name' => 'Ekonomi Kreatif & Kewirausahaan', 'slug' => 'ekonomi-kreatif', 'order_index' => 3]);
 
         // 7. Seed Profil & Site Settings
-        ProfileOrganization::create([
+        $profile = ProfileOrganization::create([
             'org_name' => 'Karang Taruna Kabupaten Bandung',
             'legal_basis' => 'Permensos No. 25 Tahun 2019 tentang Karang Taruna',
             'vision' => 'Mewujudkan Generasi Muda Kabupaten Bandung yang Berkarakter, Mandiri, Berdaya Saing, dan Berjiwa Sosial Menuju Bandung BEDAS (Bangkit, Edukatif, Dinamis, Agamis, dan Sejahtera).',
+            'missions' => [
+                'Mengembangkan potensi minat, bakat, dan kreativitas pemuda.',
+                'Membangun kemandirian ekonomi melalui UMKM dan digitalisasi pemuda.',
+                'Meningkatkan kepedulian dan kepekaan sosial terhadap persoalan kemasyarakatan.',
+                'Menjalin sinergi kemitraan strategis dengan pemerintah daerah dan swasta.',
+            ],
+            'history_content' => '<p>Karang Taruna Kabupaten Bandung merupakan organisasi sosial kepemudaan yang berkedudukan di wilayah Kabupaten Bandung sebagai wadah pengembangan generasi muda non-partisan. Tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial dari, oleh, dan untuk masyarakat, khususnya generasi muda di wilayah desa/kelurahan.</p><p>Dengan semangat <em>Aditya Karya Mahatva Yodha</em>, pemuda Kabupaten Bandung senantiasa hadir sebagai garda terdepan dalam aksi kesetiakawanan sosial, pemberdayaan ekonomi kreatif, dan pelestarian nilai kearifan lokal Tatar Pasundan.</p>',
             'period_years' => 'Masa Bakti 2024 - 2029',
             'address_office' => 'Jl. Al Fathu Soreang, Kabupaten Bandung',
             'email_official' => 'info@karangtarunabandung.or.id',
             'phone_official' => '(022) 5897 1234',
+        ]);
+
+        $profile->missions()->createMany([
+            ['mission_text' => 'Mengembangkan potensi minat, bakat, dan kreativitas pemuda.', 'order_index' => 1],
+            ['mission_text' => 'Membangun kemandirian ekonomi melalui UMKM dan digitalisasi pemuda.', 'order_index' => 2],
+            ['mission_text' => 'Meningkatkan kepedulian dan kepekaan sosial terhadap persoalan kemasyarakatan.', 'order_index' => 3],
+            ['mission_text' => 'Menjalin sinergi kemitraan strategis dengan pemerintah daerah dan swasta.', 'order_index' => 4],
+        ]);
+
+        OrganizationValue::create([
+            'icon_class' => 'ti ti-flame text-emerald-600',
+            'title' => 'Solidaritas & Kesetiakawanan',
+            'description' => 'Mengutamakan kepedulian gotong royong dan empati terhadap sesama warga.',
+            'order_index' => 1,
+        ]);
+
+        OrganizationValue::create([
+            'icon_class' => 'ti ti-bulb text-emerald-600',
+            'title' => 'Inovasi & Kreativitas',
+            'description' => 'Terus beradaptasi dengan perkembangan teknologi dan solusi modern.',
+            'order_index' => 2,
+        ]);
+
+        OrganizationValue::create([
+            'icon_class' => 'ti ti-shield-check text-emerald-600',
+            'title' => 'Integritas & Tanggung Jawab',
+            'description' => 'Menjaga amanah organisasi secara transparan dan akuntabel.',
+            'order_index' => 3,
         ]);
 
         SiteSetting::create(['setting_key' => 'site_name', 'setting_value' => 'Karang Taruna Kabupaten Bandung', 'description' => 'Nama Website']);

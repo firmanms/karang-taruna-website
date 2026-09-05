@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ProfileOrganizations\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -47,12 +48,16 @@ class ProfileOrganizationForm
                             ->image(),
                     ]),
 
-                Section::make('Visi & Sejarah')
+                Section::make('Visi, Misi & Sejarah')
                     ->schema([
                         Textarea::make('vision')
                             ->label('Pernyataan Visi')
                             ->rows(3)
                             ->required(),
+                        TagsInput::make('missions')
+                            ->label('Poin-Poin Misi Organisasi')
+                            ->placeholder('Ketik poin misi lalu tekan Enter')
+                            ->helperText('Daftar butir misi organisasi yang ditampilkan pada halaman Tentang Kami.'),
                         RichEditor::make('history_content')
                             ->label('Sejarah & Kilas Balik')
                             ->columnSpanFull(),

@@ -15,6 +15,7 @@ use App\Domain\PPKS\Models\PpksBeneficiary;
 use App\Domain\PPKS\Models\PpksCheckLog;
 use App\Domain\Settings\Models\Faq;
 use App\Domain\Settings\Models\HeroSlider;
+use App\Domain\Settings\Models\OrganizationValue;
 use App\Domain\Settings\Models\ProfileOrganization;
 use App\Domain\Territory\Models\RefDistrict;
 use App\Domain\Territory\Models\RefVillage;
@@ -122,8 +123,18 @@ class PublicPortalController extends Controller
     public function profile()
     {
         $profile = ProfileOrganization::with('missions')->first();
+        $values = OrganizationValue::orderBy('order_index')->get();
+        $kabupatenUnit = KarangTarunaUnit::where('unit_level', 'kabupaten')->with('members')->first();
+        $totalDistricts = RefDistrict::count();
+        $totalVillages = RefVillage::count();
 
-        return view('public.tentang-kami', compact('profile'));
+        return view('public.tentang-kami', compact(
+            'profile',
+            'values',
+            'kabupatenUnit',
+            'totalDistricts',
+            'totalVillages'
+        ));
     }
 
     /**
