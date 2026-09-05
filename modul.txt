@@ -1,0 +1,669 @@
+================================================================================
+DOKUMEN SPESIFIKASI MODUL, STRUKTUR TABEL DATABASE, DAN FIELD
+WEBSITE RESMI KARANG TARUNA KABUPATEN BANDUNG
+(TERMASUK SISTEM WORKFLOW APPROVAL & MODERASI KONTEN MULTI-LEVEL)
+================================================================================
+
+Dokumen ini memetakan seluruh modul sistem informasi/CMS (Content Management System) 
+dan perancangan basis data relasional (Database Schema & Fields) yang dibutuhkan 
+berdasarkan fitur dan halaman-halaman yang telah dibuat pada antarmuka frontend,
+dengan arsitektur:
+1. Pemisahan MASTER REFERENSI WILAYAH MURNI vs MASTER LEMBAGA/UNIT KARANG TARUNA.
+2. Mekanisme KONTRIBUTOR MULTI-TIER: Pengguna tingkat Kecamatan dan Desa/Kelurahan dapat menginput konten (Berita, Agenda, Prestasi, Galeri, Program Kerja, dan Data Warga PPKS), dengan sistem persetujuan (APPROVAL / MODERASI) oleh Pengurus Tingkat Kabupaten sebelum dipublikasikan ke publik.
+
+--------------------------------------------------------------------------------
+DAFTAR MODUL SISTEM (SYSTEM MODULES)
+--------------------------------------------------------------------------------
+1.  Modul Manajemen Pengguna, Hak Akses & Multi-Tenant (Users, Roles & Approvals)
+2.  Modul Workflow Approval & Moderasi Konten (Content Approval & Verification Queue)
+3.  Modul Hero Slider & Pengaturan Beranda (Hero Banner & Home Settings)
+4.  Modul Profil & Halaman Statis (Organization Profile, Vision & Mission)
+5.  Modul Master Referensi Wilayah Administratif (Pure Administrative Boundaries)
+6.  Modul Master Entitas Lembaga & Unit Karang Taruna (Hierarchical KT Units & Offices)
+7.  Modul Program Kerja & Usulan Kegiatan (Work Programs & Budgets)
+8.  Modul Agenda & Kegiatan Wilayah (Events, Calendar & Venue Approvals)
+9.  Modul Berita & Liputan Daerah (News, Articles, Categories & Scope)
+10. Modul Pengumuman Resmi & Edaran (Official Announcements & Notices)
+11. Modul Galeri Foto Dokumentasi (Photo Gallery & Albums)
+12. Modul Galeri Video Liputan (Video Gallery & Media)
+13. Modul Prestasi & Penghargaan Pemuda (Youth Achievements & Awards Submission)
+14. Modul Pusat Unduhan / Dokumen Publik (Download Center / Documents)
+15. Modul Pengecekan & Usulan Pendataan PPKS (Social Welfare Assistance Check & Submission)
+16. Modul FAQ / Tanya Jawab (Frequently Asked Questions)
+17. Modul Statistik Wilayah & Sebaran GIS (Territory Statistics & Geographic Data)
+18. Modul Statistik Pengunjung (Visitor Traffic & Web Analytics)
+19. Modul Kontak & Pengaturan Umum Website (Site Configuration & Contact Info)
+
+================================================================================
+MEKANISME WORKFLOW APPROVAL KONTEN (MULTI-LEVEL CONTENT APPROVAL FLOW)
+================================================================================
+1. Level Penginputan:
+   - **Admin Desa / Kelurahan**: Dapat membuat draft konten Berita Kegiatan Desa, Agenda Desa, Foto/Video, Prestasi Pemuda Desa, dan Usulan Data PPKS.
+   - **Admin Kecamatan**: Dapat membuat draft konten tingkat Kecamatan serta mereviu usulan dari Desa di wilayahnya.
+   - **Superadmin Kabupaten**: Memiliki hak final untuk *Approve* (Setujui & Publikasikan ke Web), *Revision* (Minta Revisi), atau *Reject* (Tolak dengan catatan alasan).
+2. Status Standar pada Setiap Konten Transaksional:
+   - `draft`             : Konten masih disimpan secara privat oleh pembuat.
+   - `pending_approval`  : Konten telah diajukan ke Kabupaten untuk direviu.
+   - `approved`          : Konten disetujui Kabupaten & tampil aktif di website publik.
+   - `rejected`          : Konten ditolak dengan catatan alasan penolakan.
+   - `revision_required` : Konten dikembalikan ke pembuat dengan catatan perbaikan.
+
+================================================================================
+RINCIAN STRUKTUR TABEL & FIELD DATABASE (DATABASE SCHEMA SPECIFICATION)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. MODUL AUTENTIKASI & MANAJEMEN PENGGUNA (MULTI-LEVEL ADMINS)
+--------------------------------------------------------------------------------
+
+A. Tabel: `users`
+Deskripsi: Menyimpan data pengguna / pengelola dari tingkat Kabupaten, Kecamatan, hingga Desa.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- name                    : VARCHAR(150), NOT NULL (Nama lengkap pengguna)
+- email                   : VARCHAR(191), UNIQUE, NOT NULL (Email login)
+- password                : VARCHAR(255), NOT NULL (Hash kata sandi)
+- phone                   : VARCHAR(20), NULLABLE (Nomor WhatsApp/HP)
+- avatar                  : VARCHAR(255), NULLABLE (Foto profil)
+- role_id                 : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `roles.id`
+- unit_id                 : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `karang_taruna_units.id` (Unit Karang Taruna yang dikelola)
+- can_auto_publish        : TINYINT(1), DEFAULT 0 (1 = Bebas approval/langsung terbit untuk Superadmin)
+- is_active               : TINYINT(1), DEFAULT 1 (1 = Aktif, 0 = Nonaktif)
+- remember_token          : VARCHAR(100), NULLABLE
+- last_login_at           : TIMESTAMP, NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+B. Tabel: `roles`
+Deskripsi: Master peran pengguna sistem.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- role_name               : VARCHAR(50), NOT NULL (Superadmin Kabupaten, Verifikator Kabupaten, Admin Kecamatan, Admin Desa, Kontributor Berita)
+- slug                    : VARCHAR(50), UNIQUE, NOT NULL
+- tier_level              : ENUM('kabupaten', 'kecamatan', 'desa'), DEFAULT 'desa'
+- permissions             : TEXT, NULLABLE (JSON hak akses CRUD modul)
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+2. MODUL WORKFLOW LOG APPROVAL & MODERASI KONTEN
+--------------------------------------------------------------------------------
+
+A. Tabel: `content_approval_logs`
+Deskripsi: Log audit riwayat persetujuan, revisi, atau penolakan konten oleh admin kabupaten.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- content_type            : ENUM('article', 'event', 'work_program', 'achievement', 'gallery_photo', 'gallery_video', 'ppks_beneficiary', 'download'), NOT NULL
+- content_id              : BIGINT(20) UNSIGNED, NOT NULL (ID pada tabel konten bersangkutan)
+- submitted_by            : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id` (Admin pembuat usulan)
+- reviewed_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id` (Admin Kabupaten yang mereviu)
+- action_status           : ENUM('submitted', 'approved', 'rejected', 'revision_required'), NOT NULL
+- review_notes            : TEXT, NULLABLE (Catatan alasan penolakan atau instruksi revisi)
+- action_timestamp        : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+3. MODUL HERO SLIDER & BERANDA
+--------------------------------------------------------------------------------
+
+A. Tabel: `hero_sliders`
+Deskripsi: Mengelola slide banner di halaman depan.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- title                   : VARCHAR(255), NOT NULL (Judul besar slide)
+- subtitle_eyebrow        : VARCHAR(255), NULLABLE (Teks pengantar di atas judul)
+- description             : TEXT, NULLABLE (Deskripsi singkat slide)
+- image_path              : VARCHAR(255), NOT NULL (Path gambar latar slide)
+- button_primary_text     : VARCHAR(50), NULLABLE (Label tombol utama)
+- button_primary_url      : VARCHAR(255), NULLABLE (Link tombol utama)
+- button_secondary_text   : VARCHAR(50), NULLABLE (Label tombol kedua)
+- button_secondary_url    : VARCHAR(255), NULLABLE (Link tombol kedua)
+- order_index             : INT(11), DEFAULT 0 (Urutan slide)
+- is_active               : TINYINT(1), DEFAULT 1
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+4. MODUL PROFIL, TENTANG KAMI, VISI & MISI
+--------------------------------------------------------------------------------
+
+A. Tabel: `profile_organization`
+Deskripsi: Profil resmi organisasi tingkat kabupaten.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- org_name                : VARCHAR(150), NOT NULL (Karang Taruna Kabupaten Bandung)
+- legal_basis             : VARCHAR(255), NULLABLE (Dasar hukum pendirian / AD-ART)
+- history_content         : LONGTEXT, NULLABLE (Sejarah & latar belakang)
+- vision                  : TEXT, NOT NULL (Pernyataan Visi)
+- logo_path               : VARCHAR(255), NULLABLE (File logo resmi)
+- sk_number               : VARCHAR(100), NULLABLE (Nomor SK Pengesahan Bupati)
+- sk_file_path            : VARCHAR(255), NULLABLE (Upload berkas SK - PDF)
+- period_years            : VARCHAR(50), NULLABLE (Contoh: "Masa Bakti 2024 - 2029")
+- address_office          : TEXT, NULLABLE (Alamat sekretariat kabupaten)
+- office_photo            : VARCHAR(255), NULLABLE (Foto gedung/kantor sekretariat)
+- latitude                : DECIMAL(10,8), NULLABLE (Koordinat Latitude GPS)
+- longitude               : DECIMAL(11,8), NULLABLE (Koordinat Longitude GPS)
+- email_official          : VARCHAR(100), NULLABLE
+- phone_official          : VARCHAR(30), NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+B. Tabel: `organization_missions`
+Deskripsi: Poin-poin misi organisasi.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- profile_id              : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `profile_organization.id`
+- mission_text            : TEXT, NOT NULL (Isi pernyataan misi)
+- order_index             : INT(11), DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+C. Tabel: `organization_values`
+Deskripsi: Nilai-nilai budaya luhur.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- icon_class              : VARCHAR(50), DEFAULT 'ti ti-star'
+- title                   : VARCHAR(100), NOT NULL
+- description             : TEXT, NOT NULL
+- order_index             : INT(11), DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+5. MODUL MASTER REFERENSI WILAYAH ADMINISTRATIF (PURE GEOGRAPHIC MASTER)
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `ref_districts` (Master Referensi Kecamatan)
+Deskripsi: Master 31 Kecamatan resmi di Kabupaten Bandung.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- kemendagri_code         : VARCHAR(20), UNIQUE, NOT NULL (Kode resmi Kemendagri, contoh: '32.04.05')
+- name                    : VARCHAR(100), NOT NULL (Nama Kecamatan, contoh: Soreang, Ciwidey, Banjaran)
+- slug                    : VARCHAR(120), UNIQUE, NOT NULL (Slug URL, contoh: 'soreang')
+- latitude_center         : DECIMAL(10,8), NULLABLE (Titik tengah koordinat latitude kecamatan)
+- longitude_center        : DECIMAL(11,8), NULLABLE (Titik tengah koordinat longitude kecamatan)
+- geojson_boundary        : LONGTEXT, NULLABLE (Poligon batas wilayah spasial GIS)
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+B. Tabel Master: `ref_villages` (Master Referensi Desa / Kelurahan)
+Deskripsi: Master 280 Desa & Kelurahan resmi se-Kabupaten Bandung.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- district_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `ref_districts.id`
+- kemendagri_code         : VARCHAR(20), UNIQUE, NOT NULL (Kode resmi Desa/Kelurahan, contoh: '32.04.05.2001')
+- name                    : VARCHAR(100), NOT NULL (Nama Desa / Kelurahan, contoh: 'Soreang', 'Panyirapan')
+- slug                    : VARCHAR(120), UNIQUE, NOT NULL
+- type                    : ENUM('Desa', 'Kelurahan'), DEFAULT 'Desa'
+- postal_code             : VARCHAR(10), NULLABLE (Kode Pos)
+- total_rw                : INT(11), DEFAULT 0
+- total_rt                : INT(11), DEFAULT 0
+- latitude_center         : DECIMAL(10,8), NULLABLE
+- longitude_center        : DECIMAL(11,8), NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+6. MODUL MASTER ENTITAS LEMBAGA & UNIT KARANG TARUNA
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `karang_taruna_units` (Master Unit Lembaga Karang Taruna)
+Deskripsi: Data lembaga Karang Taruna berjenjang (Kabupaten, Kecamatan, Desa/Kelurahan, RW).
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- unit_level              : ENUM('kabupaten', 'kecamatan', 'desa', 'rw'), NOT NULL
+- district_id             : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_districts.id` (Wajib jika level kecamatan/desa/rw)
+- village_id              : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_villages.id` (Wajib jika level desa/rw)
+- rw_number               : VARCHAR(10), NULLABLE (Nomor RW jika unit_level = 'rw')
+- unit_name               : VARCHAR(150), NOT NULL (Contoh: "Karang Taruna Kecamatan Soreang", "Karang Taruna Satria Muda Desa Soreang")
+- unit_code               : VARCHAR(50), UNIQUE, NOT NULL
+- chairman_name           : VARCHAR(150), NOT NULL (Nama Lengkap Ketua Unit Terpilih)
+- secretary_name          : VARCHAR(150), NULLABLE (Nama Sekretaris)
+- treasurer_name          : VARCHAR(150), NULLABLE (Nama Bendahara)
+- contact_phone           : VARCHAR(30), NULLABLE (Nomor WhatsApp Pengurus)
+- contact_email           : VARCHAR(100), NULLABLE
+- office_address          : TEXT, NULLABLE (Alamat sekretariat unit)
+- office_photo            : VARCHAR(255), NULLABLE (Upload foto kantor sekretariat)
+- latitude                : DECIMAL(10,8), NULLABLE (Koordinat Latitude GPS Kantor)
+- longitude               : DECIMAL(11,8), NULLABLE (Koordinat Longitude GPS Kantor)
+- sk_number               : VARCHAR(100), NULLABLE (Nomor SK Penetapan)
+- sk_file_path            : VARCHAR(255), NULLABLE (Upload berkas SK - PDF)
+- period_start_year       : YEAR, NOT NULL (Tahun awal masa bakti)
+- period_end_year         : YEAR, NOT NULL (Tahun akhir masa bakti)
+- total_members           : INT(11), DEFAULT 0
+- status_aktif            : ENUM('Aktif', 'Demisioner', 'Restrukturisasi', 'PJS', 'Nonaktif'), DEFAULT 'Aktif'
+- logo_path               : VARCHAR(255), NULLABLE
+- is_verified             : TINYINT(1), DEFAULT 1 (Verifikasi pengesahan Kabupaten)
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+B. Tabel: `unit_members` (Susunan Pengurus Unit Karang Taruna)
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id`
+- full_name               : VARCHAR(150), NOT NULL
+- position_role           : VARCHAR(100), NOT NULL (Ketua, Wakil Ketua, Sekretaris, Bendahara, Koordinator Seksi)
+- division_section        : VARCHAR(100), NULLABLE
+- phone                   : VARCHAR(30), NULLABLE
+- email                   : VARCHAR(100), NULLABLE
+- photo_path              : VARCHAR(255), NULLABLE
+- order_index             : INT(11), DEFAULT 0
+- is_active               : TINYINT(1), DEFAULT 1
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+7. MODUL PROGRAM KERJA (DENGAN VERIFIKASI KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `program_divisions` (Master Bidang / Seksi Kerja)
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- division_name           : VARCHAR(150), NOT NULL
+- slug                    : VARCHAR(150), UNIQUE, NOT NULL
+- description             : TEXT, NULLABLE
+- order_index             : INT(11), DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+B. Tabel: `work_programs`
+Deskripsi: Matriks program kerja yang dapat diinput oleh Desa/Kecamatan dengan persetujuan Kabupaten.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- division_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `program_divisions.id`
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id` (Unit Pengusul)
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id` (User Pembuat)
+- program_name            : VARCHAR(255), NOT NULL
+- slug                    : VARCHAR(255), UNIQUE, NOT NULL
+- program_code            : VARCHAR(50), NULLABLE
+- target_participants     : VARCHAR(255), NOT NULL
+- output_indicators       : TEXT, NOT NULL
+- budget_amount           : DECIMAL(15,2), DEFAULT 0.00
+- budget_source           : VARCHAR(100), DEFAULT 'APBD / Swadana'
+- execution_time          : VARCHAR(100), NOT NULL
+- poster_image            : VARCHAR(255), NULLABLE
+- short_description       : TEXT, NULLABLE
+- detailed_description    : LONGTEXT, NULLABLE
+- progress_status         : ENUM('Rencana', 'Sedang Berjalan', 'Selesai', 'Ditunda'), DEFAULT 'Rencana'
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected', 'revision_required'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id` (Verifikator Kabupaten)
+- approved_at             : TIMESTAMP, NULLABLE
+- rejection_reason        : TEXT, NULLABLE
+- is_featured_home        : TINYINT(1), DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+8. MODUL AGENDA & KEGIATAN WILAYAH (DENGAN APPROVAL KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `event_categories` (Master Kategori Kegiatan)
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- name                    : VARCHAR(100), NOT NULL
+- slug                    : VARCHAR(100), UNIQUE, NOT NULL
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+B. Tabel: `events`
+Deskripsi: Agenda kegiatan yang diajukan oleh unit Desa/Kecamatan untuk dipublikasikan ke kalender publik.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- category_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `event_categories.id`
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id` (Unit Penyelenggara)
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id` (Pengunggah)
+- district_id             : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_districts.id`
+- village_id              : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_villages.id`
+- title                   : VARCHAR(255), NOT NULL
+- slug                    : VARCHAR(255), UNIQUE, NOT NULL
+- event_date              : DATE, NOT NULL
+- start_time              : TIME, NULLABLE
+- end_time                : TIME, NULLABLE
+- location_venue          : VARCHAR(255), NOT NULL
+- location_address        : TEXT, NULLABLE
+- latitude                : DECIMAL(10,8), NULLABLE
+- longitude               : DECIMAL(11,8), NULLABLE
+- organizer               : VARCHAR(150), NOT NULL
+- description             : TEXT, NULLABLE
+- registration_link       : VARCHAR(255), NULLABLE
+- event_status            : ENUM('Mendatang', 'Sedang Berlangsung', 'Selesai', 'Dibatalkan'), DEFAULT 'Mendatang'
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected', 'revision_required'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id`
+- approved_at             : TIMESTAMP, NULLABLE
+- rejection_reason        : TEXT, NULLABLE
+- thumbnail_image         : VARCHAR(255), NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+9. MODUL BERITA & ARTIKEL (DENGAN APPROVAL KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `news_categories` (Master Kategori Berita)
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- name                    : VARCHAR(100), NOT NULL
+- slug                    : VARCHAR(100), UNIQUE, NOT NULL
+- type                    : ENUM('pusat', 'daerah', 'umum'), DEFAULT 'umum'
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+B. Tabel: `articles`
+Deskripsi: Berita daerah dari Kecamatan/Desa yang dimoderasi oleh admin Kabupaten sebelum terbit.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- category_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `news_categories.id`
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id` (Penulis Berita)
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id` (Unit Pengunggah)
+- district_id             : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_districts.id`
+- village_id              : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_villages.id`
+- title                   : VARCHAR(255), NOT NULL
+- slug                    : VARCHAR(255), UNIQUE, NOT NULL
+- excerpt                 : TEXT, NULLABLE
+- content                 : LONGTEXT, NOT NULL
+- featured_image          : VARCHAR(255), NOT NULL
+- image_caption           : VARCHAR(255), NULLABLE
+- news_scope              : ENUM('pusat', 'daerah'), DEFAULT 'daerah'
+- tags                    : VARCHAR(255), NULLABLE
+- views_count             : INT(11) UNSIGNED, DEFAULT 0
+- is_featured             : TINYINT(1), DEFAULT 0
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected', 'revision_required'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id` (Redaktur/Admin Kabupaten)
+- approved_at             : TIMESTAMP, NULLABLE
+- rejection_reason        : TEXT, NULLABLE
+- is_published            : TINYINT(1), DEFAULT 0 (Otomatis 1 saat approved_status = 'approved')
+- published_at            : TIMESTAMP, NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+10. MODUL PENGUMUMAN RESMI & EDARAN
+--------------------------------------------------------------------------------
+
+A. Tabel: `announcements`
+Deskripsi: Pengumuman resmi tingkat Kabupaten / Kecamatan yang telah disetujui.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id`
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id`
+- title                   : VARCHAR(255), NOT NULL
+- slug                    : VARCHAR(255), UNIQUE, NOT NULL
+- announcement_number     : VARCHAR(100), NULLABLE
+- category                : ENUM('Beasiswa', 'Edaran Resmi', 'Seleksi', 'Bantuan Sosial', 'Umum'), DEFAULT 'Umum'
+- excerpt                 : TEXT, NULLABLE
+- content                 : LONGTEXT, NOT NULL
+- attachment_file         : VARCHAR(255), NULLABLE
+- valid_until             : DATE, NULLABLE
+- is_pinned               : TINYINT(1), DEFAULT 0
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id`
+- views_count             : INT(11), DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+11. MODUL GALERI FOTO (DENGAN APPROVAL KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `photo_categories` (Master Kategori / Album Foto)
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- name                    : VARCHAR(100), NOT NULL
+- slug                    : VARCHAR(100), UNIQUE, NOT NULL
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+B. Tabel: `photo_galleries`
+Deskripsi: Upload foto kegiatan dari Desa/Kecamatan dengan verifikasi Kabupaten.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- category_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `photo_categories.id`
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id`
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id`
+- district_id             : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_districts.id`
+- title                   : VARCHAR(255), NOT NULL
+- caption_description     : TEXT, NULLABLE
+- image_path              : VARCHAR(255), NOT NULL
+- location                : VARCHAR(150), NULLABLE
+- event_date              : DATE, NULLABLE
+- order_index             : INT(11), DEFAULT 0
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id`
+- approved_at             : TIMESTAMP, NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+12. MODUL GALERI VIDEO (DENGAN APPROVAL KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel: `video_galleries`
+Deskripsi: Arsip video dokumentasi liputan dari unit wilayah.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id`
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id`
+- title                   : VARCHAR(255), NOT NULL
+- slug                    : VARCHAR(255), UNIQUE, NOT NULL
+- category                : VARCHAR(100), DEFAULT 'Dokumentasi'
+- video_platform          : ENUM('youtube', 'vimeo', 'local_mp4'), DEFAULT 'youtube'
+- video_url               : VARCHAR(255), NOT NULL
+- video_id                : VARCHAR(100), NULLABLE
+- thumbnail_path          : VARCHAR(255), NULLABLE
+- duration_text           : VARCHAR(20), NULLABLE
+- description             : TEXT, NULLABLE
+- is_featured             : TINYINT(1), DEFAULT 0
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id`
+- views_count             : INT(11), DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+13. MODUL PRESTASI PEMUDA & PENGHARGAAN (DENGAN APPROVAL KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel: `achievements`
+Deskripsi: Usulan data prestasi pemuda dari unit desa/kecamatan untuk diverifikasi oleh Kabupaten.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id` (Unit Pengusul)
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id`
+- district_id             : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_districts.id`
+- village_id              : INT(11) UNSIGNED, NULLABLE, FOREIGN KEY -> `ref_villages.id`
+- title                   : VARCHAR(255), NOT NULL
+- slug                    : VARCHAR(255), UNIQUE, NOT NULL
+- recipient_name          : VARCHAR(150), NOT NULL
+- achievement_level       : ENUM('Kabupaten', 'Provinsi', 'Nasional', 'Internasional'), DEFAULT 'Kabupaten'
+- category_field          : VARCHAR(100), NOT NULL (Inovasi Teknologi, Lingkungan Hidup, Olahraga, dll)
+- year                    : YEAR, NOT NULL
+- rank_position           : VARCHAR(50), NOT NULL
+- awarded_by              : VARCHAR(150), NOT NULL
+- description             : TEXT, NULLABLE
+- certificate_image       : VARCHAR(255), NULLABLE
+- is_featured             : TINYINT(1), DEFAULT 0
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected', 'revision_required'), DEFAULT 'pending_approval'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id`
+- approved_at             : TIMESTAMP, NULLABLE
+- rejection_reason        : TEXT, NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+14. MODUL PUSAT UNDUHAN / DOKUMEN PUBLIK
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `download_categories` (Master Kategori Dokumen)
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- name                    : VARCHAR(100), NOT NULL
+- slug                    : VARCHAR(100), UNIQUE, NOT NULL
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+B. Tabel: `downloads`
+Deskripsi: File berkas publik yang diupload oleh admin.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- category_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `download_categories.id`
+- user_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id`
+- document_title          : VARCHAR(255), NOT NULL
+- description             : TEXT, NULLABLE
+- file_path               : VARCHAR(255), NOT NULL
+- file_format             : VARCHAR(20), DEFAULT 'PDF'
+- file_size_kb            : INT(11) UNSIGNED, DEFAULT 0
+- download_count          : INT(11) UNSIGNED, DEFAULT 0
+- release_date            : DATE, NOT NULL
+- approval_status         : ENUM('draft', 'pending_approval', 'approved', 'rejected'), DEFAULT 'approved'
+- approved_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id`
+- is_public               : TINYINT(1), DEFAULT 1
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+15. MODUL PENGECEKAN & USULAN PENDATAAN PPKS (DENGAN VERIFIKASI KABUPATEN)
+--------------------------------------------------------------------------------
+
+A. Tabel Master: `ppks_categories` (Master 26 Jenis PPKS)
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- category_code           : VARCHAR(20), UNIQUE, NOT NULL
+- category_name           : VARCHAR(150), NOT NULL
+- description             : TEXT, NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+B. Tabel: `ppks_beneficiaries` (Basis Data Warga PPKS)
+Deskripsi: Data warga PPKS yang diusulkan oleh Karang Taruna Desa & diverifikasi oleh Kabupaten sebelum masuk ke sistem cek NIK publik.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- nik                     : VARCHAR(16), UNIQUE, NOT NULL (16 Digit NIK terenkripsi)
+- full_name               : VARCHAR(150), NOT NULL
+- category_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `ppks_categories.id`
+- district_id             : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `ref_districts.id`
+- village_id              : INT(11) UNSIGNED, NOT NULL, FOREIGN KEY -> `ref_villages.id`
+- unit_id                 : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `karang_taruna_units.id` (Unit Desa Pengusul)
+- submitted_by            : BIGINT(20) UNSIGNED, NOT NULL, FOREIGN KEY -> `users.id` (Admin Desa Pengusul)
+- address_detail          : TEXT, NULLABLE
+- social_assistance_status: VARCHAR(255), NOT NULL
+- mentor_unit             : VARCHAR(150), DEFAULT 'Karang Taruna Desa Setempat'
+- last_survey_date        : DATE, NULLABLE
+- verification_status     : ENUM('pending_verification', 'verified', 'rejected'), DEFAULT 'pending_verification'
+- verified_by             : BIGINT(20) UNSIGNED, NULLABLE, FOREIGN KEY -> `users.id` (Admin Dinsos / KT Kabupaten)
+- verified_at             : TIMESTAMP, NULLABLE
+- verification_notes      : TEXT, NULLABLE
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+C. Tabel: `ppks_check_logs`
+Deskripsi: Log audit pencarian form cek PPKS publik.
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- searched_nik_masked     : VARCHAR(20), NOT NULL
+- ip_address              : VARCHAR(45), NOT NULL
+- user_agent              : VARCHAR(255), NULLABLE
+- result_status           : ENUM('found', 'not_found', 'invalid_captcha'), NOT NULL
+- searched_at             : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+16. MODUL FAQ (FREQUENTLY ASKED QUESTIONS)
+--------------------------------------------------------------------------------
+
+A. Tabel: `faqs`
+Deskripsi: Pertanyaan dan jawaban resmi.
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- question                : TEXT, NOT NULL
+- answer                  : LONGTEXT, NOT NULL
+- category                : VARCHAR(100), DEFAULT 'Umum'
+- order_index             : INT(11), DEFAULT 0
+- is_active               : TINYINT(1), DEFAULT 1
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+17. MODUL STATISTIK WILAYAH & GEOGRAFIS (TERRITORY STATS & GIS)
+--------------------------------------------------------------------------------
+
+A. Tabel: `territory_statistics`
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- stat_key                : VARCHAR(50), UNIQUE, NOT NULL
+- stat_label              : VARCHAR(100), NOT NULL
+- stat_value              : INT(11), NOT NULL
+- icon_class              : VARCHAR(50), DEFAULT 'ti ti-map-pin'
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+18. MODUL STATISTIK PENGUNJUNG (VISITOR ANALYTICS)
+--------------------------------------------------------------------------------
+
+A. Tabel: `visitor_logs`
+Field:
+- id                      : BIGINT(20) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- ip_address              : VARCHAR(45), NOT NULL
+- user_agent              : VARCHAR(255), NULLABLE
+- page_url                : VARCHAR(255), NOT NULL
+- session_id              : VARCHAR(100), NULLABLE
+- visit_date              : DATE, NOT NULL
+- last_activity           : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+B. Tabel: `visitor_aggregates`
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- record_date             : DATE, UNIQUE, NOT NULL
+- daily_visits            : INT(11) UNSIGNED, DEFAULT 0
+- unique_visitors         : INT(11) UNSIGNED, DEFAULT 0
+- created_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
+--------------------------------------------------------------------------------
+19. MODUL PENGATURAN UMUM & KONTAK (SITE SETTINGS)
+--------------------------------------------------------------------------------
+
+A. Tabel: `site_settings`
+Field:
+- id                      : INT(11) UNSIGNED, PRIMARY KEY, AUTO_INCREMENT
+- setting_group           : VARCHAR(50), DEFAULT 'general'
+- setting_key             : VARCHAR(100), UNIQUE, NOT NULL
+- setting_value           : TEXT, NULLABLE
+- description             : VARCHAR(255), NULLABLE
+- updated_at              : TIMESTAMP, DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+Contoh Data:
+- `site_name`             : "Karang Taruna Kabupaten Bandung"
+- `site_tagline`          : "Bersama Berkarya, Berdaya, dan Berdampak"
+- `contact_email`         : "kontak@karangtarunabandungkab.or.id"
+- `contact_phone`         : "+62 821-2345-6789"
+- `contact_address`       : "Jl. Raya Soreang No. 123, Kabupaten Bandung, Jawa Barat"
+
+================================================================================
+RELASI ANTAR TABEL UTAMA (ENTITY RELATIONSHIPS)
+================================================================================
+1.  `ref_districts` (1) ---> (N) `ref_villages` (1 Kecamatan menaungi banyak Desa)
+2.  `ref_districts` (1) ---> (N) `karang_taruna_units` (Unit KT tingkat Kecamatan ke Master Wilayah)
+3.  `ref_villages`  (1) ---> (N) `karang_taruna_units` (Unit KT tingkat Desa ke Master Wilayah)
+4.  `karang_taruna_units` (1) ---> (N) `unit_members` (1 Unit KT memiliki banyak Pengurus/Anggota)
+5.  `karang_taruna_units` (1) ---> (N) `users` (Akun login admin per unit Karang Taruna)
+6.  `users` (1) ---> (N) `articles` (User Kecamatan/Desa menginput berita dengan status pending approval)
+7.  `users` (1) ---> (N) `events` (User Kecamatan/Desa menginput agenda kegiatan)
+8.  `users` (1) ---> (N) `achievements` (User Kecamatan/Desa mengajukan usulan prestasi pemuda)
+9.  `users` (1) ---> (N) `ppks_beneficiaries` (User Desa mengusulkan data warga penerima manfaat)
+10. `users` (1) ---> (N) `content_approval_logs` (Admin Kabupaten mencatat riwayat review / approval)
+11. `karang_taruna_units` (1) ---> (N) `work_programs` (Unit wilayah mengusulkan program kerja)
+12. `photo_categories` (1) ---> (N) `photo_galleries` (Kategori foto ke galeri dokumentasi)
+13. `download_categories` (1) ---> (N) `downloads` (Kategori dokumen ke file unduhan)
+14. `ppks_categories` (1) ---> (N) `ppks_beneficiaries` (Kategori PPKS ke data warga)
+
+================================================================================
+Akhir Dokumen Spesifikasi Modul & Struktur Tabel Database
+================================================================================
