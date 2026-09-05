@@ -633,6 +633,19 @@
             const levelLabel = 'KT ' + level.toUpperCase();
             const phoneLink = u.contact_phone ? `https://wa.me/${u.contact_phone.replace(/[^0-9]/g, '')}` : '#';
 
+            let unitSlug = u.slug || (u.district ? u.district.slug : u.id);
+            let detailUrl = "{{ route('public.directory') }}";
+            if (level === 'kecamatan') {
+              detailUrl = "{{ url('/kecamatan') }}/" + unitSlug;
+            } else if (level === 'desa') {
+              if (!u.slug && u.district && u.village) {
+                unitSlug = u.district.slug + '-' + u.village.slug;
+              }
+              detailUrl = "{{ url('/desa') }}/" + unitSlug;
+            } else if (level === 'kabupaten') {
+              detailUrl = "{{ route('public.profile') }}";
+            }
+
             marker.bindPopup(`
               <div style="font-family: sans-serif; padding: 4px; min-width: 210px;">
                 <span style="font-size: 10px; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">${levelLabel}</span>
@@ -640,7 +653,7 @@
                 <div style="font-size: 11px; color: #475569; margin-bottom: 3px;"><strong>Ketua:</strong> ${u.chairman_name || '-'}</div>
                 <div style="font-size: 11px; color: #64748b; margin-bottom: 6px;">${u.office_address || 'Kabupaten Bandung'}</div>
                 <div style="border-top: 1px solid #e2e8f0; padding-top: 6px; display: flex; justify-content: space-between; align-items: center;">
-                  <a href="{{ route('public.directory') }}?level=${level}" style="font-size: 11px; color: #047857; font-weight: 600; text-decoration: none;">Direktori →</a>
+                  <a href="${detailUrl}" style="font-size: 11px; color: #047857; font-weight: 700; text-decoration: none;">Lihat Unit →</a>
                   ${u.contact_phone ? `<a href="${phoneLink}" target="_blank" style="font-size: 11px; color: #16a34a; font-weight: 600; text-decoration: none;"><i class="ti ti-brand-whatsapp"></i> Hubungi</a>` : ''}
                 </div>
               </div>

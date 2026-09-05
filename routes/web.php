@@ -27,6 +27,10 @@ Route::name('public.')->group(function () {
     Route::get('/direktori', [PublicPortalController::class, 'directory'])->name('directory');
     Route::get('/peta-sebaran', [PublicPortalController::class, 'territoryMap'])->name('map');
 
+    // Detail Unit Sub-site (Kecamatan & Desa)
+    Route::get('/kecamatan/{slug}', [PublicPortalController::class, 'districtDetail'])->name('district.detail');
+    Route::get('/desa/{slug}', [PublicPortalController::class, 'villageDetail'])->name('village.detail');
+
     // Cek PPKS
     Route::match(['get', 'post'], '/cek-ppks', [PublicPortalController::class, 'checkPpks'])->name('ppks');
 });

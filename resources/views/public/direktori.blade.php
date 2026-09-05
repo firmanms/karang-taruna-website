@@ -62,9 +62,14 @@
             </div>
             <div class="dir-kec-footer">
               <span class="status-verified"><i class="ti ti-shield-check"></i> {{ $unit->status_aktif }}</span>
-              @if($unit->contact_phone)
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $unit->contact_phone) }}" target="_blank" class="btn-wa-sm"><i class="ti ti-brand-whatsapp"></i> Chat</a>
-              @endif
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-left: auto;">
+                <a href="{{ $unit->public_url }}" class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: 0.5rem; text-decoration: none;">
+                  Profil & Konten →
+                </a>
+                @if($unit->contact_phone)
+                  <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $unit->contact_phone) }}" target="_blank" class="btn-wa-sm" title="Hubungi WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
+                @endif
+              </div>
             </div>
           </div>
         @empty

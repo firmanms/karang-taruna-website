@@ -132,7 +132,8 @@ class PublicPortalController extends Controller
         // 3. Unit Map data untuk peta sebaran OpenStreetMap
         $mapUnits = KarangTarunaUnit::whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->select('id', 'unit_name', 'unit_level', 'district_id', 'village_id', 'latitude', 'longitude', 'office_address', 'contact_phone', 'chairman_name', 'status_aktif')
+            ->with(['district', 'village'])
+            ->select('id', 'unit_name', 'unit_level', 'slug', 'district_id', 'village_id', 'latitude', 'longitude', 'office_address', 'contact_phone', 'chairman_name', 'status_aktif')
             ->get();
 
         return view('public.index', compact(
@@ -358,7 +359,7 @@ class PublicPortalController extends Controller
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->with(['district', 'village'])
-            ->get(['id', 'unit_name', 'unit_level', 'chairman_name', 'contact_phone', 'office_address', 'latitude', 'longitude', 'status_aktif', 'district_id', 'village_id']);
+            ->get(['id', 'unit_name', 'unit_level', 'slug', 'chairman_name', 'contact_phone', 'office_address', 'latitude', 'longitude', 'status_aktif', 'district_id', 'village_id']);
 
         $totalDistricts = RefDistrict::count();
         $totalVillages = RefVillage::count();
@@ -432,5 +433,167 @@ class PublicPortalController extends Controller
         $captchaQuestion = "{$num1} + {$num2} = ?";
 
         return view('public.cek-ppks', compact('result', 'searched', 'captchaQuestion'));
+    }
+
+    /**
+     * Halaman Detail Sub-Site Unit Karang Taruna Kecamatan
+     */
+    public function districtDetail(string $slug)
+    {
+        // Cari unit kecamatan berdasarkan slug unit atau slug master district
+        $unit = KarangTarunaUnit::where('unit_level', 'kecamatan')
+            ->where(function ($q) use ($slug) {
+                $q->where('slug', $slug)
+                    ->orWhereHas('district', function ($dq) use ($slug) {
+                        $dq->where('slug', $slug);
+                    })
+                    ->orWhere('id', $slug);
+            })
+            ->with(['district', 'members' => function ($q) {
+                $q->where('is_active', true)->orderBy('order_index');
+            }])
+            ->firstOrFail();
+
+        // Desa-desa di bawah kecamatan ini beserta unit desanya
+        $villages = RefVillage::where('district_id', $unit->district_id)
+            ->with(['units' => function ($q) {
+                $q->where('unit_level', 'desa');
+            }])
+            ->get();
+
+        // Konten yang diinput oleh unit kecamatan ini (atau berelasi dengan district ini)
+        $articles = Article::published()
+            ->where(function ($q) use ($unit) {
+                $q->where('unit_id', $unit->id)
+                    ->orWhere('district_id', $unit->district_id);
+            })
+            ->with(['category'])
+            ->latest('published_at')
+            ->take(6)
+            ->get();
+
+        $workPrograms = WorkProgram::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->with(['division'])
+            ->get();
+
+        $events = Event::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->orderBy('event_date')
+            ->take(4)
+            ->get();
+
+        $achievements = Achievement::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->latest('year')
+            ->get();
+
+        $photos = PhotoGallery::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $announcements = Announcement::active()
+            ->where('unit_id', $unit->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('public.unit-detail', compact(
+            'unit',
+            'villages',
+            'articles',
+            'workPrograms',
+            'events',
+            'achievements',
+            'photos',
+            'announcements'
+        ));
+    }
+
+    /**
+     * Halaman Detail Sub-Site Unit Karang Taruna Desa / Kelurahan
+     */
+    public function villageDetail(string $slug)
+    {
+        // Cari unit desa berdasarkan slug unit atau id
+        $unit = KarangTarunaUnit::where('unit_level', 'desa')
+            ->where(function ($q) use ($slug) {
+                $q->where('slug', $slug)
+                    ->orWhere('id', $slug);
+            })
+            ->with(['district', 'village', 'members' => function ($q) {
+                $q->where('is_active', true)->orderBy('order_index');
+            }])
+            ->first();
+
+        // Fallback jika slug berbentuk 'namaKecamatan-namaDesa' dan belum tersimpan di kolom slug
+        if (! $unit && str_contains($slug, '-')) {
+            $parts = explode('-', $slug, 2);
+            $distSlug = $parts[0];
+            $villSlug = $parts[1];
+
+            $unit = KarangTarunaUnit::where('unit_level', 'desa')
+                ->whereHas('district', fn ($q) => $q->where('slug', $distSlug))
+                ->whereHas('village', fn ($q) => $q->where('slug', $villSlug))
+                ->with(['district', 'village', 'members' => function ($q) {
+                    $q->where('is_active', true)->orderBy('order_index');
+                }])
+                ->first();
+        }
+
+        if (! $unit) {
+            abort(404, 'Unit Karang Taruna Desa tidak ditemukan.');
+        }
+
+        // Konten yang diinput oleh unit desa ini
+        $articles = Article::published()
+            ->where('unit_id', $unit->id)
+            ->with(['category'])
+            ->latest('published_at')
+            ->take(6)
+            ->get();
+
+        $workPrograms = WorkProgram::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->with(['division'])
+            ->get();
+
+        $events = Event::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->orderBy('event_date')
+            ->take(4)
+            ->get();
+
+        $achievements = Achievement::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->latest('year')
+            ->get();
+
+        $photos = PhotoGallery::where('approval_status', 'approved')
+            ->where('unit_id', $unit->id)
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $announcements = Announcement::active()
+            ->where('unit_id', $unit->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        $villages = collect(); // Desa tidak memiliki sub-desa
+
+        return view('public.unit-detail', compact(
+            'unit',
+            'villages',
+            'articles',
+            'workPrograms',
+            'events',
+            'achievements',
+            'photos',
+            'announcements'
+        ));
     }
 }
