@@ -446,15 +446,42 @@
       <div>
         <div class="section-head">
           <div>
-            <h2>Peta Sebaran</h2>
-            <p class="section-sub">Jangkauan Karang Taruna di seluruh wilayah Kabupaten Bandung.</p>
+            <h2>Peta Sebaran Wilayah</h2>
+            <p class="section-sub">Jangkauan & titik koordinat Karang Taruna di Kabupaten Bandung.</p>
           </div>
+          <a class="link" href="{{ route('public.map') }}">Lihat Peta Lengkap →</a>
         </div>
-        <div class="map-card">
-          <div class="map-num">
-            <strong>{{ $totalDistricts > 0 ? $totalDistricts : 30 }}</strong><span>Kecamatan</span><strong>{{ $totalVillages > 0 ? $totalVillages : 280 }}</strong><span>Desa/Kelurahan</span>
+        <div class="map-card" style="display: flex; flex-direction: column; gap: 1rem; padding: 1.25rem; align-items: stretch; background: #fff;">
+          <div class="map-num" style="display: flex; gap: 2rem; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;">
+            <div>
+              <strong style="font-size: 28px; line-height: 1;">{{ $totalDistricts > 0 ? $totalDistricts : 31 }}</strong>
+              <span style="font-size: 13px; color: #64748b;">Kecamatan</span>
+            </div>
+            <div>
+              <strong style="font-size: 28px; line-height: 1;">{{ $totalVillages > 0 ? $totalVillages : 280 }}</strong>
+              <span style="font-size: 13px; color: #64748b;">Desa/Kelurahan</span>
+            </div>
+            <div>
+              <strong style="font-size: 28px; line-height: 1;">{{ $totalUnits > 0 ? $totalUnits : count($mapUnits) }}</strong>
+              <span style="font-size: 13px; color: #64748b;">Unit Aktif</span>
+            </div>
           </div>
-          <img src="{{ asset('frontend/images/map-bandung.svg') }}" alt="Ilustrasi peta sebaran">
+          
+          <!-- Legend Warna Unit -->
+          <div style="display: flex; gap: 0.85rem; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: #475569; background: #f8fafc; padding: 0.5rem 0.75rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+            <span style="font-weight: 600; color: #1e293b;"><i class="ti ti-info-circle"></i> Keterangan Titik:</span>
+            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span style="width: 12px; height: 12px; border-radius: 50%; background-color: #ef4444; border: 2px solid #fff; box-shadow: 0 0 0 1px #ef4444;"></span> Kabupaten (Merah)
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span style="width: 12px; height: 12px; border-radius: 50%; background-color: #3b82f6; border: 2px solid #fff; box-shadow: 0 0 0 1px #3b82f6;"></span> Kecamatan (Biru)
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span style="width: 12px; height: 12px; border-radius: 50%; background-color: #10b981; border: 2px solid #fff; box-shadow: 0 0 0 1px #10b981;"></span> Desa / Kelurahan (Hijau)
+            </span>
+          </div>
+
+          <div id="homeMapContainer" style="height: 380px; width: 100%; min-height: 380px; border-radius: 0.75rem; z-index: 10; border: 1px solid #e2e8f0;"></div>
         </div>
       </div>
       <div id="faq">
@@ -521,4 +548,114 @@
     </div>
   </section>
 @endsection
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mapEl = document.getElementById('homeMapContainer');
+    if (mapEl) {
+      // Inisialisasi Peta Leaflet Beranda (Kabupaten Bandung Center)
+      const homeMap = L.map('homeMapContainer', {
+        scrollWheelZoom: false
+      }).setView([-7.0252, 107.5198], 10);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+      }).addTo(homeMap);
+
+      setTimeout(function() {
+        homeMap.invalidateSize();
+      }, 250);
+
+      // Helper untuk custom colored marker icon
+      function getMarkerIcon(level) {
+        let color = '#10b981'; // default desa: emerald green
+        let iconName = 'ti-home';
+        let borderColor = '#059669';
+
+        if (level === 'kabupaten') {
+          color = '#ef4444'; // merah
+          iconName = 'ti-building-monument';
+          borderColor = '#b91c1c';
+        } else if (level === 'kecamatan') {
+          color = '#3b82f6'; // biru
+          iconName = 'ti-building-community';
+          borderColor = '#1d4ed8';
+        }
+
+        return L.divIcon({
+          className: 'custom-map-pin',
+          html: `<div style="
+            background-color: ${color};
+            width: 32px;
+            height: 32px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+          ">
+            <i class="ti ${iconName}" style="
+              transform: rotate(45deg);
+              color: #ffffff;
+              font-size: 14px;
+            "></i>
+          </div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        });
+      }
+
+      const dbMapUnits = @json($mapUnits ?? []);
+
+      if (dbMapUnits && dbMapUnits.length > 0) {
+        dbMapUnits.forEach(function(u) {
+          if (u.latitude && u.longitude) {
+            const level = (u.unit_level || 'desa').toLowerCase();
+            const marker = L.marker([u.latitude, u.longitude], {
+              icon: getMarkerIcon(level)
+            });
+
+            let badgeBg = '#ecfdf5';
+            let badgeColor = '#047857';
+            if (level === 'kabupaten') {
+              badgeBg = '#fef2f2';
+              badgeColor = '#b91c1c';
+            } else if (level === 'kecamatan') {
+              badgeBg = '#eff6ff';
+              badgeColor = '#1d4ed8';
+            }
+
+            const levelLabel = 'KT ' + level.toUpperCase();
+            const phoneLink = u.contact_phone ? `https://wa.me/${u.contact_phone.replace(/[^0-9]/g, '')}` : '#';
+
+            marker.bindPopup(`
+              <div style="font-family: sans-serif; padding: 4px; min-width: 210px;">
+                <span style="font-size: 10px; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">${levelLabel}</span>
+                <strong style="font-size: 13px; color: #1e293b; display: block; margin: 6px 0 4px 0;">${u.unit_name}</strong>
+                <div style="font-size: 11px; color: #475569; margin-bottom: 3px;"><strong>Ketua:</strong> ${u.chairman_name || '-'}</div>
+                <div style="font-size: 11px; color: #64748b; margin-bottom: 6px;">${u.office_address || 'Kabupaten Bandung'}</div>
+                <div style="border-top: 1px solid #e2e8f0; padding-top: 6px; display: flex; justify-content: space-between; align-items: center;">
+                  <a href="{{ route('public.directory') }}?level=${level}" style="font-size: 11px; color: #047857; font-weight: 600; text-decoration: none;">Direktori →</a>
+                  ${u.contact_phone ? `<a href="${phoneLink}" target="_blank" style="font-size: 11px; color: #16a34a; font-weight: 600; text-decoration: none;"><i class="ti ti-brand-whatsapp"></i> Hubungi</a>` : ''}
+                </div>
+              </div>
+            `);
+            marker.addTo(homeMap);
+          }
+        });
+      } else {
+        // Default marker
+        L.marker([-7.0252, 107.5198], { icon: getMarkerIcon('kabupaten') }).addTo(homeMap)
+          .bindPopup('<b>Sekretariat Karang Taruna Kab. Bandung</b><br>Soreang, Kab. Bandung')
+          .openPopup();
+      }
+    }
+  });
+</script>
+@endpush
 

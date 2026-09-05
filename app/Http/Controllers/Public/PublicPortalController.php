@@ -33,15 +33,28 @@ class PublicPortalController extends Controller
         $sliders = HeroSlider::where('is_active', true)->orderBy('order_index')->get();
         $profile = ProfileOrganization::first();
 
+        // 1. Berita Terbaru: Hanya bersumber dari Unit Tingkat Kabupaten
         $articles = Article::published()
-            ->where(function ($q) {
-                $q->where('news_scope', 'Pusat/Kabupaten')
-                    ->orWhereNull('news_scope');
+            ->whereHas('unit', function ($q) {
+                $q->where('unit_level', 'kabupaten');
             })
             ->with(['category', 'unit', 'district'])
             ->latest('published_at')
             ->take(4)
             ->get();
+
+        // Fallback jika belum ada berita yang berelasi ke unit kabupaten, ambil yang news_scope Pusat/Kabupaten atau null
+        if ($articles->isEmpty()) {
+            $articles = Article::published()
+                ->where(function ($q) {
+                    $q->where('news_scope', 'Pusat/Kabupaten')
+                        ->orWhereNull('news_scope');
+                })
+                ->with(['category', 'unit', 'district'])
+                ->latest('published_at')
+                ->take(4)
+                ->get();
+        }
 
         $regionalArticles = Article::published()
             ->where('news_scope', 'Kecamatan/Desa')
@@ -50,7 +63,7 @@ class PublicPortalController extends Controller
             ->take(3)
             ->get();
 
-        // Fallback jika belum ada yang di-tag Kecamatan/Desa, ambil latest
+        // Fallback jika belum ada yang di-tag Kecamatan/Desa, ambil latest selain 4 artikel utama
         if ($regionalArticles->isEmpty()) {
             $regionalArticles = Article::published()
                 ->with(['category', 'unit', 'district'])
@@ -66,13 +79,30 @@ class PublicPortalController extends Controller
             ->take(3)
             ->get();
 
+        // 2. Program Kerja: Hanya yang bersumber dari Unit Tingkat Kabupaten
         $featuredPrograms = WorkProgram::where('approval_status', 'approved')
+            ->whereHas('unit', function ($q) {
+                $q->where('unit_level', 'kabupaten');
+            })
             ->where('is_featured_home', true)
+            ->with(['division', 'unit'])
             ->take(6)
             ->get();
 
         if ($featuredPrograms->isEmpty()) {
             $featuredPrograms = WorkProgram::where('approval_status', 'approved')
+                ->whereHas('unit', function ($q) {
+                    $q->where('unit_level', 'kabupaten');
+                })
+                ->with(['division', 'unit'])
+                ->take(6)
+                ->get();
+        }
+
+        // Fallback jika belum ada unit_level kabupaten
+        if ($featuredPrograms->isEmpty()) {
+            $featuredPrograms = WorkProgram::where('approval_status', 'approved')
+                ->with(['division', 'unit'])
                 ->take(6)
                 ->get();
         }
@@ -99,6 +129,12 @@ class PublicPortalController extends Controller
         $totalUnits = KarangTarunaUnit::where('status_aktif', 'Aktif')->count();
         $totalMembers = KarangTarunaUnit::sum('total_members');
 
+        // 3. Unit Map data untuk peta sebaran OpenStreetMap
+        $mapUnits = KarangTarunaUnit::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->select('id', 'unit_name', 'unit_level', 'district_id', 'village_id', 'latitude', 'longitude', 'office_address', 'contact_phone', 'chairman_name', 'status_aktif')
+            ->get();
+
         return view('public.index', compact(
             'sliders',
             'profile',
@@ -113,7 +149,8 @@ class PublicPortalController extends Controller
             'totalDistricts',
             'totalVillages',
             'totalUnits',
-            'totalMembers'
+            'totalMembers',
+            'mapUnits'
         ));
     }
 

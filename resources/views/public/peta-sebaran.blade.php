@@ -125,6 +125,20 @@
           </div>
         </div>
 
+        <!-- Legend Warna Tingkatan Unit -->
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.85rem; color: #475569; background: #fff; padding: 0.6rem 1rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+          <span style="font-weight: 600; color: #1e293b;"><i class="ti ti-info-circle"></i> Keterangan Titik Marker:</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #ef4444; border: 2px solid #fff; box-shadow: 0 0 0 1px #ef4444;"></span> <strong>Kabupaten</strong> (Merah)
+          </span>
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #3b82f6; border: 2px solid #fff; box-shadow: 0 0 0 1px #3b82f6;"></span> <strong>Kecamatan</strong> (Biru)
+          </span>
+          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #10b981; border: 2px solid #fff; box-shadow: 0 0 0 1px #10b981;"></span> <strong>Desa / Kelurahan</strong> (Hijau)
+          </span>
+        </div>
+
         <div id="mapContainer"></div>
       </div>
 
@@ -170,6 +184,45 @@
     const unitsData = @json($units);
     let markersLayer = L.layerGroup().addTo(map);
 
+    // Helper untuk custom colored marker icon
+    function getMarkerIcon(level) {
+      let color = '#10b981'; // default desa: hijau
+      let iconName = 'ti-home';
+
+      if (level === 'kabupaten') {
+        color = '#ef4444'; // merah
+        iconName = 'ti-building-monument';
+      } else if (level === 'kecamatan') {
+        color = '#3b82f6'; // biru
+        iconName = 'ti-building-community';
+      }
+
+      return L.divIcon({
+        className: 'custom-map-pin',
+        html: `<div style="
+          background-color: ${color};
+          width: 32px;
+          height: 32px;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #ffffff;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        ">
+          <i class="ti ${iconName}" style="
+            transform: rotate(45deg);
+            color: #ffffff;
+            font-size: 14px;
+          "></i>
+        </div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+    }
+
     function renderMarkers(filteredUnits) {
       markersLayer.clearLayers();
       document.getElementById('markerCountDisplay').textContent = filteredUnits.length;
@@ -177,15 +230,28 @@
       if (filteredUnits && filteredUnits.length > 0) {
         filteredUnits.forEach(function(u) {
           if (u.latitude && u.longitude) {
-            const marker = L.marker([u.latitude, u.longitude]);
+            const level = (u.unit_level || 'desa').toLowerCase();
+            const marker = L.marker([u.latitude, u.longitude], {
+              icon: getMarkerIcon(level)
+            });
             
-            const detailUrl = "{{ route('public.directory') }}?level=" + (u.unit_level || '');
+            let badgeBg = '#ecfdf5';
+            let badgeColor = '#047857';
+            if (level === 'kabupaten') {
+              badgeBg = '#fef2f2';
+              badgeColor = '#b91c1c';
+            } else if (level === 'kecamatan') {
+              badgeBg = '#eff6ff';
+              badgeColor = '#1d4ed8';
+            }
+
+            const detailUrl = "{{ route('public.directory') }}?level=" + level;
             const phoneLink = u.contact_phone ? `https://wa.me/${u.contact_phone.replace(/[^0-9]/g, '')}` : '#';
 
             marker.bindPopup(`
               <div style="font-family: sans-serif; padding: 6px; min-width: 220px;">
-                <div style="font-size: 11px; font-weight: 700; color: #047857; text-transform: uppercase; margin-bottom: 2px;">
-                  ${u.unit_level ? 'KT ' + u.unit_level.toUpperCase() : 'UNIT'}
+                <div style="font-size: 11px; font-weight: 700; color: ${badgeColor}; background: ${badgeBg}; display: inline-block; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 4px;">
+                  KT ${level.toUpperCase()}
                 </div>
                 <strong style="font-size: 14px; color: #1e293b; display: block; margin-bottom: 6px;">${u.unit_name}</strong>
                 <div style="font-size: 12px; color: #475569; margin-bottom: 4px;">
@@ -197,7 +263,7 @@
                 <div style="font-size: 12px; color: #10b981; margin-bottom: 8px;">
                   <strong>Status:</strong> <span style="background: #ecfdf5; padding: 2px 6px; border-radius: 4px; font-weight: 600;">${u.status_aktif || 'Aktif'}</span>
                 </div>
-                <div style="display: flex; gap: 6px; margin-top: 6px; border-top: 1px solid #e2e8f0; padding-top: 6px;">
+                <div style="display: flex; gap: 6px; margin-top: 6px; border-top: 1px solid #e2e8f0; padding-top: 6px; align-items: center;">
                   <a href="${detailUrl}" style="font-size: 11px; color: #047857; font-weight: 600; text-decoration: none;">Lihat Direktori →</a>
                   ${u.contact_phone ? `<a href="${phoneLink}" target="_blank" style="font-size: 11px; color: #16a34a; font-weight: 600; margin-left: auto; text-decoration: none;"><i class="ti ti-brand-whatsapp"></i> Hubungi</a>` : ''}
                 </div>
@@ -207,7 +273,7 @@
           }
         });
       } else {
-        L.marker([-7.0252, 107.5198]).addTo(markersLayer)
+        L.marker([-7.0252, 107.5198], { icon: getMarkerIcon('kabupaten') }).addTo(markersLayer)
           .bindPopup('<b>Sekretariat Karang Taruna Kab. Bandung</b><br>Soreang, Kab. Bandung')
           .openPopup();
       }
