@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Domain\Content\Models\ContentApprovalLog;
 use App\Models\User;
+use App\Notifications\ContentWorkflowNotification;
 use Filament\Notifications\Notification;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Model;
@@ -75,7 +76,7 @@ class ApprovalWorkflowService
                 'action_timestamp' => now(),
             ]);
 
-            $this->notifyContentCreator($model, 'Konten Anda Disetujui', 'Konten telah disetujui oleh Pengurus Kabupaten dan kini aktif di website publik.', 'success');
+            $this->notifyContentCreator($model, 'Konten Anda Disetujui', 'Konten telah disetujui oleh Pengurus Kabupaten dan kini aktif di website publik.', 'success', 'approved', $notes);
 
             return true;
         });
@@ -108,7 +109,7 @@ class ApprovalWorkflowService
                 'action_timestamp' => now(),
             ]);
 
-            $this->notifyContentCreator($model, 'Permintaan Revisi Konten', 'Catatan: '.$revisionNotes, 'warning');
+            $this->notifyContentCreator($model, 'Permintaan Revisi Konten', 'Catatan: '.$revisionNotes, 'warning', 'revision_required', $revisionNotes);
 
             return true;
         });
@@ -141,7 +142,7 @@ class ApprovalWorkflowService
                 'action_timestamp' => now(),
             ]);
 
-            $this->notifyContentCreator($model, 'Konten Ditolak', 'Alasan penolakan: '.$rejectionReason, 'danger');
+            $this->notifyContentCreator($model, 'Konten Ditolak', 'Alasan penolakan: '.$rejectionReason, 'danger', 'rejected', $rejectionReason);
 
             return true;
         });
@@ -160,17 +161,29 @@ class ApprovalWorkflowService
             $q->whereIn('slug', ['superadmin', 'verifikator']);
         })->get();
 
+        $title = 'Pengajuan Konten Baru';
+        $body = "Terdapat pengajuan {$contentType} baru dari {$submitter->name} (".($submitter->unit?->unit_name ?? 'Unit').').';
+
         foreach ($countyUsers as $reviewer) {
+            // 1. Filament in-app real-time notification
             Notification::make()
-                ->title('Pengajuan Konten Baru')
-                ->body("Terdapat pengajuan {$contentType} baru dari {$submitter->name} (".($submitter->unit?->unit_name ?? 'Unit').').')
+                ->title($title)
+                ->body($body)
                 ->icon('heroicon-o-clock')
                 ->iconColor('warning')
                 ->sendToDatabase($reviewer);
+
+            // 2. Queued Laravel notification
+            $reviewer->notify(new ContentWorkflowNotification(
+                title: $title,
+                message: $body,
+                actionType: 'submitted',
+                contentType: $contentType,
+            ));
         }
     }
 
-    protected function notifyContentCreator(Model $model, string $title, string $message, string $color): void
+    protected function notifyContentCreator(Model $model, string $title, string $message, string $color, string $actionType = 'approved', ?string $notes = null): void
     {
         $creator = null;
         if (isset($model->user_id)) {
@@ -180,11 +193,20 @@ class ApprovalWorkflowService
         }
 
         if ($creator) {
+            // 1. Filament in-app database notification
             Notification::make()
                 ->title($title)
                 ->body($message)
                 ->color($color)
                 ->sendToDatabase($creator);
+
+            // 2. Queued Laravel notification
+            $creator->notify(new ContentWorkflowNotification(
+                title: $title,
+                message: $message,
+                actionType: $actionType,
+                notes: $notes,
+            ));
         }
     }
 }
