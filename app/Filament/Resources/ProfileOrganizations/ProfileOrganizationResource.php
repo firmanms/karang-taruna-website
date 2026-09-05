@@ -62,4 +62,9 @@ class ProfileOrganizationResource extends Resource
             'edit' => EditProfileOrganization::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

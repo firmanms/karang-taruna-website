@@ -62,4 +62,9 @@ class NewsCategoryResource extends Resource
             'edit' => EditNewsCategory::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

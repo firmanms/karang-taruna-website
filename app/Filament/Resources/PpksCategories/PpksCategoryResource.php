@@ -56,4 +56,9 @@ class PpksCategoryResource extends Resource
             'edit' => EditPpksCategory::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

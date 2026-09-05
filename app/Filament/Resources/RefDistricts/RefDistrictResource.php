@@ -62,4 +62,9 @@ class RefDistrictResource extends Resource
             'edit' => EditRefDistrict::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

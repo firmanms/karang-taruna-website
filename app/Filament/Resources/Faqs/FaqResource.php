@@ -62,4 +62,9 @@ class FaqResource extends Resource
             'edit' => EditFaq::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

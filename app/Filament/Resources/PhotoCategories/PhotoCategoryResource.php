@@ -62,4 +62,9 @@ class PhotoCategoryResource extends Resource
             'edit' => EditPhotoCategory::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

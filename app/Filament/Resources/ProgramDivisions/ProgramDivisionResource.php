@@ -62,4 +62,9 @@ class ProgramDivisionResource extends Resource
             'edit' => EditProgramDivision::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

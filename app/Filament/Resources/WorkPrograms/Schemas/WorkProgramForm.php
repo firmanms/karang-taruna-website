@@ -12,6 +12,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class WorkProgramForm
@@ -77,7 +78,7 @@ class WorkProgramForm
                         Grid::make(2)->schema([
                             Select::make('unit_id')
                                 ->label('Unit Lembaga Pengusul')
-                                ->relationship('unit', 'unit_name')
+                                ->relationship('unit', 'unit_name', fn (Builder $query) => $query->forUser())
                                 ->searchable()
                                 ->preload()
                                 ->default(fn () => auth()->user()?->unit_id)

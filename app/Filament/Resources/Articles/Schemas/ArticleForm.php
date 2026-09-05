@@ -15,6 +15,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ArticleForm
@@ -75,14 +76,14 @@ class ArticleForm
                         Grid::make(3)->schema([
                             Select::make('unit_id')
                                 ->label('Unit Lembaga Pengusul')
-                                ->relationship('unit', 'unit_name')
+                                ->relationship('unit', 'unit_name', fn (Builder $query) => $query->forUser())
                                 ->searchable()
                                 ->preload()
                                 ->default(fn () => auth()->user()?->unit_id)
                                 ->required(),
                             Select::make('district_id')
                                 ->label('Kecamatan Terkait')
-                                ->relationship('district', 'name')
+                                ->relationship('district', 'name', fn (Builder $query) => auth()->user()?->isAdminKecamatan() && auth()->user()?->unit?->district_id ? $query->where('id', auth()->user()->unit->district_id) : $query)
                                 ->searchable()
                                 ->preload()
                                 ->live()

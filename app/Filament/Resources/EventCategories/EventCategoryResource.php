@@ -62,4 +62,9 @@ class EventCategoryResource extends Resource
             'edit' => EditEventCategory::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }

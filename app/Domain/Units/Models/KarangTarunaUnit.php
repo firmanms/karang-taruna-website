@@ -5,6 +5,7 @@ namespace App\Domain\Units\Models;
 use App\Domain\Territory\Models\RefDistrict;
 use App\Domain\Territory\Models\RefVillage;
 use App\Models\User;
+use App\Traits\HasTenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class KarangTarunaUnit extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTenantScope;
 
     protected $fillable = [
         'unit_level',

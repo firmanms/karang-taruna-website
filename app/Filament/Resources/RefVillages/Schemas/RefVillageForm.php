@@ -8,6 +8,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class RefVillageForm
@@ -21,7 +22,7 @@ class RefVillageForm
                     ->schema([
                         Select::make('district_id')
                             ->label('Kecamatan')
-                            ->relationship('district', 'name')
+                            ->relationship('district', 'name', fn (Builder $query) => auth()->user()?->isAdminKecamatan() && auth()->user()?->unit?->district_id ? $query->where('id', auth()->user()->unit->district_id) : $query)
                             ->searchable()
                             ->preload()
                             ->required(),

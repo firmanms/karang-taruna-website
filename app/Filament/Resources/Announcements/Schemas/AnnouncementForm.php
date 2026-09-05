@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class AnnouncementForm
@@ -67,7 +68,7 @@ class AnnouncementForm
                                 ->label('Berlaku Hingga (Opsional)'),
                             Select::make('unit_id')
                                 ->label('Unit Lembaga Penerbit')
-                                ->relationship('unit', 'unit_name')
+                                ->relationship('unit', 'unit_name', fn (Builder $query) => $query->forUser())
                                 ->searchable()
                                 ->preload()
                                 ->default(fn () => auth()->user()?->unit_id)

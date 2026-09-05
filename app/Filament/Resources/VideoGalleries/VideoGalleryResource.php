@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class VideoGalleryResource extends Resource
@@ -61,5 +62,10 @@ class VideoGalleryResource extends Resource
             'view' => ViewVideoGallery::route('/{record}'),
             'edit' => EditVideoGallery::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->forUser();
     }
 }

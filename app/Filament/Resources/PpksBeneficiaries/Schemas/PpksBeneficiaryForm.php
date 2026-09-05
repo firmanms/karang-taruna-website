@@ -11,6 +11,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class PpksBeneficiaryForm
 {
@@ -49,14 +50,14 @@ class PpksBeneficiaryForm
                         Grid::make(3)->schema([
                             Select::make('unit_id')
                                 ->label('Unit Pengusul')
-                                ->relationship('unit', 'unit_name')
+                                ->relationship('unit', 'unit_name', fn (Builder $query) => $query->forUser())
                                 ->searchable()
                                 ->preload()
                                 ->default(fn () => auth()->user()?->unit_id)
                                 ->required(),
                             Select::make('district_id')
                                 ->label('Kecamatan')
-                                ->relationship('district', 'name')
+                                ->relationship('district', 'name', fn (Builder $query) => auth()->user()?->isAdminKecamatan() && auth()->user()?->unit?->district_id ? $query->where('id', auth()->user()->unit->district_id) : $query)
                                 ->searchable()
                                 ->preload()
                                 ->live()

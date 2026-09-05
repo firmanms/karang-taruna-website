@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class WorkProgramResource extends Resource
@@ -61,5 +62,10 @@ class WorkProgramResource extends Resource
             'view' => ViewWorkProgram::route('/{record}'),
             'edit' => EditWorkProgram::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->forUser();
     }
 }

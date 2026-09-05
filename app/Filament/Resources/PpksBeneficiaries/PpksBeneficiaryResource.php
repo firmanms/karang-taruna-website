@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class PpksBeneficiaryResource extends Resource
@@ -57,5 +58,10 @@ class PpksBeneficiaryResource extends Resource
             'view' => ViewPpksBeneficiary::route('/{record}'),
             'edit' => EditPpksBeneficiary::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->forUser();
     }
 }

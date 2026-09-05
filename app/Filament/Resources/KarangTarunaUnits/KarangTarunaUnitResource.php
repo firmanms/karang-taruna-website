@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class KarangTarunaUnitResource extends Resource
@@ -61,5 +62,10 @@ class KarangTarunaUnitResource extends Resource
             'view' => ViewKarangTarunaUnit::route('/{record}'),
             'edit' => EditKarangTarunaUnit::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->forUser();
     }
 }

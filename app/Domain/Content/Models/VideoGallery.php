@@ -4,13 +4,14 @@ namespace App\Domain\Content\Models;
 
 use App\Domain\Units\Models\KarangTarunaUnit;
 use App\Models\User;
+use App\Traits\HasTenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VideoGallery extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTenantScope;
 
     protected $fillable = [
         'unit_id',

@@ -12,6 +12,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class KarangTarunaUnitForm
 {
@@ -25,17 +26,43 @@ class KarangTarunaUnitForm
                         Grid::make(3)->schema([
                             Select::make('unit_level')
                                 ->label('Tingkat / Level Unit')
-                                ->options([
-                                    'kabupaten' => 'Kabupaten',
-                                    'kecamatan' => 'Kecamatan',
-                                    'desa' => 'Desa / Kelurahan',
-                                    'rw' => 'Tingkat RW',
-                                ])
+                                ->options(function () {
+                                    $user = auth()->user();
+                                    if ($user?->isAdminKecamatan()) {
+                                        return [
+                                            'kecamatan' => 'Kecamatan (Unit Sendiri)',
+                                            'desa' => 'Desa / Kelurahan',
+                                            'rw' => 'Tingkat RW',
+                                        ];
+                                    }
+                                    if ($user?->isAdminDesa()) {
+                                        return [
+                                            'desa' => 'Desa / Kelurahan (Unit Sendiri)',
+                                            'rw' => 'Tingkat RW',
+                                        ];
+                                    }
+
+                                    return [
+                                        'kabupaten' => 'Kabupaten',
+                                        'kecamatan' => 'Kecamatan',
+                                        'desa' => 'Desa / Kelurahan',
+                                        'rw' => 'Tingkat RW',
+                                    ];
+                                })
                                 ->live()
                                 ->required(),
                             Select::make('district_id')
                                 ->label('Kecamatan')
-                                ->relationship('district', 'name')
+                                ->relationship(
+                                    'district',
+                                    'name',
+                                    fn (Builder $query) => auth()->user()?->isAdminKecamatan() && auth()->user()?->unit?->district_id
+                                        ? $query->where('id', auth()->user()->unit->district_id)
+                                        : $query
+                                )
+                                ->default(fn () => auth()->user()?->unit?->district_id)
+                                ->disabled(fn () => auth()->user()?->isAdminKecamatan() || auth()->user()?->isAdminDesa())
+                                ->dehydrated()
                                 ->searchable()
                                 ->preload()
                                 ->live()
@@ -43,11 +70,17 @@ class KarangTarunaUnitForm
                                 ->required(fn (Get $get): bool => in_array($get('unit_level'), ['kecamatan', 'desa', 'rw'])),
                             Select::make('village_id')
                                 ->label('Desa / Kelurahan')
-                                ->options(fn (Get $get): array => RefVillage::query()
-                                    ->when($get('district_id'), fn ($query, $districtId) => $query->where('district_id', $districtId))
-                                    ->pluck('name', 'id')
-                                    ->toArray()
-                                )
+                                ->options(function (Get $get) {
+                                    $districtId = $get('district_id') ?: auth()->user()?->unit?->district_id;
+                                    $user = auth()->user();
+
+                                    return RefVillage::query()
+                                        ->when($districtId, fn ($query, $dId) => $query->where('district_id', $dId))
+                                        ->when($user?->isAdminDesa() && $user?->unit?->village_id, fn ($query) => $query->where('id', $user->unit->village_id))
+                                        ->pluck('name', 'id')
+                                        ->toArray();
+                                })
+                                ->default(fn () => auth()->user()?->unit?->village_id)
                                 ->searchable()
                                 ->live()
                                 ->visible(fn (Get $get): bool => in_array($get('unit_level'), ['desa', 'rw']))

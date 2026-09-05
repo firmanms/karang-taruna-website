@@ -9,6 +9,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class UnitMemberForm
 {
@@ -21,7 +22,7 @@ class UnitMemberForm
                     ->schema([
                         Select::make('unit_id')
                             ->label('Unit Lembaga Karang Taruna')
-                            ->relationship('unit', 'unit_name')
+                            ->relationship('unit', 'unit_name', fn (Builder $query) => $query->forUser())
                             ->searchable()
                             ->preload()
                             ->required(),

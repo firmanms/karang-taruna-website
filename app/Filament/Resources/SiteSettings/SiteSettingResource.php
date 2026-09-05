@@ -62,4 +62,9 @@ class SiteSettingResource extends Resource
             'edit' => EditSiteSetting::route('/{record}/edit'),
         ];
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isSuperadmin() ?? false;
+    }
 }
