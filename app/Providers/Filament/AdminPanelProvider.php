@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile(isSimple: false)
             ->brandName('Karang Taruna Kabupaten Bandung')
+            ->databaseNotifications()
             ->colors([
                 'primary' => Color::Blue,
             ])
