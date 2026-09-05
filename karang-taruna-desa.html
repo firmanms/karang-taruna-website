@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Direktori 280 Unit Karang Taruna Desa dan Kelurahan di Seluruh Wilayah Kabupaten Bandung">
+  <title>Karang Taruna Desa & Kelurahan - Direktori Unit Basis</title>
+  
+  <!-- Favicon / Web Icon -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Tabler Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link href="https://unpkg.com/@idds/styles@latest/dist/index.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="brand-logo">
+        <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+        <div class="brand-text">
+          <strong>Karang Taruna</strong>
+          <small>Kabupaten Bandung</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">Beranda</a>
+
+        <!-- Submenu Profil -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Profil</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="tentang-kami.html" class="dropdown-link">Tentang Kami</a>
+            <a href="prestasi.html" class="dropdown-link">Prestasi Pemuda</a>
+            <a href="peta-sebaran.html" class="dropdown-link">Peta Wilayah</a>
+          </div>
+        </div>
+
+        <!-- Submenu Direktori Wilayah -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Direktori</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="karang-taruna-kabupaten.html" class="dropdown-link">Tingkat Kabupaten</a>
+            <a href="karang-taruna-kecamatan.html" class="dropdown-link">Karang Taruna Kecamatan</a>
+            <a href="karang-taruna-desa.html" class="dropdown-link">Karang Taruna Desa / Kelurahan</a>
+          </div>
+        </div>
+
+        <!-- Submenu Galeri & Media -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Galeri & Media</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="galeri-foto.html" class="dropdown-link">Galeri Foto</a>
+            <a href="galeri-video.html" class="dropdown-link">Galeri Video</a>
+            <a href="unduhan.html" class="dropdown-link">Pusat Unduhan</a>
+          </div>
+        </div>
+
+        <!-- Submenu Aktivitas -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Aktivitas</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="program.html" class="dropdown-link">Program Kerja</a>
+            <a href="agenda.html" class="dropdown-link">Agenda & Kegiatan</a>
+            <a href="berita.html" class="dropdown-link">Berita Terbaru</a>
+            <a href="pengumuman.html" class="dropdown-link">Pengumuman</a>
+            <a href="index.html#faq" class="dropdown-link">FAQ</a>
+          </div>
+        </div>
+
+        <a href="#kontak" class="nav-item">Kontak</a>
+      </nav>
+      <button class="menu-btn" aria-label="Buka menu"><i class="ti ti-menu-2"></i></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Banner -->
+    <section class="page-banner">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="ti ti-home"></i> Beranda</a>
+          <span>/</span>
+          <span>Direktori</span>
+          <span>/</span>
+          <span class="active">Karang Taruna Desa & Kelurahan</span>
+        </div>
+        <h1>Karang Taruna Desa & Kelurahan</h1>
+        <p>Database resmi kepengurusan unit basis Karang Taruna di 280 Desa dan Kelurahan yang tersebar di 31 Kecamatan Kabupaten Bandung.</p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section">
+      <div class="container">
+        <!-- Quick Nav Tier Bar -->
+        <div class="tier-nav-bar">
+          <a href="karang-taruna-kabupaten.html" class="tier-nav-item">
+            <i class="ti ti-building-community"></i> Tingkat Kabupaten
+          </a>
+          <a href="karang-taruna-kecamatan.html" class="tier-nav-item">
+            <i class="ti ti-map-pin"></i> Karang Taruna Kecamatan (31)
+          </a>
+          <a href="karang-taruna-desa.html" class="tier-nav-item active">
+            <i class="ti ti-home-check"></i> Karang Taruna Desa / Kelurahan (280)
+          </a>
+        </div>
+
+        <!-- Filter & Search Box -->
+        <div class="dir-toolbar">
+          <div class="dir-search-wrap">
+            <i class="ti ti-search"></i>
+            <input type="text" id="desaSearchInput" placeholder="Cari nama desa, nama unit, ketua, atau kecamatan...">
+          </div>
+          <div class="dir-select-wrap">
+            <select id="filterKecamatanSelect">
+              <option value="all">Semua Kecamatan (31 Kecamatan)</option>
+              <option value="Soreang">Kecamatan Soreang</option>
+              <option value="Cileunyi">Kecamatan Cileunyi</option>
+              <option value="Ciwidey">Kecamatan Ciwidey</option>
+              <option value="Baleendah">Kecamatan Baleendah</option>
+              <option value="Pangalengan">Kecamatan Pangalengan</option>
+              <option value="Rancaekek">Kecamatan Rancaekek</option>
+              <option value="Majalaya">Kecamatan Majalaya</option>
+              <option value="Bojongsoang">Kecamatan Bojongsoang</option>
+              <option value="Katapang">Kecamatan Katapang</option>
+              <option value="Margaasih">Kecamatan Margaasih</option>
+              <option value="Cicalengka">Kecamatan Cicalengka</option>
+              <option value="Rancabali">Kecamatan Rancabali</option>
+              <option value="Pasirjambu">Kecamatan Pasirjambu</option>
+              <option value="Ibun">Kecamatan Ibun</option>
+              <option value="Ciparay">Kecamatan Ciparay</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Desa Directory Table Container -->
+        <div class="dir-desa-card-table">
+          <div class="matrix-table-wrap">
+            <table class="dir-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">NO</th>
+                  <th style="min-width: 220px;">NAMA DESA / UNIT</th>
+                  <th style="min-width: 170px;">KECAMATAN</th>
+                  <th style="min-width: 180px;">KETUA UNIT BASIS</th>
+                  <th style="min-width: 150px;">STATUS SK LEGALITAS</th>
+                  <th style="min-width: 200px;">SEKRETARIAT & KONTAK</th>
+                </tr>
+              </thead>
+              <tbody id="desaStandaloneTableBody">
+                <tr data-kec="Soreang">
+                  <td class="text-center font-bold">1</td>
+                  <td>
+                    <strong>Desa Soreang</strong>
+                    <small>Unit Asoka RW 01–15</small>
+                  </td>
+                  <td>Kecamatan Soreang</td>
+                  <td>Ridwan Maulana</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Balai Desa Soreang • 0812-9988-1122</td>
+                </tr>
+
+                <tr data-kec="Soreang">
+                  <td class="text-center font-bold">2</td>
+                  <td>
+                    <strong>Desa Panyirapan</strong>
+                    <small>Unit Taruna Mandiri</small>
+                  </td>
+                  <td>Kecamatan Soreang</td>
+                  <td>Indra Permana</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Panyirapan No. 12 • 0857-1122-3344</td>
+                </tr>
+
+                <tr data-kec="Soreang">
+                  <td class="text-center font-bold">3</td>
+                  <td>
+                    <strong>Desa Cingcin</strong>
+                    <small>Unit Bina Remaja Cingcin</small>
+                  </td>
+                  <td>Kecamatan Soreang</td>
+                  <td>Ginanjar Nugraha</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Cingcin Kolot No. 04 • 0822-1144-5566</td>
+                </tr>
+
+                <tr data-kec="Soreang">
+                  <td class="text-center font-bold">4</td>
+                  <td>
+                    <strong>Desa Sadu</strong>
+                    <small>Unit Sadu Kencana</small>
+                  </td>
+                  <td>Kecamatan Soreang</td>
+                  <td>Aris Munandar</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Raya Soreang - Ciwidey Km. 2 • 0819-3344-5566</td>
+                </tr>
+
+                <tr data-kec="Cileunyi">
+                  <td class="text-center font-bold">5</td>
+                  <td>
+                    <strong>Desa Cileunyi Kulon</strong>
+                    <small>Unit Garuda Muda</small>
+                  </td>
+                  <td>Kecamatan Cileunyi</td>
+                  <td>Taufik Hidayat</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Komplek Balai Desa Cileunyi Kulon • 0813-4455-6677</td>
+                </tr>
+
+                <tr data-kec="Cileunyi">
+                  <td class="text-center font-bold">6</td>
+                  <td>
+                    <strong>Desa Cileunyi Wetan</strong>
+                    <small>Unit Karya Sejahtera</small>
+                  </td>
+                  <td>Kecamatan Cileunyi</td>
+                  <td>Budi Santoso</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Percobaan No. 5 • 0878-9900-1122</td>
+                </tr>
+
+                <tr data-kec="Cileunyi">
+                  <td class="text-center font-bold">7</td>
+                  <td>
+                    <strong>Desa Cinunuk</strong>
+                    <small>Unit Manunggal Karya</small>
+                  </td>
+                  <td>Kecamatan Cileunyi</td>
+                  <td>Irfan Firmansyah</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Raya Cinunuk No. 182 • 0812-7788-9900</td>
+                </tr>
+
+                <tr data-kec="Ciwidey">
+                  <td class="text-center font-bold">8</td>
+                  <td>
+                    <strong>Desa Ciwidey</strong>
+                    <small>Unit Panca Karya Ciwidey</small>
+                  </td>
+                  <td>Kecamatan Ciwidey</td>
+                  <td>Asep Saepuloh</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Raya Barat Ciwidey No. 34 • 0821-5566-7788</td>
+                </tr>
+
+                <tr data-kec="Ciwidey">
+                  <td class="text-center font-bold">9</td>
+                  <td>
+                    <strong>Desa Panundaan</strong>
+                    <small>Unit Taruna Lestari</small>
+                  </td>
+                  <td>Kecamatan Ciwidey</td>
+                  <td>Wawan Kuswandi</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Simpang Panundaan • 0853-2211-4455</td>
+                </tr>
+
+                <tr data-kec="Rancabali">
+                  <td class="text-center font-bold">10</td>
+                  <td>
+                    <strong>Desa Alamendah</strong>
+                    <small>Unit Alam Bestari</small>
+                  </td>
+                  <td>Kecamatan Rancabali</td>
+                  <td>Gilang Ramadhan</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Sentra Wisata Alamendah • 0852-7788-9900</td>
+                </tr>
+
+                <tr data-kec="Rancabali">
+                  <td class="text-center font-bold">11</td>
+                  <td>
+                    <strong>Desa Patengan</strong>
+                    <small>Unit Situ Patenggang</small>
+                  </td>
+                  <td>Kecamatan Rancabali</td>
+                  <td>Dani Herdiana</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Kawasan Danau Patengan • 0877-3344-5566</td>
+                </tr>
+
+                <tr data-kec="Baleendah">
+                  <td class="text-center font-bold">12</td>
+                  <td>
+                    <strong>Kelurahan Baleendah</strong>
+                    <small>Unit Pemuda Pelopor</small>
+                  </td>
+                  <td>Kecamatan Baleendah</td>
+                  <td>Agus Mulyana</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Kantor Kelurahan Baleendah • 0811-2233-4455</td>
+                </tr>
+
+                <tr data-kec="Baleendah">
+                  <td class="text-center font-bold">13</td>
+                  <td>
+                    <strong>Kelurahan Andir</strong>
+                    <small>Unit Andir Bersatu</small>
+                  </td>
+                  <td>Kecamatan Baleendah</td>
+                  <td>Rahmat Suryadi</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Andir Raya No. 44 • 0813-1122-3344</td>
+                </tr>
+
+                <tr data-kec="Bojongsoang">
+                  <td class="text-center font-bold">14</td>
+                  <td>
+                    <strong>Desa Bojongsoang</strong>
+                    <small>Unit Cipta Karya</small>
+                  </td>
+                  <td>Kecamatan Bojongsoang</td>
+                  <td>Rifki Andriansyah</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Cikoneng No. 8 • 0813-6677-8899</td>
+                </tr>
+
+                <tr data-kec="Bojongsoang">
+                  <td class="text-center font-bold">15</td>
+                  <td>
+                    <strong>Desa Lengkong</strong>
+                    <small>Unit Telkom Taruna</small>
+                  </td>
+                  <td>Kecamatan Bojongsoang</td>
+                  <td>Yoga Pratama</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Kawasan Pendidikan Telkom • 0812-4455-6677</td>
+                </tr>
+
+                <tr data-kec="Pangalengan">
+                  <td class="text-center font-bold">16</td>
+                  <td>
+                    <strong>Desa Pangalengan</strong>
+                    <small>Unit Malabar Sejahtera</small>
+                  </td>
+                  <td>Kecamatan Pangalengan</td>
+                  <td>Jajang Nurjaman</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Alun-alun Pangalengan • 0821-8899-0011</td>
+                </tr>
+
+                <tr data-kec="Pangalengan">
+                  <td class="text-center font-bold">17</td>
+                  <td>
+                    <strong>Desa Margamukti</strong>
+                    <small>Unit Cibolang Mandiri</small>
+                  </td>
+                  <td>Kecamatan Pangalengan</td>
+                  <td>Roni Hermawan</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Kawasan Perkebunan Teh • 0852-6677-8899</td>
+                </tr>
+
+                <tr data-kec="Rancaekek">
+                  <td class="text-center font-bold">18</td>
+                  <td>
+                    <strong>Desa Rancaekek Wetan</strong>
+                    <small>Unit Linggar Kencana</small>
+                  </td>
+                  <td>Kecamatan Rancaekek</td>
+                  <td>Nanang Suryana</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Raya Rancaekek No. 45 • 0818-1122-3344</td>
+                </tr>
+
+                <tr data-kec="Majalaya">
+                  <td class="text-center font-bold">19</td>
+                  <td>
+                    <strong>Desa Majalaya</strong>
+                    <small>Unit Taruna Tekstil</small>
+                  </td>
+                  <td>Kecamatan Majalaya</td>
+                  <td>Hadi Purnomo</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Pasar Baru Majalaya • 0813-3344-5566</td>
+                </tr>
+
+                <tr data-kec="Katapang">
+                  <td class="text-center font-bold">20</td>
+                  <td>
+                    <strong>Desa Katapang</strong>
+                    <small>Unit Sauyunan</small>
+                  </td>
+                  <td>Kecamatan Katapang</td>
+                  <td>Dedi Mulyadi</td>
+                  <td><span class="badge-status-active"><i class="ti ti-check"></i> SK Aktif (2024–2029)</span></td>
+                  <td>Jl. Terusan Kopo Km. 13 • 0857-4455-6677</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="kontak">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand-logo footer-brand">
+            <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+            <div class="brand-text">
+              <strong style="color:#ffffff">Karang Taruna</strong>
+              <small style="color:#6ee7b7">Kabupaten Bandung</small>
+            </div>
+          </a>
+          <p>Bersama pemuda, membangun masyarakat yang lebih maju, mandiri, dan sejahtera.</p>
+        </div>
+        <div>
+          <h4>Kontak Kami</h4>
+          <p>Jl. Al Fathu Soreang, Kabupaten Bandung</p>
+          <p>info@karangtarunabandung.or.id</p>
+          <p>(022) 5897 1234</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Instagram" class="social-icon"><i class="ti ti-brand-instagram"></i></a>
+            <a href="#" aria-label="YouTube" class="social-icon"><i class="ti ti-brand-youtube"></i></a>
+            <a href="#" aria-label="Facebook" class="social-icon"><i class="ti ti-brand-facebook"></i></a>
+            <a href="#" aria-label="TikTok" class="social-icon"><i class="ti ti-brand-tiktok"></i></a>
+            <a href="#" aria-label="WhatsApp" class="social-icon"><i class="ti ti-brand-whatsapp"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4>Direktori</h4>
+          <div class="footer-links">
+            <a href="karang-taruna-kabupaten.html">Tingkat Kabupaten</a>
+            <a href="karang-taruna-kecamatan.html">Karang Taruna Kecamatan</a>
+            <a href="karang-taruna-desa.html">Karang Taruna Desa</a>
+            <a href="peta-sebaran.html">Peta Sebaran</a>
+          </div>
+        </div>
+        <div>
+          <h4>Statistik Pengunjung</h4>
+          <div class="visitor-widget">
+            <div class="visitor-stats">
+              <div class="visitor-item">
+                <span>Hari Ini:</span>
+                <strong id="visitorToday">342</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Bulan Ini:</span>
+                <strong id="visitorMonth">8.920</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Total Pengunjung:</span>
+                <strong id="visitorTotal">124.580</strong>
+              </div>
+              <div class="visitor-item online-status">
+                <span>Online Saat Ini:</span>
+                <strong id="visitorOnline"><span class="pulse-dot"></span> 18 User</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Karang Taruna Kabupaten Bandung.</span>
+        <span>Kebijakan Privasi · Syarat & Ketentuan · Peta Situs</span>
+      </div>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/@idds/js@latest/dist/index.iife.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+
+</html>

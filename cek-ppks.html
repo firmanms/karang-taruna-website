@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Layanan Cek Data Pemerlu Pelayanan Kesejahteraan Sosial (PPKS) Karang Taruna Kabupaten Bandung">
+  <title>Cek Data PPKS - Karang Taruna Kabupaten Bandung</title>
+  
+  <!-- Favicon / Web Icon -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Tabler Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link href="https://unpkg.com/@idds/styles@latest/dist/index.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="brand-logo">
+        <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+        <div class="brand-text">
+          <strong>Karang Taruna</strong>
+          <small>Kabupaten Bandung</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">Beranda</a>
+
+        <!-- Submenu Profil -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Profil</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="tentang-kami.html" class="dropdown-link">Tentang Kami</a>
+            <a href="prestasi.html" class="dropdown-link">Prestasi Pemuda</a>
+            <a href="peta-sebaran.html" class="dropdown-link">Peta Wilayah</a>
+          </div>
+        </div>
+
+        <!-- Submenu Direktori Wilayah -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Direktori</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="karang-taruna-kabupaten.html" class="dropdown-link">Tingkat Kabupaten</a>
+            <a href="karang-taruna-kecamatan.html" class="dropdown-link">Karang Taruna Kecamatan</a>
+            <a href="karang-taruna-desa.html" class="dropdown-link">Karang Taruna Desa / Kelurahan</a>
+          </div>
+        </div>
+
+        <!-- Submenu Layanan Sosial -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Layanan</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="cek-ppks.html" class="dropdown-link">Cek Data PPKS</a>
+            <a href="unduhan.html" class="dropdown-link">Pusat Unduhan</a>
+          </div>
+        </div>
+
+        <!-- Submenu Aktivitas -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Aktivitas</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="program.html" class="dropdown-link">Program Kerja</a>
+            <a href="agenda.html" class="dropdown-link">Agenda & Kegiatan</a>
+            <a href="berita.html" class="dropdown-link">Berita Terbaru</a>
+            <a href="pengumuman.html" class="dropdown-link">Pengumuman</a>
+            <a href="index.html#faq" class="dropdown-link">FAQ</a>
+          </div>
+        </div>
+
+        <a href="#kontak" class="nav-item">Kontak</a>
+      </nav>
+      <button class="menu-btn" aria-label="Buka menu"><i class="ti ti-menu-2"></i></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Banner -->
+    <section class="page-banner">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="ti ti-home"></i> Beranda</a>
+          <span>/</span>
+          <span>Layanan Sosial</span>
+          <span>/</span>
+          <span class="active">Cek Data PPKS</span>
+        </div>
+        <h1>Pengecekan Data PPKS</h1>
+        <p>Layanan integrasi penelusuran status Pemerlu Pelayanan Kesejahteraan Sosial (PPKS) terpadu di wilayah Kabupaten Bandung.</p>
+      </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="section">
+      <div class="container">
+        <div class="ppks-wrapper">
+          <!-- Form Card -->
+          <div class="ppks-card">
+            <div class="ppks-card-header">
+              <div class="ppks-icon-badge">
+                <i class="ti ti-heart-handshake"></i>
+              </div>
+              <div>
+                <h2>Pencarian Status Bantuan & Terdaftar PPKS</h2>
+                <p>Masukkan 16 digit Nomor Induk Kependudukan (NIK) Anda dan kode captcha di bawah ini.</p>
+              </div>
+            </div>
+
+            <form id="ppksForm" class="ppks-form" onsubmit="return false;">
+              <!-- NIK Input -->
+              <div class="form-group">
+                <label for="nikInput"><i class="ti ti-id"></i> Nomor Induk Kependudukan (NIK)</label>
+                <div class="input-with-icon">
+                  <i class="ti ti-credit-card"></i>
+                  <input type="text" id="nikInput" name="nik" placeholder="Contoh: 3204xxxxxxxxxxxx" maxlength="16" required autocomplete="off">
+                </div>
+                <small class="form-hint">Pastikan NIK sesuai dengan KTP-el atau Kartu Keluarga resmi.</small>
+              </div>
+
+              <!-- Captcha Block -->
+              <div class="form-group">
+                <label for="captchaInput"><i class="ti ti-shield-lock"></i> Verifikasi Keamanan (Captcha)</label>
+                <div class="captcha-row">
+                  <div class="captcha-box" id="captchaBox" title="Klik tombol refresh jika kode kurang jelas">
+                    <!-- Captcha Code Canvas / Text -->
+                    <span id="captchaCodeText">X9B7K</span>
+                  </div>
+                  <button type="button" class="btn-refresh-captcha" id="refreshCaptchaBtn" title="Ganti Captcha">
+                    <i class="ti ti-refresh"></i>
+                  </button>
+                  <div class="captcha-input-wrap">
+                    <input type="text" id="captchaInput" placeholder="Ketik kode di samping" maxlength="6" required autocomplete="off">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-actions">
+                <button type="submit" class="btn-ppks-submit" id="btnCheckPPKS">
+                  <i class="ti ti-search"></i> Cari Data PPKS
+                </button>
+                <button type="reset" class="btn-ppks-reset" id="btnResetPPKS">
+                  <i class="ti ti-rotate-clockwise"></i> Reset
+                </button>
+              </div>
+            </form>
+
+            <!-- Loading Spinner State -->
+            <div class="ppks-loading" id="ppksLoading" style="display: none;">
+              <div class="spinner-dot"></div>
+              <p>Sedang memverifikasi data NIK dengan basis data PPKS...</p>
+            </div>
+
+            <!-- Error State Alert -->
+            <div class="ppks-alert error" id="ppksErrorAlert" style="display: none;">
+              <i class="ti ti-alert-circle"></i>
+              <div id="ppksErrorText">Kode Captcha salah! Silakan coba lagi.</div>
+            </div>
+
+            <!-- Result Card: Terdaftar -->
+            <div class="ppks-result-card success" id="ppksResultSuccess" style="display: none;">
+              <div class="result-head">
+                <span class="status-pill verified"><i class="ti ti-circle-check"></i> DATA DITEMUKAN & TERDAFTAR</span>
+                <span class="reg-date">Update: 15 Agustus 2026</span>
+              </div>
+              <div class="result-grid">
+                <div class="result-item">
+                  <span>Nomor Induk Kependudukan (NIK)</span>
+                  <strong id="resNik">3204************</strong>
+                </div>
+                <div class="result-item">
+                  <span>Nama Lengkap (Sesuai Dukcapil)</span>
+                  <strong id="resNama">ASEP *********</strong>
+                </div>
+                <div class="result-item">
+                  <span>Kategori PPKS</span>
+                  <strong id="resKategori">Keluarga Rentan / Prasejahtera</strong>
+                </div>
+                <div class="result-item">
+                  <span>Wilayah Domisili</span>
+                  <strong id="resWilayah">Kecamatan Soreang, Desa Soreang</strong>
+                </div>
+                <div class="result-item">
+                  <span>Status Program Bantuan</span>
+                  <strong class="text-green-700" id="resStatusBansos">Aktif Menerima Program Sembako & PKH</strong>
+                </div>
+                <div class="result-item">
+                  <span>Unit Pendamping</span>
+                  <strong>Karang Taruna Unit Desa Soreang</strong>
+                </div>
+              </div>
+              <div class="result-footer">
+                <p><i class="ti ti-info-circle"></i> Jika terdapat ketidaksesuaian data atau kendala penyaluran, silakan hubungi Seksi Kesejahteraan Sosial Karang Taruna di kantor desa setempat.</p>
+              </div>
+            </div>
+
+            <!-- Result Card: Tidak Ditemukan -->
+            <div class="ppks-result-card not-found" id="ppksResultNotFound" style="display: none;">
+              <div class="result-head">
+                <span class="status-pill warning"><i class="ti ti-info-circle"></i> DATA TIDAK DITEMUKAN</span>
+              </div>
+              <div class="not-found-body">
+                <h3>NIK belum terdaftar dalam Basis Data PPKS</h3>
+                <p>Data NIK yang Anda masukkan belum tercatat dalam sistem Pemerlu Pelayanan Kesejahteraan Sosial (PPKS) Kabupaten Bandung periode berjalan.</p>
+                <div class="not-found-tips">
+                  <strong>Langkah yang dapat dilakukan:</strong>
+                  <ul>
+                    <li>Pastikan Anda telah memasukkan 16 digit NIK dengan benar.</li>
+                    <li>Ajukan permohonan pendataan mandiri melalui Musyawarah Desa (Musdes) atau Seksi Sosial Karang Taruna tingkat RW/Desa.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info & Guidance Side Box -->
+          <div class="ppks-side-guide">
+            <div class="guide-card">
+              <h3><i class="ti ti-help-circle"></i> Apa itu PPKS?</h3>
+              <p>Pemerlu Pelayanan Kesejahteraan Sosial (PPKS) adalah perseorangan, keluarga, kelompok, dan/atau masyarakat yang karena suatu hambatan, kesulitan, atau gangguan, tidak dapat melaksanakan fungsi sosialnya sehingga memerlukan pelayanan sosial.</p>
+            </div>
+
+            <div class="guide-card">
+              <h3><i class="ti ti-category"></i> Kategori PPKS</h3>
+              <ul class="guide-list">
+                <li><i class="ti ti-check"></i> Anak Balita & Lansia Terlantar</li>
+                <li><i class="ti ti-check"></i> Penyandang Disabilitas</li>
+                <li><i class="ti ti-check"></i> Korban Bencana Alam & Sosial</li>
+                <li><i class="ti ti-check"></i> Keluarga Prasejahtera & Rentan</li>
+                <li><i class="ti ti-check"></i> Pemuda Putus Sekolah Membutuhkan Vokasi</li>
+              </ul>
+            </div>
+
+            <div class="guide-card help-contact">
+              <h3><i class="ti ti-headset"></i> Butuh Bantuan Pendataan?</h3>
+              <p>Hubungi Posko Pengaduan Sosial Karang Taruna Kabupaten Bandung:</p>
+              <a href="https://wa.me/6281234567890" target="_blank" class="btn-wa-help">
+                <i class="ti ti-brand-whatsapp"></i> Layanan Konsultasi WA
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="kontak">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand-logo footer-brand">
+            <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+            <div class="brand-text">
+              <strong style="color:#ffffff">Karang Taruna</strong>
+              <small style="color:#6ee7b7">Kabupaten Bandung</small>
+            </div>
+          </a>
+          <p>Bersama pemuda, membangun masyarakat yang lebih maju, mandiri, dan sejahtera.</p>
+        </div>
+        <div>
+          <h4>Kontak Kami</h4>
+          <p>Jl. Al Fathu Soreang, Kabupaten Bandung</p>
+          <p>info@karangtarunabandung.or.id</p>
+          <p>(022) 5897 1234</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Instagram" class="social-icon"><i class="ti ti-brand-instagram"></i></a>
+            <a href="#" aria-label="YouTube" class="social-icon"><i class="ti ti-brand-youtube"></i></a>
+            <a href="#" aria-label="Facebook" class="social-icon"><i class="ti ti-brand-facebook"></i></a>
+            <a href="#" aria-label="TikTok" class="social-icon"><i class="ti ti-brand-tiktok"></i></a>
+            <a href="#" aria-label="WhatsApp" class="social-icon"><i class="ti ti-brand-whatsapp"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4>Layanan</h4>
+          <div class="footer-links">
+            <a href="cek-ppks.html">Cek Data PPKS</a>
+            <a href="karang-taruna-kecamatan.html">Karang Taruna Kecamatan</a>
+            <a href="karang-taruna-desa.html">Karang Taruna Desa</a>
+            <a href="unduhan.html">Pusat Unduhan</a>
+          </div>
+        </div>
+        <div>
+          <h4>Statistik Pengunjung</h4>
+          <div class="visitor-widget">
+            <div class="visitor-stats">
+              <div class="visitor-item">
+                <span>Hari Ini:</span>
+                <strong id="visitorToday">342</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Bulan Ini:</span>
+                <strong id="visitorMonth">8.920</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Total Pengunjung:</span>
+                <strong id="visitorTotal">124.580</strong>
+              </div>
+              <div class="visitor-item online-status">
+                <span>Online Saat Ini:</span>
+                <strong id="visitorOnline"><span class="pulse-dot"></span> 18 User</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Karang Taruna Kabupaten Bandung.</span>
+        <span>Kebijakan Privasi · Syarat & Ketentuan · Peta Situs</span>
+      </div>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/@idds/js@latest/dist/index.iife.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#052e24"/>
+      <stop offset=".55" stop-color="#0f513f"/>
+      <stop offset="1" stop-color="#14532d"/>
+    </linearGradient>
+    <radialGradient id="r" cx=".78" cy=".45" r=".45">
+      <stop offset="0" stop-color="#4ade80" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#4ade80" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="760" fill="url(#g)"/>
+  <rect width="1600" height="760" fill="url(#r)"/>
+  <circle cx="1220" cy="250" r="120" fill="#22c55e" opacity=".18"/>
+  <circle cx="1390" cy="500" r="210" fill="#86efac" opacity=".1"/>
+  <g opacity=".96">
+    <circle cx="1080" cy="250" r="88" fill="#d1fae5"/>
+    <rect x="1010" y="340" width="145" height="250" rx="70" fill="#111827"/>
+    <circle cx="1285" cy="280" r="72" fill="#fde68a"/>
+    <rect x="1230" y="355" width="110" height="210" rx="54" fill="#374151"/>
+    <circle cx="1450" cy="300" r="58" fill="#f5d0a9"/>
+    <rect x="1404" y="365" width="98" height="185" rx="48" fill="#1f2937"/>
+  </g>
+  <text x="960" y="655" font-family="Arial" font-size="32" font-weight="700" fill="#dcfce7">PEMUDA • BERKARYA • BERDAYA</text>
+</svg>

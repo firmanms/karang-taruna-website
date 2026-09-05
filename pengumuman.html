@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Pusat Pengumuman, Surat Edaran, dan Informasi Resmi Karang Taruna Kabupaten Bandung">
+  <title>Pengumuman & Edaran Resmi - Karang Taruna Kabupaten Bandung</title>
+  
+  <!-- Favicon / Web Icon -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Tabler Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link href="https://unpkg.com/@idds/styles@latest/dist/index.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="brand-logo">
+        <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+        <div class="brand-text">
+          <strong>Karang Taruna</strong>
+          <small>Kabupaten Bandung</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">Beranda</a>
+
+        <!-- Submenu Profil -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Profil</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="tentang-kami.html" class="dropdown-link">Tentang Kami</a>
+            <a href="prestasi.html" class="dropdown-link">Prestasi Pemuda</a>
+            <a href="peta-sebaran.html" class="dropdown-link">Wilayah & Sebaran</a>
+          </div>
+        </div>
+
+        <!-- Submenu Galeri & Media -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Galeri & Media</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="galeri-foto.html" class="dropdown-link">Galeri Foto</a>
+            <a href="galeri-video.html" class="dropdown-link">Galeri Video</a>
+            <a href="unduhan.html" class="dropdown-link">Pusat Unduhan</a>
+          </div>
+        </div>
+
+        <!-- Submenu Aktivitas -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Aktivitas</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="program.html" class="dropdown-link">Program Kerja</a>
+            <a href="agenda.html" class="dropdown-link">Agenda & Kegiatan</a>
+            <a href="berita.html" class="dropdown-link">Berita Terbaru</a>
+            <a href="pengumuman.html" class="dropdown-link">Pengumuman</a>
+            <a href="index.html#faq" class="dropdown-link">FAQ</a>
+          </div>
+        </div>
+
+        <a href="#kontak" class="nav-item">Kontak</a>
+      </nav>
+      <button class="menu-btn" aria-label="Buka menu"><i class="ti ti-menu-2"></i></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Banner -->
+    <section class="page-banner">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="ti ti-home"></i> Beranda</a>
+          <span>/</span>
+          <span>Aktivitas</span>
+          <span>/</span>
+          <span class="active">Pengumuman</span>
+        </div>
+        <h1>Pusat Pengumuman & Edaran</h1>
+        <p>Pemberitahuan resmi, surat edaran organisasi, pendaftaran kegiatan kepemudaan, dan informasi penting lainnya.</p>
+      </div>
+    </section>
+
+    <!-- Announcement Archive Section -->
+    <section class="section">
+      <div class="container">
+        <!-- Search & Category Filters -->
+        <div class="news-filter-header">
+          <div class="news-category-filters announcement-filters">
+            <button class="filter-btn active" data-announcement-filter="all">Semua</button>
+            <button class="filter-btn" data-announcement-filter="penting"><i class="ti ti-pin"></i> Penting</button>
+            <button class="filter-btn" data-announcement-filter="edaran"><i class="ti ti-file-text"></i> Surat Edaran</button>
+            <button class="filter-btn" data-announcement-filter="seleksi"><i class="ti ti-user-check"></i> Seleksi / Beasiswa</button>
+            <button class="filter-btn" data-announcement-filter="kegiatan"><i class="ti ti-calendar-event"></i> Kegiatan</button>
+          </div>
+
+          <div class="news-search-input">
+            <i class="ti ti-search"></i>
+            <input type="text" id="announcementSearchInput" placeholder="Cari nomor surat atau judul...">
+          </div>
+        </div>
+
+        <!-- Announcement Grid -->
+        <div class="announcement-archive-grid" id="announcementGrid">
+          <!-- Item 1 - Penting Pinned -->
+          <article class="announcement-archive-card pinned" data-type="penting">
+            <div class="announcement-card-top">
+              <span class="announcement-pill"><i class="ti ti-pin"></i> Penting & Mendesak</span>
+              <span class="announcement-expiry"><i class="ti ti-clock"></i> Batas: 30 April 2026</span>
+            </div>
+            <div class="announcement-meta-row">
+              <span class="meta-no"><i class="ti ti-file-certificate"></i> No: 042/SE/KT-KAB/IV/2026</span>
+              <span class="meta-date"><i class="ti ti-calendar"></i> 10 April 2026</span>
+            </div>
+            <h2>Open Recruitment Duta Kepemudaan & Pemuda Pelopor Kabupaten Bandung 2026</h2>
+            <p>Pendaftaran seleksi duta kepemudaan dan inovasi pemuda pelopor terbuka bagi pemuda/i usia 17–25 tahun yang berdomisili dan ber-KTP di wilayah Kabupaten Bandung. Tersedia pelatihan kepemimpinan intensif, jejaring regional, dan apresiasi pembiayaan pembinaan program.</p>
+            <div class="announcement-card-action">
+              <a href="unduhan.html" class="btn-primary-sm"><i class="ti ti-download"></i> Unduh Syarat & Formulir PDF</a>
+              <span class="badge-status-active">Pendaftaran Dibuka</span>
+            </div>
+          </article>
+
+          <!-- Item 2 - Edaran -->
+          <article class="announcement-archive-card" data-type="edaran">
+            <div class="announcement-card-top">
+              <span class="announcement-pill pill-info"><i class="ti ti-file-description"></i> Surat Edaran</span>
+              <span class="announcement-expiry"><i class="ti ti-check"></i> Terbit Resmi</span>
+            </div>
+            <div class="announcement-meta-row">
+              <span class="meta-no"><i class="ti ti-file-certificate"></i> No: 038/SE/KT-KAB/IV/2026</span>
+              <span class="meta-date"><i class="ti ti-calendar"></i> 08 April 2026</span>
+            </div>
+            <h2>Instruksi Pelaksanaan Temu Karya Tingkat Kecamatan Masa Bakti 2026–2031</h2>
+            <p>Diberitahukan kepada seluruh Pengurus Karang Taruna Unit dan Kecamatan untuk mempersiapkan agenda musyawarah kerja serta regenerasi pengurus sesuai pedoman AD/ART organisasi yang berlaku.</p>
+            <div class="announcement-card-action">
+              <a href="unduhan.html" class="btn-outline-sm"><i class="ti ti-file-download"></i> Unduh Surat Edaran (PDF)</a>
+              <span class="badge-status-info">Umum</span>
+            </div>
+          </article>
+
+          <!-- Item 3 - Seleksi / Beasiswa -->
+          <article class="announcement-archive-card" data-type="seleksi">
+            <div class="announcement-card-top">
+              <span class="announcement-pill pill-info"><i class="ti ti-certificate"></i> Beasiswa / Pelatihan</span>
+              <span class="announcement-expiry"><i class="ti ti-clock"></i> Kuota: 150 Orang</span>
+            </div>
+            <div class="announcement-meta-row">
+              <span class="meta-no"><i class="ti ti-file-certificate"></i> No: 031/KOMINFO-KT/III/2026</span>
+              <span class="meta-date"><i class="ti ti-calendar"></i> 05 April 2026</span>
+            </div>
+            <h2>Bantuan Sertifikasi Digital Marketing & Web Development Gratis 2026</h2>
+            <p>Program beasiswa peningkatan kompetensi keahlian digital generasi muda desa bekerja sama dengan Kementerian Kominfo dan mitra industri teknologi untuk pemuda Karang Taruna.</p>
+            <div class="announcement-card-action">
+              <a href="unduhan.html" class="btn-primary-sm"><i class="ti ti-arrow-up-right"></i> Daftar Online</a>
+              <span class="badge-status-active">Sedang Berlangsung</span>
+            </div>
+          </article>
+
+          <!-- Item 4 - Kegiatan -->
+          <article class="announcement-archive-card" data-type="kegiatan">
+            <div class="announcement-card-top">
+              <span class="announcement-pill pill-info"><i class="ti ti-trophy"></i> Turnamen Olahraga</span>
+              <span class="announcement-expiry"><i class="ti ti-calendar"></i> Pelaksanaan: Ags 2026</span>
+            </div>
+            <div class="announcement-meta-row">
+              <span class="meta-no"><i class="ti ti-file-certificate"></i> No: 025/PAN-CUP/III/2026</span>
+              <span class="meta-date"><i class="ti ti-calendar"></i> 28 Maret 2026</span>
+            </div>
+            <h2>Pemberitahuan Turnamen Futsal & Bola Voli Antar Pemuda Kecamatan 2026</h2>
+            <p>Juklak dan Juknis pendaftaran tim perwakilan pemuda karang taruna se-Kabupaten Bandung memperebutkan Piala Bergilir Bupati Bandung di Stadion Si Jalak Harupat.</p>
+            <div class="announcement-card-action">
+              <a href="unduhan.html" class="btn-outline-sm"><i class="ti ti-download"></i> Unduh Juknis Turnamen</a>
+              <span class="badge-status-info">Tahap Registrasi</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="kontak">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand-logo footer-brand">
+            <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+            <div class="brand-text">
+              <strong style="color:#ffffff">Karang Taruna</strong>
+              <small style="color:#6ee7b7">Kabupaten Bandung</small>
+            </div>
+          </a>
+          <p>Bersama pemuda, membangun masyarakat yang lebih maju, mandiri, dan sejahtera.</p>
+        </div>
+        <div>
+          <h4>Kontak Kami</h4>
+          <p>Jl. Al Fathu Soreang, Kabupaten Bandung</p>
+          <p>info@karangtarunabandung.or.id</p>
+          <p>(022) 5897 1234</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Instagram" class="social-icon"><i class="ti ti-brand-instagram"></i></a>
+            <a href="#" aria-label="YouTube" class="social-icon"><i class="ti ti-brand-youtube"></i></a>
+            <a href="#" aria-label="Facebook" class="social-icon"><i class="ti ti-brand-facebook"></i></a>
+            <a href="#" aria-label="TikTok" class="social-icon"><i class="ti ti-brand-tiktok"></i></a>
+            <a href="#" aria-label="WhatsApp" class="social-icon"><i class="ti ti-brand-whatsapp"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4>Tautan Cepat</h4>
+          <div class="footer-links">
+            <a href="tentang-kami.html">Profil</a>
+            <a href="berita.html">Berita</a>
+            <a href="pengumuman.html">Pengumuman</a>
+            <a href="agenda.html">Agenda</a>
+          </div>
+        </div>
+        <div>
+          <h4>Statistik Pengunjung</h4>
+          <div class="visitor-widget">
+            <div class="visitor-stats">
+              <div class="visitor-item">
+                <span>Hari Ini:</span>
+                <strong id="visitorToday">342</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Bulan Ini:</span>
+                <strong id="visitorMonth">8.920</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Total Pengunjung:</span>
+                <strong id="visitorTotal">124.580</strong>
+              </div>
+              <div class="visitor-item online-status">
+                <span>Online Saat Ini:</span>
+                <strong id="visitorOnline"><span class="pulse-dot"></span> 18 User</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Karang Taruna Kabupaten Bandung.</span>
+        <span>Kebijakan Privasi · Syarat & Ketentuan · Peta Situs</span>
+      </div>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/@idds/js@latest/dist/index.iife.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+
+</html>

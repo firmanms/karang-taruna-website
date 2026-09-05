@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Kumpulan Berita Terkini Karang Taruna Kabupaten Bandung - Berita Pusat dan Daerah">
+  <title>Berita & Kabar Terkini - Karang Taruna Kabupaten Bandung</title>
+  
+  <!-- Favicon / Web Icon -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Tabler Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link href="https://unpkg.com/@idds/styles@latest/dist/index.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="brand-logo">
+        <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+        <div class="brand-text">
+          <strong>Karang Taruna</strong>
+          <small>Kabupaten Bandung</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">Beranda</a>
+
+        <!-- Submenu Profil -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Profil</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="tentang-kami.html" class="dropdown-link">Tentang Kami</a>
+            <a href="prestasi.html" class="dropdown-link">Prestasi Pemuda</a>
+            <a href="peta-sebaran.html" class="dropdown-link">Wilayah & Sebaran</a>
+          </div>
+        </div>
+
+        <!-- Submenu Galeri & Media -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Galeri & Media</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="galeri-foto.html" class="dropdown-link">Galeri Foto</a>
+            <a href="galeri-video.html" class="dropdown-link">Galeri Video</a>
+            <a href="unduhan.html" class="dropdown-link">Pusat Unduhan</a>
+          </div>
+        </div>
+
+        <!-- Submenu Aktivitas -->
+        <div class="nav-dropdown">
+          <button class="dropdown-toggle" type="button">
+            <span>Aktivitas</span>
+            <i class="ti ti-chevron-down dropdown-arrow"></i>
+          </button>
+          <div class="dropdown-menu slide-dropdown">
+            <a href="program.html" class="dropdown-link">Program Kerja</a>
+            <a href="agenda.html" class="dropdown-link">Agenda & Kegiatan</a>
+            <a href="berita.html" class="dropdown-link">Berita Terbaru</a>
+            <a href="pengumuman.html" class="dropdown-link">Pengumuman</a>
+            <a href="index.html#faq" class="dropdown-link">FAQ</a>
+          </div>
+        </div>
+
+        <a href="#kontak" class="nav-item">Kontak</a>
+      </nav>
+      <button class="menu-btn" aria-label="Buka menu"><i class="ti ti-menu-2"></i></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Banner -->
+    <section class="page-banner">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html"><i class="ti ti-home"></i> Beranda</a>
+          <span>/</span>
+          <span>Aktivitas</span>
+          <span>/</span>
+          <span class="active">Berita</span>
+        </div>
+        <h1>Berita & Kabar Terkini</h1>
+        <p>Informasi kegiatan, aksi kepemudaan, inovasi sosial, dan kabar aktual dari pusat hingga pelosok kecamatan se-Kabupaten Bandung.</p>
+      </div>
+    </section>
+
+    <!-- News List Section -->
+    <section class="section">
+      <div class="container">
+        <!-- Search & Filter Controls -->
+        <div class="news-filter-header">
+          <div class="news-category-filters">
+            <button class="filter-btn active" data-news-filter="all">Semua Berita</button>
+            <button class="filter-btn" data-news-filter="pusat"><i class="ti ti-building-community"></i> Berita Pusat</button>
+            <button class="filter-btn" data-news-filter="daerah"><i class="ti ti-map-pin"></i> Berita Daerah (Kecamatan)</button>
+          </div>
+
+          <div class="news-search-input">
+            <i class="ti ti-search"></i>
+            <input type="text" id="newsSearchInput" placeholder="Cari judul berita atau topik...">
+          </div>
+        </div>
+
+        <!-- Featured Big Headline -->
+        <article class="featured-news-banner" data-category="pusat">
+          <div class="featured-news-img">
+            <img src="assets/images/news-1.svg" alt="Aksi Tanam Pohon">
+            <span class="badge-featured">Utama / Pusat</span>
+          </div>
+          <div class="featured-news-content">
+            <div class="news-meta-top">
+              <span class="tag-badge"><i class="ti ti-leaf"></i> Lingkungan Hidup</span>
+              <span class="post-date"><i class="ti ti-calendar"></i> 12 April 2026</span>
+            </div>
+            <h2><a href="detail-berita.html">Karang Taruna Gelar Aksi Tanam 1.000 Pohon di Kawasan Bandung Selatan</a></h2>
+            <p>Pengurus Karang Taruna Kabupaten Bandung bersama ratusan relawan pemuda lintas kecamatan menggelar gerakan pelestarian alam dan konservasi hulu daerah aliran sungai Citarum.</p>
+            <div class="featured-news-footer">
+              <span class="author-info"><i class="ti ti-user"></i> Humas Karang Taruna Kab. Bandung</span>
+              <a href="detail-berita.html" class="read-more-btn">Baca Selengkapnya <i class="ti ti-arrow-right"></i></a>
+            </div>
+          </div>
+        </article>
+
+        <!-- News Grid -->
+        <div class="news-grid-list" id="newsGridList">
+          <!-- News 1 - Pusat -->
+          <article class="news-card-item" data-category="pusat">
+            <div class="news-card-thumb">
+              <img src="assets/images/news-2.svg" alt="Pelatihan Kewirausahaan">
+              <span class="category-pill pusat">Pusat</span>
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class="tag">Ekonomi & UMKM</span>
+                <span class="date"><i class="ti ti-calendar"></i> 10 Apr 2026</span>
+              </div>
+              <h3><a href="detail-berita.html">Pelatihan Kewirausahaan & Inkubasi UMKM Pemuda di Soreang</a></h3>
+              <p>Mendorong kemandirian ekonomi generasi muda melalui pendampingan legalitas NIB, sertifikasi produk, dan pemasaran digital.</p>
+              <div class="news-card-footer">
+                <small><i class="ti ti-map-pin"></i> Soreang</small>
+                <a href="detail-berita.html" class="link-arrow">Baca <i class="ti ti-chevron-right"></i></a>
+              </div>
+            </div>
+          </article>
+
+          <!-- News 2 - Daerah (Soreang) -->
+          <article class="news-card-item" data-category="daerah">
+            <div class="news-card-thumb">
+              <img src="assets/images/news-2.svg" alt="Sentra UMKM Soreang">
+              <span class="category-pill daerah">Kec. Soreang</span>
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class="tag">Pemberdayaan</span>
+                <span class="date"><i class="ti ti-calendar"></i> 14 Apr 2026</span>
+              </div>
+              <h3><a href="detail-berita.html">Pemberdayaan Sentra UMKM Pemuda di Kawasan Soreang</a></h3>
+              <p>Kolaborasi pemuda desa dalam memperluas jangkauan pasar produk lokal binaan Karang Taruna Unit.</p>
+              <div class="news-card-footer">
+                <small><i class="ti ti-map-pin"></i> Kec. Soreang</small>
+                <a href="detail-berita.html" class="link-arrow">Baca <i class="ti ti-chevron-right"></i></a>
+              </div>
+            </div>
+          </article>
+
+          <!-- News 3 - Daerah (Cileunyi) -->
+          <article class="news-card-item" data-category="daerah">
+            <div class="news-card-thumb">
+              <img src="assets/images/news-3.svg" alt="Aksi Tanggap Cileunyi">
+              <span class="category-pill daerah">Kec. Cileunyi</span>
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class="tag">Sosial & Relawan</span>
+                <span class="date"><i class="ti ti-calendar"></i> 11 Apr 2026</span>
+              </div>
+              <h3><a href="detail-berita.html">Aksi Tanggap Darurat & Penyaluran Logistik Pemuda Cileunyi</a></h3>
+              <p>Respon cepat relawan muda membantu pemukiman warga terdampak banjir luapan dan pembersihan fasilitas ibadah.</p>
+              <div class="news-card-footer">
+                <small><i class="ti ti-map-pin"></i> Kec. Cileunyi</small>
+                <a href="detail-berita.html" class="link-arrow">Baca <i class="ti ti-chevron-right"></i></a>
+              </div>
+            </div>
+          </article>
+
+          <!-- News 4 - Daerah (Ciwidey) -->
+          <article class="news-card-item" data-category="daerah">
+            <div class="news-card-thumb">
+              <img src="assets/images/news-1.svg" alt="Gerakan Pemuda Ciwidey">
+              <span class="category-pill daerah">Kec. Ciwidey</span>
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class="tag">Ekowisata</span>
+                <span class="date"><i class="ti ti-calendar"></i> 08 Apr 2026</span>
+              </div>
+              <h3><a href="detail-berita.html">Gerakan Pemuda Pelopor Wisata & Konservasi Hijau Ciwidey</a></h3>
+              <p>Edukasi lingkungan hidup dan pengembangan potensi ekowisata berbasis komunitas pemuda lokal di Ciwidey.</p>
+              <div class="news-card-footer">
+                <small><i class="ti ti-map-pin"></i> Kec. Ciwidey</small>
+                <a href="detail-berita.html" class="link-arrow">Baca <i class="ti ti-chevron-right"></i></a>
+              </div>
+            </div>
+          </article>
+
+          <!-- News 5 - Pusat -->
+          <article class="news-card-item" data-category="pusat">
+            <div class="news-card-thumb">
+              <img src="assets/images/news-4.svg" alt="Prestasi Pemuda">
+              <span class="category-pill pusat">Pusat</span>
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class="tag">Prestasi</span>
+                <span class="date"><i class="ti ti-calendar"></i> 05 Apr 2026</span>
+              </div>
+              <h3><a href="detail-berita.html">Pemuda Kabupaten Bandung Raih Juara Inovasi Sosial Tingkat Jawa Barat</a></h3>
+              <p>Apresiasi atas keberhasilan pengembangan aplikasi bank sampah digital yang digagas oleh pengurus Karang Taruna.</p>
+              <div class="news-card-footer">
+                <small><i class="ti ti-map-pin"></i> Tingkat Provinsi</small>
+                <a href="detail-berita.html" class="link-arrow">Baca <i class="ti ti-chevron-right"></i></a>
+              </div>
+            </div>
+          </article>
+
+          <!-- News 6 - Daerah (Baleendah) -->
+          <article class="news-card-item" data-category="daerah">
+            <div class="news-card-thumb">
+              <img src="assets/images/gallery-3.svg" alt="Literasi Digital Baleendah">
+              <span class="category-pill daerah">Kec. Baleendah</span>
+            </div>
+            <div class="news-card-body">
+              <div class="news-card-meta">
+                <span class="tag">Teknologi</span>
+                <span class="date"><i class="ti ti-calendar"></i> 02 Apr 2026</span>
+              </div>
+              <h3><a href="detail-berita.html">Workshop Pemrograman & Talenta Digital Pemuda Baleendah</a></h3>
+              <p>Membekali puluhan remaja dan anggota karang taruna tingkat desa dengan keahlian coding dan website manajemen.</p>
+              <div class="news-card-footer">
+                <small><i class="ti ti-map-pin"></i> Kec. Baleendah</small>
+                <a href="detail-berita.html" class="link-arrow">Baca <i class="ti ti-chevron-right"></i></a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrapper">
+          <button class="page-btn disabled" aria-label="Halaman sebelumnya"><i class="ti ti-chevron-left"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn" aria-label="Halaman berikutnya"><i class="ti ti-chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="kontak">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand-logo footer-brand">
+            <img class="logo-emblem" src="assets/images/logo.png" alt="Lambang Karang Taruna">
+            <div class="brand-text">
+              <strong style="color:#ffffff">Karang Taruna</strong>
+              <small style="color:#6ee7b7">Kabupaten Bandung</small>
+            </div>
+          </a>
+          <p>Bersama pemuda, membangun masyarakat yang lebih maju, mandiri, dan sejahtera.</p>
+        </div>
+        <div>
+          <h4>Kontak Kami</h4>
+          <p>Jl. Al Fathu Soreang, Kabupaten Bandung</p>
+          <p>info@karangtarunabandung.or.id</p>
+          <p>(022) 5897 1234</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Instagram" class="social-icon"><i class="ti ti-brand-instagram"></i></a>
+            <a href="#" aria-label="YouTube" class="social-icon"><i class="ti ti-brand-youtube"></i></a>
+            <a href="#" aria-label="Facebook" class="social-icon"><i class="ti ti-brand-facebook"></i></a>
+            <a href="#" aria-label="TikTok" class="social-icon"><i class="ti ti-brand-tiktok"></i></a>
+            <a href="#" aria-label="WhatsApp" class="social-icon"><i class="ti ti-brand-whatsapp"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4>Tautan Cepat</h4>
+          <div class="footer-links">
+            <a href="tentang-kami.html">Profil</a>
+            <a href="berita.html">Berita</a>
+            <a href="program.html">Program Kerja</a>
+            <a href="peta-sebaran.html">Peta Wilayah</a>
+          </div>
+        </div>
+        <div>
+          <h4>Statistik Pengunjung</h4>
+          <div class="visitor-widget">
+            <div class="visitor-stats">
+              <div class="visitor-item">
+                <span>Hari Ini:</span>
+                <strong id="visitorToday">342</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Bulan Ini:</span>
+                <strong id="visitorMonth">8.920</strong>
+              </div>
+              <div class="visitor-item">
+                <span>Total Pengunjung:</span>
+                <strong id="visitorTotal">124.580</strong>
+              </div>
+              <div class="visitor-item online-status">
+                <span>Online Saat Ini:</span>
+                <strong id="visitorOnline"><span class="pulse-dot"></span> 18 User</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Karang Taruna Kabupaten Bandung.</span>
+        <span>Kebijakan Privasi · Syarat & Ketentuan · Peta Situs</span>
+      </div>
+    </div>
+  </footer>
+  <script src="https://unpkg.com/@idds/js@latest/dist/index.iife.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+
+</html>
