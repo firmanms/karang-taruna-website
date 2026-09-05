@@ -305,13 +305,32 @@ class PublicPortalController extends Controller
      */
     public function territoryMap()
     {
-        $districts = RefDistrict::withCount('units')->get();
+        $districts = RefDistrict::withCount('units')->orderBy('name')->get();
         $units = KarangTarunaUnit::where('is_verified', true)
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->get(['id', 'unit_name', 'unit_level', 'chairman_name', 'contact_phone', 'office_address', 'latitude', 'longitude', 'status_aktif']);
+            ->with(['district', 'village'])
+            ->get(['id', 'unit_name', 'unit_level', 'chairman_name', 'contact_phone', 'office_address', 'latitude', 'longitude', 'status_aktif', 'district_id', 'village_id']);
 
-        return view('public.peta-sebaran', compact('districts', 'units'));
+        $totalDistricts = RefDistrict::count();
+        $totalVillages = RefVillage::count();
+        $totalUnits = KarangTarunaUnit::where('is_verified', true)->count();
+        $totalMembers = (int) KarangTarunaUnit::where('is_verified', true)->sum('total_members');
+        $totalEvents = Event::where('approval_status', 'approved')->count();
+        $totalPrograms = WorkProgram::where('approval_status', 'approved')->count();
+        $totalAchievements = Achievement::where('approval_status', 'approved')->count();
+
+        return view('public.peta-sebaran', compact(
+            'districts',
+            'units',
+            'totalDistricts',
+            'totalVillages',
+            'totalUnits',
+            'totalMembers',
+            'totalEvents',
+            'totalPrograms',
+            'totalAchievements'
+        ));
     }
 
     /**
