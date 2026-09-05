@@ -1,0 +1,966 @@
+# MASTER WORKFLOW PEMBANGUNAN SISTEM
+
+Gunakan file `modul.txt` sebagai sumber requirement utama proyek.
+
+Jangan mengimplementasikan seluruh aplikasi sekaligus.
+
+Kerjakan aplikasi secara bertahap sesuai urutan fase di bawah. Pada setiap fase:
+
+1. Baca requirement yang relevan dari `modul.txt`.
+2. Analisis struktur project yang sudah ada.
+3. Jangan menghapus atau merombak fitur yang sudah berfungsi tanpa alasan.
+4. Gunakan Laravel best practice.
+5. Gunakan migration, model relationship, policy, service/action bila diperlukan.
+6. Hindari hardcode role, wilayah, status, dan konfigurasi.
+7. Jalankan migration/test/build setelah perubahan.
+8. Perbaiki error sebelum melanjutkan.
+9. Setelah selesai, tampilkan ringkasan:
+
+   * file dibuat;
+   * file diubah;
+   * migration dibuat;
+   * fitur selesai;
+   * testing dilakukan;
+   * pekerjaan berikutnya.
+
+Stack utama:
+
+* Laravel 13
+* PHP 8.3+
+* Filament 5
+* Livewire 4
+* Tailwind CSS 4
+* Alpine.js
+* MySQL/MariaDB
+* Redis
+* Laravel Queue
+* Laravel Sanctum untuk API
+* MinIO / S3 compatible storage
+* Leaflet + OpenStreetMap untuk GIS
+* Nginx untuk production
+
+Aplikasi menggunakan modular monolith, bukan microservices.
+
+---
+
+# PROMPT 01 — ANALISIS & PROJECT PLAN
+
+Baca seluruh file `modul.txt`.
+
+Jangan membuat kode terlebih dahulu.
+
+Pelajari semua requirement Website Resmi Karang Taruna Kabupaten Bandung dan buat implementation plan lengkap.
+
+Identifikasi:
+
+1. aktor dan role;
+2. hierarchy Kabupaten → Kecamatan → Desa/Kelurahan → RW;
+3. modul master;
+4. modul transaksi;
+5. modul CMS;
+6. modul publik;
+7. workflow approval;
+8. relasi database;
+9. kebutuhan file storage;
+10. kebutuhan GIS;
+11. kebutuhan API;
+12. kebutuhan security;
+13. dashboard masing-masing role.
+
+Susun implementasi menjadi milestone:
+
+M1 Foundation
+M2 Database
+M3 Authentication & RBAC
+M4 Master Wilayah dan Unit
+M5 Approval Workflow
+M6 CMS
+M7 Portal Publik
+M8 PPKS
+M9 GIS & Statistik
+M10 API
+M11 Testing & Security
+M12 Deployment
+
+Buat juga dependency antar modul.
+
+Tampilkan plan terlebih dahulu dan jangan mengimplementasikan fitur bisnis pada fase ini.
+
+---
+
+# PROMPT 02 — INITIALIZE PROJECT
+
+Sekarang kerjakan Milestone 1: Foundation.
+
+Siapkan project Laravel dengan arsitektur modular monolith.
+
+Install dan konfigurasi komponen yang diperlukan untuk:
+
+* Filament 5;
+* Livewire;
+* authentication;
+* permission;
+* Redis;
+* queue;
+* API Sanctum;
+* media/file storage;
+* Laravel Boost untuk AI development;
+* testing.
+
+Buat struktur folder aplikasi yang bersih.
+
+Gunakan Bahasa Indonesia sebagai locale aplikasi dan timezone `Asia/Jakarta`.
+
+Pisahkan:
+
+* public website;
+* admin CMS;
+* domain/business logic;
+* API.
+
+Jangan membuat seluruh resource CMS pada fase ini.
+
+Pastikan aplikasi berhasil dijalankan.
+
+Jalankan test dan build.
+
+---
+
+# PROMPT 03 — DATABASE SCHEMA
+
+Kerjakan Milestone 2: Database.
+
+Baca kembali struktur database di `modul.txt`.
+
+Implementasikan migration dan model berdasarkan spesifikasi tersebut.
+
+Prioritaskan tabel:
+
+roles
+users
+
+ref_districts
+ref_villages
+
+karang_taruna_units
+unit_members
+
+content_approval_logs
+
+program_divisions
+work_programs
+
+event_categories
+events
+
+news_categories
+articles
+
+announcements
+
+photo_categories
+photo_galleries
+
+video_galleries
+
+achievements
+
+download_categories
+downloads
+
+ppks_categories
+ppks_beneficiaries
+ppks_check_logs
+
+faqs
+
+territory_statistics
+
+visitor_logs
+visitor_aggregates
+
+site_settings
+
+hero_sliders
+profile_organization
+organization_missions
+organization_values
+
+Pastikan foreign key, index, unique constraint, enum/status, timestamps dan relationship sesuai requirement.
+
+Jangan menggabungkan `ref_districts/ref_villages` dengan `karang_taruna_units`.
+
+Master wilayah adalah wilayah administratif.
+
+Karang Taruna Unit adalah lembaga/organisasi.
+
+Buat Seeder dasar untuk role dan status yang dibutuhkan.
+
+Setelah selesai jalankan:
+
+migration
+seeder
+model relationship test
+
+Perbaiki semua error.
+
+---
+
+# PROMPT 04 — AUTHENTICATION, RBAC & MULTI-TENANT SCOPE
+
+Kerjakan Milestone 3.
+
+Implementasikan authentication dan authorization.
+
+Role awal:
+
+1. Superadmin Kabupaten
+2. Verifikator Kabupaten
+3. Admin Kecamatan
+4. Admin Desa/Kelurahan
+5. Kontributor jika diperlukan
+
+Setiap user selain administrator Kabupaten terhubung ke `karang_taruna_units`.
+
+Terapkan data scope:
+
+Superadmin Kabupaten:
+dapat melihat dan mengelola seluruh data.
+
+Verifikator Kabupaten:
+dapat melihat data seluruh wilayah dan melakukan approval sesuai permission.
+
+Admin Kecamatan:
+hanya mengelola data unit kecamatannya dan data yang memang diizinkan dari desa di wilayah kecamatannya.
+
+Admin Desa/Kelurahan:
+hanya mengelola data unit desanya sendiri.
+
+Jangan hanya menyembunyikan menu di frontend.
+
+Authorization wajib diterapkan server-side menggunakan Policy/Gate/query scope.
+
+Buat dashboard Filament sesuai role.
+
+Tambahkan login, logout, profile user, reset password dan status akun aktif/nonaktif.
+
+Buat test untuk memastikan admin Desa A tidak dapat mengakses data Desa B.
+
+---
+
+# PROMPT 05 — MASTER WILAYAH & UNIT KARANG TARUNA
+
+Kerjakan Milestone 4.
+
+Buat Filament Resources untuk:
+
+Master Kecamatan
+Master Desa/Kelurahan
+Unit Karang Taruna
+Pengurus Unit
+
+Hierarchy:
+
+Kabupaten
+↓
+Kecamatan
+↓
+Desa/Kelurahan
+↓
+RW apabila digunakan
+
+Saat memilih Kecamatan pada form Desa atau Unit, gunakan dependent select.
+
+Unit Karang Taruna harus memiliki:
+
+nama unit
+kode unit
+level
+wilayah
+ketua
+sekretaris
+bendahara
+kontak
+alamat
+koordinat
+SK
+periode kepengurusan
+jumlah anggota
+status aktif
+logo
+status verifikasi.
+
+Tambahkan halaman detail unit.
+
+Siapkan data agar nantinya dapat ditampilkan pada website publik dan peta GIS.
+
+---
+
+# PROMPT 06 — APPROVAL WORKFLOW ENGINE
+
+Kerjakan Milestone 5.
+
+Bangun workflow approval reusable yang tidak menduplikasi logika di masing-masing modul.
+
+Status standar:
+
+draft
+pending_approval
+approved
+revision_required
+rejected
+
+Flow:
+
+Admin Desa/Kecamatan
+→ membuat draft
+→ submit
+→ pending_approval
+→ review Kabupaten.
+
+Kabupaten dapat memilih:
+
+APPROVE
+→ approved
+→ publish
+
+REQUEST REVISION
+→ revision_required
+→ beri catatan
+→ kembali ke pembuat
+→ edit
+→ submit ulang
+
+REJECT
+→ rejected
+→ wajib beri alasan.
+
+Setiap aktivitas approval harus masuk ke:
+
+`content_approval_logs`
+
+Catat:
+
+content_type
+content_id
+submitted_by
+reviewed_by
+action_status
+review_notes
+action_timestamp
+
+Buat komponen/service approval yang reusable untuk:
+
+articles
+events
+work_programs
+achievements
+photo_galleries
+video_galleries
+ppks_beneficiaries
+downloads
+
+Tambahkan notification di dashboard.
+
+Buat halaman:
+
+Approval Queue
+Riwayat Approval
+Konten Memerlukan Revisi
+
+Pastikan hanya user berizin yang dapat melakukan approval.
+
+---
+
+# PROMPT 07 — CMS KONTEN
+
+Kerjakan Milestone 6 secara modular.
+
+Implementasikan satu kelompok fitur per langkah dan lakukan test setiap selesai kelompok.
+
+Kelompok A:
+Berita & Artikel
+Kategori Berita
+
+Kelompok B:
+Agenda Kegiatan
+Kategori Agenda
+
+Kelompok C:
+Program Kerja
+Bidang Program
+
+Kelompok D:
+Pengumuman
+
+Kelompok E:
+Galeri Foto
+Album/Kategori Foto
+Galeri Video
+
+Kelompok F:
+Prestasi Pemuda
+
+Kelompok G:
+Pusat Unduhan
+
+Kelompok H:
+FAQ
+
+Setiap modul yang membutuhkan moderasi harus menggunakan Approval Workflow yang sudah dibuat pada Milestone 5.
+
+Jangan membuat workflow approval baru di masing-masing resource.
+
+Tambahkan:
+
+search
+filter wilayah
+filter unit
+filter status
+filter tanggal
+pagination
+bulk action yang aman
+preview konten
+
+Gunakan Rich Text Editor yang kompatibel dengan Filament 5 untuk konten artikel.
+
+---
+
+# PROMPT 08 — WEBSITE PUBLIK
+
+Kerjakan Milestone 7.
+
+Bangun frontend Website Resmi Karang Taruna Kabupaten Bandung tanpa login.
+
+Gunakan:
+
+Blade
+Tailwind CSS
+Alpine.js
+Livewire hanya bila interaktifitas server diperlukan.
+
+Jangan gunakan React/Next.js.
+
+Buat desain modern, responsif, cepat dan mobile-first.
+
+Halaman:
+
+Beranda
+Profil
+Sejarah
+Visi Misi
+Struktur/Pengurus
+Program Kerja
+Berita
+Detail Berita
+Agenda
+Detail Agenda
+Galeri Foto
+Galeri Video
+Prestasi Pemuda
+Pusat Unduhan
+FAQ
+Sebaran Karang Taruna
+PPKS
+Kontak
+
+Beranda memiliki:
+
+Hero Slider
+Berita terbaru
+Agenda
+Program unggulan
+Prestasi
+Galeri
+Statistik wilayah
+Peta sebaran
+Pengumuman
+CTA.
+
+PENTING:
+
+Website publik hanya boleh mengambil konten:
+
+approval_status = approved
+
+dan untuk konten yang menggunakan flag publikasi:
+
+is_published = true.
+
+Konten draft, pending, rejected atau revision_required tidak boleh dapat diakses melalui URL publik.
+
+Tambahkan SEO:
+
+meta title
+meta description
+OpenGraph
+canonical URL
+sitemap.xml
+robots.txt.
+
+---
+
+# PROMPT 09 — PPKS
+
+Kerjakan Milestone 8.
+
+Implementasikan modul PPKS sesuai `modul.txt`.
+
+Admin Desa dapat mengusulkan warga PPKS.
+
+Data harus melalui verifikasi.
+
+Flow:
+
+Admin Desa
+→ input
+→ pending_verification
+→ Verifikator Kabupaten
+→ verified / rejected.
+
+Buat halaman publik:
+
+CEK DATA PPKS
+
+Input:
+
+NIK
+captcha
+
+Jangan menampilkan seluruh informasi sensitif warga.
+
+Masking data yang diperlukan.
+
+Tambahkan rate limiting.
+
+Catat pencarian ke `ppks_check_logs`.
+
+Pastikan security, privacy dan validation menjadi prioritas.
+
+Jangan pernah menampilkan daftar seluruh NIK pada website publik.
+
+---
+
+# PROMPT 10 — GIS & STATISTIK
+
+Kerjakan Milestone 9.
+
+Gunakan Leaflet dan OpenStreetMap.
+
+Buat halaman:
+
+Sebaran Karang Taruna Kabupaten Bandung.
+
+Tampilkan marker unit:
+
+Kabupaten
+Kecamatan
+Desa/Kelurahan
+
+Popup marker minimal menampilkan:
+
+nama unit
+ketua
+alamat
+status
+link detail.
+
+Gunakan latitude dan longitude yang tersimpan di database.
+
+Tambahkan filter:
+
+Kecamatan
+Desa/Kelurahan
+Status Unit.
+
+Jangan memanggil ribuan marker secara tidak efisien.
+
+Sediakan endpoint GeoJSON/API apabila lebih efisien.
+
+Tambahkan statistik:
+
+jumlah kecamatan
+jumlah desa/kelurahan
+jumlah unit
+jumlah anggota
+jumlah kegiatan
+jumlah program
+jumlah prestasi.
+
+---
+
+# PROMPT 11 — REST API
+
+Kerjakan Milestone 10.
+
+Buat API `/api/v1`.
+
+Gunakan Laravel Sanctum untuk endpoint private.
+
+Endpoint publik hanya mengembalikan konten approved/published.
+
+Resource:
+
+news
+events
+programs
+achievements
+galleries
+downloads
+karang-taruna-units
+territory
+statistics.
+
+Tambahkan:
+
+pagination
+search
+filter
+sorting
+API Resource
+validation
+rate limiting.
+
+Response JSON harus konsisten:
+
+success
+message
+data
+meta.
+
+Siapkan struktur sehingga API nantinya dapat digunakan aplikasi Android tanpa mengubah business logic utama.
+
+---
+
+# PROMPT 12 — DASHBOARD
+
+Buat dashboard berbeda berdasarkan role.
+
+SUPERADMIN KABUPATEN:
+
+Total Unit
+Kecamatan
+Desa/Kelurahan
+Anggota
+Berita
+Agenda
+Program
+Prestasi
+PPKS
+Pending Approval
+
+Grafik:
+
+konten per bulan
+kegiatan per kecamatan
+unit aktif/nonaktif
+approval status.
+
+VERIFIKATOR:
+
+Pending Review
+Revision
+Approved Today
+Rejected
+Approval Queue terbaru.
+
+ADMIN KECAMATAN:
+
+Statistik kecamatan sendiri.
+
+ADMIN DESA:
+
+Statistik desa sendiri.
+
+Semua query dashboard wajib mengikuti data scope/authorization.
+
+---
+
+# PROMPT 13 — NOTIFICATION & QUEUE
+
+Tambahkan notification untuk workflow.
+
+Ketika konten diajukan:
+
+notifikasi Verifikator Kabupaten.
+
+Ketika approved:
+
+notifikasi pembuat.
+
+Ketika revision_required:
+
+notifikasi pembuat beserta catatan.
+
+Ketika rejected:
+
+notifikasi pembuat beserta alasan.
+
+Gunakan Laravel Notifications dan Queue.
+
+Gunakan Redis sebagai queue/cache jika tersedia.
+
+Pastikan proses berat seperti notification dan pengolahan file tidak memperlambat request utama.
+
+---
+
+# PROMPT 14 — FILE STORAGE
+
+Konfigurasikan storage agar mendukung:
+
+local development
+S3/MinIO production.
+
+Jenis file:
+
+foto berita
+galeri
+foto kantor
+logo
+SK PDF
+dokumen download
+sertifikat prestasi.
+
+Buat validasi:
+
+extension
+MIME
+ukuran maksimum.
+
+Gunakan UUID/random filename.
+
+Jangan gunakan nama file asli sebagai nama penyimpanan utama.
+
+Buat image optimization/thumbnails jika diperlukan.
+
+Pastikan private document tidak dapat diakses melalui URL publik tanpa authorization.
+
+---
+
+# PROMPT 15 — SECURITY AUDIT
+
+Lakukan security audit aplikasi.
+
+Periksa:
+
+authentication
+authorization
+IDOR
+mass assignment
+SQL injection
+XSS
+CSRF
+file upload
+directory traversal
+rate limiting
+exposure NIK
+session security
+API authorization
+approval bypass
+tenant/data scope leakage.
+
+Secara khusus uji:
+
+Admin Desa A mencoba membuka/edit data Desa B.
+
+Admin Kecamatan A mencoba membuka data Kecamatan B.
+
+User biasa mencoba endpoint approval.
+
+Konten pending mencoba diakses dari website publik.
+
+PPKS dicoba brute-force melalui NIK.
+
+Perbaiki setiap vulnerability yang ditemukan.
+
+Jangan hanya membuat laporan; implementasikan perbaikannya.
+
+---
+
+# PROMPT 16 — AUTOMATED TESTING
+
+Buat Feature Test dan Unit Test untuk fitur kritis.
+
+Prioritas:
+
+authentication
+role permission
+tenant scope
+article CRUD
+approval
+revision
+reject
+publication
+PPKS verification
+public content visibility
+API authorization.
+
+Test workflow:
+
+draft
+→ submit
+→ approve
+→ published.
+
+Dan:
+
+draft
+→ submit
+→ revision
+→ edit
+→ resubmit
+→ approve.
+
+Jalankan seluruh test suite.
+
+Jangan menyelesaikan fase sampai critical test lulus.
+
+---
+
+# PROMPT 17 — PERFORMANCE
+
+Audit performa aplikasi.
+
+Cari:
+
+N+1 queries
+query tanpa index
+loading data berlebih
+gambar terlalu besar
+dashboard query berat
+map marker berlebihan.
+
+Implementasikan:
+
+eager loading
+index database
+pagination
+Redis caching
+query caching bila sesuai
+image optimization
+lazy loading.
+
+Jangan melakukan caching data authorization dengan cara yang dapat menyebabkan kebocoran antar unit.
+
+---
+
+# PROMPT 18 — FINAL QA
+
+Lakukan QA lengkap menggunakan browser.
+
+Test desktop dan mobile.
+
+Test sebagai:
+
+Pengunjung
+Admin Desa
+Admin Kecamatan
+Verifikator
+Superadmin.
+
+Uji flow nyata:
+
+Login
+→ buat berita
+→ simpan draft
+→ submit
+→ review
+→ minta revisi
+→ edit
+→ submit ulang
+→ approve
+→ cek berita muncul di website publik.
+
+Lakukan juga untuk Agenda dan Prestasi.
+
+Catat setiap bug yang ditemukan.
+
+Perbaiki bug.
+
+Ulangi test sampai critical flow berjalan.
+
+---
+
+# PROMPT 19 — PRODUCTION DEPLOYMENT
+
+Siapkan aplikasi untuk production Ubuntu + Nginx.
+
+Environment production menggunakan:
+
+Nginx
+PHP-FPM
+MySQL/MariaDB
+Redis
+Supervisor/systemd untuk queue worker
+MinIO/S3
+Cloudflare.
+
+Siapkan contoh deployment checklist:
+
+environment variables
+APP_KEY
+database
+storage
+queue
+cache
+scheduler
+permissions
+storage link
+SSL
+Nginx
+PHP OPcache
+backup
+log rotation
+health check.
+
+Production:
+
+APP_ENV=production
+APP_DEBUG=false
+
+Jangan menyimpan credential production di repository.
+
+Jalankan optimization Laravel yang direkomendasikan untuk production.
+
+Buat dokumentasi deployment dan rollback.
+
+---
+
+# PROMPT 20 — DOCUMENTATION & HANDOVER
+
+Buat dokumentasi final project.
+
+Dokumen minimal:
+
+README.md
+ARCHITECTURE.md
+DATABASE.md
+ROLES-PERMISSIONS.md
+APPROVAL-WORKFLOW.md
+API.md
+DEPLOYMENT.md
+BACKUP-RESTORE.md
+
+Jelaskan:
+
+arsitektur
+struktur folder
+database
+roles
+data scope
+approval
+API
+storage
+queue
+deployment
+backup
+troubleshooting.
+
+Buat juga akun/demo seeder untuk development:
+
+Superadmin
+Verifikator
+Admin Kecamatan
+Admin Desa
+
+Jangan gunakan password demo tersebut pada production.
