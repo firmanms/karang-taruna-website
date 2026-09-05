@@ -15,48 +15,48 @@
 @endpush
 
 @section('content')
-  <!-- Page Banner -->
-  <section class="page-banner">
-    <div class="container">
-      <div class="breadcrumb">
-        <a href="{{ route('public.home') }}"><i class="ti ti-home"></i> Beranda</a>
-        <span>/</span>
-        <span>Profil</span>
-        <span>/</span>
-        <span class="active">Peta Sebaran</span>
-      </div>
-      <h1>Peta Sebaran & Wilayah</h1>
-      <p>Jangkauan organisasi, direktori pengurus kecamatan, dan data sebaran 31 Karang Taruna Kecamatan serta 280 Desa/Kelurahan se-Kabupaten Bandung.</p>
+<!-- Page Banner -->
+<section class="page-banner">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="{{ route('public.home') }}"><i class="ti ti-home"></i> Beranda</a>
+      <span>/</span>
+      <span>Profil</span>
+      <span>/</span>
+      <span class="active">Peta Sebaran</span>
     </div>
-  </section>
+    <h1>Peta Sebaran & Wilayah</h1>
+    <p>Jangkauan organisasi, direktori pengurus kecamatan, dan data sebaran 31 Karang Taruna Kecamatan serta 280 Desa/Kelurahan se-Kabupaten Bandung.</p>
+  </div>
+</section>
 
-  <!-- Map & Stats Section -->
-  <section class="section">
-    <div class="container">
-      <!-- Stats Row -->
-      <div class="territory-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
-        <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-map-2"></i></div>
-          <div>
-            <strong>{{ $totalDistricts ?? 31 }}</strong>
-            <span>Kecamatan</span>
-          </div>
+<!-- Map & Stats Section -->
+<section class="section">
+  <div class="container">
+    <!-- Stats Row -->
+    <div class="territory-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+      <div class="territory-stat-card">
+        <div class="stat-icon-wrap"><i class="ti ti-map-2"></i></div>
+        <div>
+          <strong>{{ $totalDistricts ?? 31 }}</strong>
+          <span>Kecamatan</span>
         </div>
-        <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-home-check"></i></div>
-          <div>
-            <strong>{{ $totalVillages ?? 280 }}</strong>
-            <span>Desa / Kelurahan</span>
-          </div>
+      </div>
+      <div class="territory-stat-card">
+        <div class="stat-icon-wrap"><i class="ti ti-home-check"></i></div>
+        <div>
+          <strong>{{ $totalVillages ?? 280 }}</strong>
+          <span>Desa / Kelurahan</span>
         </div>
-        <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-building-community"></i></div>
-          <div>
-            <strong>{{ $totalUnits ?? 312 }}</strong>
-            <span>Unit Karang Taruna</span>
-          </div>
+      </div>
+      <div class="territory-stat-card">
+        <div class="stat-icon-wrap"><i class="ti ti-building-community"></i></div>
+        <div>
+          <strong>{{ $totalUnits ?? 312 }}</strong>
+          <span>Unit Karang Taruna</span>
         </div>
-        <div class="territory-stat-card">
+      </div>
+      <!-- <div class="territory-stat-card">
           <div class="stat-icon-wrap"><i class="ti ti-users"></i></div>
           <div>
             <strong>{{ number_format($totalMembers > 0 ? $totalMembers : 14500, 0, ',', '.') }}</strong>
@@ -83,91 +83,91 @@
             <strong>{{ $totalAchievements ?? 0 }}</strong>
             <span>Prestasi Pemuda</span>
           </div>
-        </div>
-      </div>
+        </div> -->
+    </div>
 
-      <!-- Interactive Map Visual Card with Filter Header -->
-      <div class="map-visual-card" style="margin-top: 2rem;">
-        <div class="map-visual-head" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-          <div>
-            <h2>Peta Interaktif GIS Karang Taruna</h2>
-            <p>Visualisasi pemetaan unit kerja Karang Taruna se-Kabupaten Bandung.</p>
-          </div>
-          <span class="map-badge-live"><span class="pulse-dot"></span> <span id="markerCountDisplay">{{ count($units) }}</span> Titik Terpetakan</span>
-        </div>
-
-        <!-- GIS Filter Controls Bar -->
-        <div class="gis-filter-bar" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; background: #f8fafc; padding: 1rem; border-radius: 0.75rem; border: 1px solid #e2e8f0;">
-          <div style="flex: 1; min-width: 200px;">
-            <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><i class="ti ti-map-pin"></i> Filter Kecamatan</label>
-            <select id="filterDistrict" class="form-control" style="width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; background: #fff; font-size: 14px;">
-              <option value="">-- Semua Kecamatan --</option>
-              @foreach($districts as $d)
-                <option value="{{ $d->id }}">{{ $d->name }}</option>
-              @endforeach
-            </select>
-          </div>
-
-          <div style="flex: 1; min-width: 180px;">
-            <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><i class="ti ti-layers-intersect"></i> Tingkatan Unit</label>
-            <select id="filterLevel" class="form-control" style="width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; background: #fff; font-size: 14px;">
-              <option value="">-- Semua Tingkatan --</option>
-              <option value="kabupaten">Tingkat Kabupaten</option>
-              <option value="kecamatan">Tingkat Kecamatan</option>
-              <option value="desa">Tingkat Desa/Kelurahan</option>
-            </select>
-          </div>
-
-          <div style="display: flex; align-items: flex-end;">
-            <button id="resetGisFilter" type="button" style="padding: 0.5rem 1rem; background: #047857; color: #fff; border: none; border-radius: 0.5rem; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-              <i class="ti ti-rotate-clockwise"></i> Reset Filter
-            </button>
-          </div>
-        </div>
-
-        <!-- Legend Warna Tingkatan Unit -->
-        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.85rem; color: #475569; background: #fff; padding: 0.6rem 1rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
-          <span style="font-weight: 600; color: #1e293b;"><i class="ti ti-info-circle"></i> Keterangan Titik Marker:</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #ef4444; border: 2px solid #fff; box-shadow: 0 0 0 1px #ef4444;"></span> <strong>Kabupaten</strong> (Merah)
-          </span>
-          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #3b82f6; border: 2px solid #fff; box-shadow: 0 0 0 1px #3b82f6;"></span> <strong>Kecamatan</strong> (Biru)
-          </span>
-          <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-            <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #10b981; border: 2px solid #fff; box-shadow: 0 0 0 1px #10b981;"></span> <strong>Desa / Kelurahan</strong> (Hijau)
-          </span>
-        </div>
-
-        <div id="mapContainer"></div>
-      </div>
-
-      <!-- Kecamatan Grid -->
-      <div class="directory-section-header" style="margin-top: 3rem;">
+    <!-- Interactive Map Visual Card with Filter Header -->
+    <div class="map-visual-card" style="margin-top: 2rem;">
+      <div class="map-visual-head" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
-          <h2>Sebaran 31 Kecamatan se-Kabupaten Bandung</h2>
-          <p>Daftar wilayah administratif dan jangkauan organisasi Karang Taruna.</p>
+          <h2>Peta Interaktif GIS Karang Taruna</h2>
+          <p>Visualisasi pemetaan unit kerja Karang Taruna se-Kabupaten Bandung.</p>
+        </div>
+        <span class="map-badge-live"><span class="pulse-dot"></span> <span id="markerCountDisplay">{{ count($units) }}</span> Titik Terpetakan</span>
+      </div>
+
+      <!-- GIS Filter Controls Bar -->
+      <div class="gis-filter-bar" style="display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; background: #f8fafc; padding: 1rem; border-radius: 0.75rem; border: 1px solid #e2e8f0;">
+        <div style="flex: 1; min-width: 200px;">
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><i class="ti ti-map-pin"></i> Filter Kecamatan</label>
+          <select id="filterDistrict" class="form-control" style="width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; background: #fff; font-size: 14px;">
+            <option value="">-- Semua Kecamatan --</option>
+            @foreach($districts as $d)
+            <option value="{{ $d->id }}">{{ $d->name }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 180px;">
+          <label style="font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;"><i class="ti ti-layers-intersect"></i> Tingkatan Unit</label>
+          <select id="filterLevel" class="form-control" style="width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; background: #fff; font-size: 14px;">
+            <option value="">-- Semua Tingkatan --</option>
+            <option value="kabupaten">Tingkat Kabupaten</option>
+            <option value="kecamatan">Tingkat Kecamatan</option>
+            <option value="desa">Tingkat Desa/Kelurahan</option>
+          </select>
+        </div>
+
+        <div style="display: flex; align-items: flex-end;">
+          <button id="resetGisFilter" type="button" style="padding: 0.5rem 1rem; background: #047857; color: #fff; border: none; border-radius: 0.5rem; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <i class="ti ti-rotate-clockwise"></i> Reset Filter
+          </button>
         </div>
       </div>
 
-      <div class="kecamatan-grid" id="kecamatanGrid" style="margin-top: 1.5rem;">
-        @foreach($districts as $dist)
-          <div class="kecamatan-card">
-            <div class="kec-card-head">
-              <h3>Kecamatan {{ $dist->name }}</h3>
-            </div>
-            <div class="kec-card-body">
-              <p><i class="ti ti-building"></i> <strong>Kode Kemendagri:</strong> {{ $dist->kemendagri_code ?? '-' }}</p>
-              <p><i class="ti ti-users"></i> <strong>Jumlah Unit:</strong> {{ $dist->units_count ?? 1 }} Unit Lembaga</p>
-            </div>
-            <div class="kec-card-footer">
-              <span class="status-aktif"><i class="ti ti-circle-check"></i> Wilayah Terverifikasi</span>
-            </div>
-          </div>
-        @endforeach
+      <!-- Legend Warna Tingkatan Unit -->
+      <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.85rem; color: #475569; background: #fff; padding: 0.6rem 1rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+        <span style="font-weight: 600; color: #1e293b;"><i class="ti ti-info-circle"></i> Keterangan Titik Marker:</span>
+        <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #ef4444; border: 2px solid #fff; box-shadow: 0 0 0 1px #ef4444;"></span> <strong>Kabupaten</strong> (Merah)
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #3b82f6; border: 2px solid #fff; box-shadow: 0 0 0 1px #3b82f6;"></span> <strong>Kecamatan</strong> (Biru)
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background-color: #10b981; border: 2px solid #fff; box-shadow: 0 0 0 1px #10b981;"></span> <strong>Desa / Kelurahan</strong> (Hijau)
+        </span>
+      </div>
+
+      <div id="mapContainer"></div>
+    </div>
+
+    <!-- Kecamatan Grid -->
+    <div class="directory-section-header" style="margin-top: 3rem;">
+      <div>
+        <h2>Sebaran 31 Kecamatan se-Kabupaten Bandung</h2>
+        <p>Daftar wilayah administratif dan jangkauan organisasi Karang Taruna.</p>
       </div>
     </div>
-  </section>
+
+    <div class="kecamatan-grid" id="kecamatanGrid" style="margin-top: 1.5rem;">
+      @foreach($districts as $dist)
+      <div class="kecamatan-card">
+        <div class="kec-card-head">
+          <h3>Kecamatan {{ $dist->name }}</h3>
+        </div>
+        <div class="kec-card-body">
+          <p><i class="ti ti-building"></i> <strong>Kode Kemendagri:</strong> {{ $dist->kemendagri_code ?? '-' }}</p>
+          <p><i class="ti ti-users"></i> <strong>Jumlah Unit:</strong> {{ $dist->units_count ?? 1 }} Unit Lembaga</p>
+        </div>
+        <div class="kec-card-footer">
+          <span class="status-aktif"><i class="ti ti-circle-check"></i> Wilayah Terverifikasi</span>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </div>
+</section>
 @endsection
 
 @push('scripts')
@@ -234,7 +234,7 @@
             const marker = L.marker([u.latitude, u.longitude], {
               icon: getMarkerIcon(level)
             });
-            
+
             let badgeBg = '#ecfdf5';
             let badgeColor = '#047857';
             if (level === 'kabupaten') {
@@ -285,7 +285,9 @@
           }
         });
       } else {
-        L.marker([-7.0252, 107.5198], { icon: getMarkerIcon('kabupaten') }).addTo(markersLayer)
+        L.marker([-7.0252, 107.5198], {
+            icon: getMarkerIcon('kabupaten')
+          }).addTo(markersLayer)
           .bindPopup('<b>Sekretariat Karang Taruna Kab. Bandung</b><br>Soreang, Kab. Bandung')
           .openPopup();
       }
