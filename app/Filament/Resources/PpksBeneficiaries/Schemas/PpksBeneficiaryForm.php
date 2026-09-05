@@ -17,6 +17,7 @@ class PpksBeneficiaryForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('Identitas Warga PPKS')
                     ->description('Pastikan data NIK dan Nama sesuai dengan KTP-el atau KK resmi.')
