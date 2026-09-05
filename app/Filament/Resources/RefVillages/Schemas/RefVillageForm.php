@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RefVillages\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -31,9 +32,8 @@ class RefVillageForm
                                 ->label('Nama Desa / Kelurahan')
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                            TextInput::make('slug')
-                                ->label('Slug')
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', $state ? Str::slug($state).'-'.strtolower(Str::random(5)) : '')),
+                            Hidden::make('slug')
                                 ->required()
                                 ->unique(ignoreRecord: true),
                             TextInput::make('kemendagri_code')

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProgramDivisions\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -24,11 +25,9 @@ class ProgramDivisionForm
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                        TextInput::make('slug')
-                            ->label('Slug')
+                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', $state ? Str::slug($state).'-'.strtolower(Str::random(5)) : '')),
+                        Hidden::make('slug')
                             ->required()
-                            ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         TextInput::make('order_index')
                             ->label('Nomor Urut')

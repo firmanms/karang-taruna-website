@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Roles\Schemas;
 
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -27,11 +28,9 @@ class RoleForm
                                 ->required()
                                 ->maxLength(255)
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                            TextInput::make('slug')
-                                ->label('Slug Identifier')
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', $state ? Str::slug($state).'-'.strtolower(Str::random(5)) : '')),
+                            Hidden::make('slug')
                                 ->required()
-                                ->maxLength(255)
                                 ->unique(ignoreRecord: true),
                             Select::make('tier_level')
                                 ->label('Tingkatan Wilayah')

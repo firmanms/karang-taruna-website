@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WorkPrograms\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -29,9 +30,8 @@ class WorkProgramForm
                                 ->label('Nama Program Kerja')
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                            TextInput::make('slug')
-                                ->label('Slug URL')
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', $state ? Str::slug($state).'-'.strtolower(Str::random(5)) : '')),
+                            Hidden::make('slug')
                                 ->required()
                                 ->unique(ignoreRecord: true),
                         ]),

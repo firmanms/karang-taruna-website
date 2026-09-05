@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RefDistricts\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -24,9 +25,8 @@ class RefDistrictForm
                                 ->label('Nama Kecamatan')
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                            TextInput::make('slug')
-                                ->label('Slug URL')
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', $state ? Str::slug($state).'-'.strtolower(Str::random(5)) : '')),
+                            Hidden::make('slug')
                                 ->required()
                                 ->unique(ignoreRecord: true),
                             TextInput::make('kemendagri_code')

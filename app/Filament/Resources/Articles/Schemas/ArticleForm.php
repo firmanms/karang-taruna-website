@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Articles\Schemas;
 use App\Domain\Territory\Models\RefVillage;
 use App\Domain\Units\Models\KarangTarunaUnit;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -33,9 +34,8 @@ class ArticleForm
                                 ->label('Judul Berita')
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                            TextInput::make('slug')
-                                ->label('Slug URL')
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', $state ? Str::slug($state).'-'.strtolower(Str::random(5)) : '')),
+                            Hidden::make('slug')
                                 ->required()
                                 ->unique(ignoreRecord: true),
                         ]),
