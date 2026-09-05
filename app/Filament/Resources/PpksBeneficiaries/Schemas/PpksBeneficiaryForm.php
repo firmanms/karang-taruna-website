@@ -29,9 +29,7 @@ class PpksBeneficiaryForm
                                 ->required()
                                 ->length(16)
                                 ->numeric()
-                                ->unique(ignoreRecord: true)
-                                ->password(fn ($operation) => $operation === 'create' ? false : false)
-                                ->revealable(),
+                                ->unique(ignoreRecord: true),
                             TextInput::make('full_name')
                                 ->label('Nama Lengkap Warga')
                                 ->placeholder('Contoh: Ahmad Subagja')
