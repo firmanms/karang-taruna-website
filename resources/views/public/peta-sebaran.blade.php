@@ -56,34 +56,6 @@
           <span>Unit Karang Taruna</span>
         </div>
       </div>
-      <!-- <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-users"></i></div>
-          <div>
-            <strong>{{ number_format($totalMembers > 0 ? $totalMembers : 14500, 0, ',', '.') }}</strong>
-            <span>Kader & Anggota</span>
-          </div>
-        </div>
-        <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-calendar-event"></i></div>
-          <div>
-            <strong>{{ $totalEvents ?? 0 }}</strong>
-            <span>Agenda Kegiatan</span>
-          </div>
-        </div>
-        <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-briefcase"></i></div>
-          <div>
-            <strong>{{ $totalPrograms ?? 0 }}</strong>
-            <span>Program Kerja</span>
-          </div>
-        </div>
-        <div class="territory-stat-card">
-          <div class="stat-icon-wrap"><i class="ti ti-trophy"></i></div>
-          <div>
-            <strong>{{ $totalAchievements ?? 0 }}</strong>
-            <span>Prestasi Pemuda</span>
-          </div>
-        </div> -->
     </div>
 
     <!-- Interactive Map Visual Card with Filter Header -->
