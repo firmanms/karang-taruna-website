@@ -102,7 +102,8 @@ class WorkProgramForm
                             ->maxSize(3072),
                         Toggle::make('is_featured_home')
                             ->label('Tampilkan sebagai Program Unggulan di Beranda')
-                            ->default(false),
+                            ->default(false)
+                            ->visible(fn () => auth()->user()?->isSuperadmin() || auth()->user()?->isVerifikator()),
                     ]),
             ]);
     }

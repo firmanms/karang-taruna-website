@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Events\Schemas;
 
 use App\Domain\Territory\Models\RefVillage;
+use App\Domain\Units\Models\KarangTarunaUnit;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -91,7 +92,17 @@ class EventForm
                                 ->relationship('unit', 'unit_name', fn (Builder $query) => $query->forUser())
                                 ->searchable()
                                 ->preload()
+                                ->live()
                                 ->default(fn () => auth()->user()?->unit_id)
+                                ->afterStateUpdated(function (Set $set, ?int $state) {
+                                    if ($state) {
+                                        $unit = KarangTarunaUnit::find($state);
+                                        if ($unit) {
+                                            $set('district_id', $unit->district_id);
+                                            $set('village_id', $unit->village_id);
+                                        }
+                                    }
+                                })
                                 ->required(),
                             Select::make('district_id')
                                 ->label('Kecamatan')
@@ -99,16 +110,25 @@ class EventForm
                                 ->searchable()
                                 ->preload()
                                 ->live()
-                                ->default(fn () => auth()->user()?->unit?->district_id),
+                                ->default(fn () => auth()->user()?->unit?->district_id)
+                                ->disabled(fn () => auth()->user()?->isAdminKecamatan() || auth()->user()?->isAdminDesa())
+                                ->dehydrated(),
                             Select::make('village_id')
                                 ->label('Desa / Kelurahan')
-                                ->options(fn (Get $get): array => RefVillage::query()
-                                    ->when($get('district_id'), fn ($query, $districtId) => $query->where('district_id', $districtId))
-                                    ->pluck('name', 'id')
-                                    ->toArray()
-                                )
+                                ->options(function (Get $get) {
+                                    $districtId = $get('district_id') ?: auth()->user()?->unit?->district_id;
+                                    $user = auth()->user();
+
+                                    return RefVillage::query()
+                                        ->when($districtId, fn ($query, $dId) => $query->where('district_id', $dId))
+                                        ->when($user?->isAdminDesa() && $user?->unit?->village_id, fn ($query) => $query->where('id', $user->unit->village_id))
+                                        ->pluck('name', 'id')
+                                        ->toArray();
+                                })
                                 ->searchable()
-                                ->default(fn () => auth()->user()?->unit?->village_id),
+                                ->default(fn () => auth()->user()?->unit?->village_id)
+                                ->disabled(fn () => auth()->user()?->isAdminDesa())
+                                ->dehydrated(),
                         ]),
                         Grid::make(2)->schema([
                             TextInput::make('registration_link')

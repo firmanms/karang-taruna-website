@@ -79,7 +79,8 @@ class VideoGalleryForm
                             ->required(),
                         Toggle::make('is_featured')
                             ->label('Tampilkan sebagai Video Utama di Beranda')
-                            ->default(false),
+                            ->default(false)
+                            ->visible(fn () => auth()->user()?->isSuperadmin() || auth()->user()?->isVerifikator()),
                     ]),
             ]);
     }
