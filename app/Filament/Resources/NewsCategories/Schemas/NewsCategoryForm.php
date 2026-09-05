@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Filament\Resources\NewsCategories\Schemas;
+
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Set;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+
+class NewsCategoryForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('Kategori Berita')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('name')
+                                ->label('Nama Kategori')
+                                ->required()
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                            TextInput::make('slug')
+                                ->label('Slug URL')
+                                ->required()
+                                ->unique(ignoreRecord: true),
+                        ]),
+                        Select::make('type')
+                            ->label('Cakupan Kategori')
+                            ->options([
+                                'pusat' => 'Berita Pusat (Kabupaten)',
+                                'daerah' => 'Kabar Daerah (Kecamatan / Desa)',
+                                'umum' => 'Umum & Sosial',
+                            ])
+                            ->default('umum')
+                            ->required(),
+                    ]),
+            ]);
+    }
+}

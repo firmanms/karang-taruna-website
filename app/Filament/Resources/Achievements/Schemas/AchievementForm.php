@@ -1,0 +1,116 @@
+<?php
+
+namespace App\Filament\Resources\Achievements\Schemas;
+
+use App\Domain\Territory\Models\RefVillage;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+
+class AchievementForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('Informasi Prestasi / Penghargaan')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('title')
+                                ->label('Nama Penghargaan / Prestasi')
+                                ->required()
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                            TextInput::make('slug')
+                                ->label('Slug URL')
+                                ->required()
+                                ->unique(ignoreRecord: true),
+                        ]),
+                        Grid::make(2)->schema([
+                            TextInput::make('recipient_name')
+                                ->label('Nama Penerima / Delegasi')
+                                ->required()
+                                ->placeholder('Nama perorangan atau tim pemuda'),
+                            Select::make('achievement_level')
+                                ->label('Tingkat Kejuaraan')
+                                ->options([
+                                    'Kabupaten' => 'Tingkat Kabupaten',
+                                    'Provinsi' => 'Tingkat Provinsi',
+                                    'Nasional' => 'Tingkat Nasional',
+                                    'Internasional' => 'Tingkat Internasional',
+                                ])
+                                ->default('Kabupaten')
+                                ->required(),
+                        ]),
+                        Grid::make(3)->schema([
+                            TextInput::make('category_field')
+                                ->label('Bidang Prestasi')
+                                ->placeholder('Contoh: Inovasi Teknologi, Olahraga, Lingkungan')
+                                ->required(),
+                            TextInput::make('year')
+                                ->label('Tahun Perolehan')
+                                ->numeric()
+                                ->default((int) date('Y'))
+                                ->required(),
+                            TextInput::make('rank_position')
+                                ->label('Peringkat / Juara')
+                                ->placeholder('Contoh: Juara 1, Medali Emas')
+                                ->required(),
+                        ]),
+                        TextInput::make('awarded_by')
+                            ->label('Pemberi Penghargaan / Penyelenggara')
+                            ->required()
+                            ->placeholder('Contoh: Kementerian Pemuda dan Olahraga RI'),
+                        Textarea::make('description')
+                            ->label('Deskripsi / Cerita Singkat Prestasi')
+                            ->rows(3),
+                    ]),
+
+                Section::make('Bukti Sertifikat & Unit')
+                    ->schema([
+                        FileUpload::make('certificate_image')
+                            ->label('Foto Sertifikat / Piagam / Dokumentasi')
+                            ->disk('public')
+                            ->directory('achievements')
+                            ->image()
+                            ->maxSize(4096),
+                        Grid::make(3)->schema([
+                            Select::make('unit_id')
+                                ->label('Unit Lembaga Asal')
+                                ->relationship('unit', 'unit_name')
+                                ->searchable()
+                                ->preload()
+                                ->default(fn () => auth()->user()?->unit_id)
+                                ->required(),
+                            Select::make('district_id')
+                                ->label('Kecamatan')
+                                ->relationship('district', 'name')
+                                ->searchable()
+                                ->preload()
+                                ->live()
+                                ->default(fn () => auth()->user()?->unit?->district_id),
+                            Select::make('village_id')
+                                ->label('Desa / Kelurahan')
+                                ->options(fn (Get $get): array => RefVillage::query()
+                                    ->when($get('district_id'), fn ($query, $districtId) => $query->where('district_id', $districtId))
+                                    ->pluck('name', 'id')
+                                    ->toArray()
+                                )
+                                ->searchable()
+                                ->default(fn () => auth()->user()?->unit?->village_id),
+                        ]),
+                        Toggle::make('is_featured')
+                            ->label('Tampilkan sebagai Prestasi Unggulan di Beranda')
+                            ->default(false),
+                    ]),
+            ]);
+    }
+}
