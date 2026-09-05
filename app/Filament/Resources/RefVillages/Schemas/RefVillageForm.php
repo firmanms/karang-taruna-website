@@ -38,7 +38,7 @@ class RefVillageForm
                                 ->unique(ignoreRecord: true),
                             TextInput::make('kemendagri_code')
                                 ->label('Kode Kemendagri')
-                                ->placeholder('Contoh: 32.04.05.2001')
+                                ->placeholder('Contoh: 3204052001')
                                 ->required(),
                         ]),
                         Grid::make(3)->schema([

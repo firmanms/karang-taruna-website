@@ -20,6 +20,11 @@ class RefDistrict extends Model
         'geojson_boundary',
     ];
 
+    public function setKemendagriCodeAttribute(?string $value): void
+    {
+        $this->attributes['kemendagri_code'] = $value !== null ? str_replace('.', '', trim($value)) : null;
+    }
+
     public function villages(): HasMany
     {
         return $this->hasMany(RefVillage::class, 'district_id');

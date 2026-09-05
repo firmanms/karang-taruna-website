@@ -25,6 +25,11 @@ class RefVillage extends Model
         'longitude_center',
     ];
 
+    public function setKemendagriCodeAttribute(?string $value): void
+    {
+        $this->attributes['kemendagri_code'] = $value !== null ? str_replace('.', '', trim($value)) : null;
+    }
+
     public function district(): BelongsTo
     {
         return $this->belongsTo(RefDistrict::class, 'district_id');

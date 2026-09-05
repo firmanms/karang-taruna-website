@@ -31,7 +31,7 @@ class RefDistrictForm
                                 ->unique(ignoreRecord: true),
                             TextInput::make('kemendagri_code')
                                 ->label('Kode Kemendagri')
-                                ->placeholder('Contoh: 32.04.05')
+                                ->placeholder('Contoh: 320405')
                                 ->required(),
                         ]),
                     ]),

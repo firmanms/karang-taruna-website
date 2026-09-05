@@ -25,8 +25,8 @@ class ListRefDistricts extends ListRecords
                 ->action(function () {
                     $headers = ['kemendagri_code', 'name', 'latitude_center', 'longitude_center'];
                     $sampleRows = [
-                        ['32.04.01', 'Soreang', -7.0289, 107.5186],
-                        ['32.04.02', 'Banjaran', -7.0425, 107.5892],
+                        ['320401', 'Soreang', -7.0289, 107.5186],
+                        ['320402', 'Banjaran', -7.0425, 107.5892],
                     ];
 
                     return ExcelImportExportService::downloadTemplateXlsx('template-master-kecamatan.xlsx', $headers, $sampleRows);

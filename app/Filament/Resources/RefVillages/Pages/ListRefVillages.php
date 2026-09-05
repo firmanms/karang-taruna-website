@@ -35,8 +35,8 @@ class ListRefVillages extends ListRecords
                         'longitude_center',
                     ];
                     $sampleRows = [
-                        ['32.04.01.2001', 'Soreang', 'Soreang', 'Desa', '40911', 18, 72, -7.0289, 107.5186],
-                        ['32.04.01.2002', 'Soreang', 'Panyirapan', 'Desa', '40915', 14, 56, -7.0345, 107.5210],
+                        ['3204012001', 'Soreang', 'Soreang', 'Desa', '40911', 18, 72, -7.0289, 107.5186],
+                        ['3204012002', 'Soreang', 'Panyirapan', 'Desa', '40915', 14, 56, -7.0345, 107.5210],
                     ];
 
                     return ExcelImportExportService::downloadTemplateXlsx('template-master-desa-kelurahan.xlsx', $headers, $sampleRows);

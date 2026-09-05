@@ -165,12 +165,15 @@ class ExcelImportExportService
                 }
 
                 $code = $row['kemendagri_code'] ?? $row['kode_kemendagri'] ?? null;
+                if ($code !== null) {
+                    $code = str_replace('.', '', trim((string) $code));
+                }
                 $slug = Str::slug($name);
 
                 // Update jika sudah ada (berdasarkan nama atau kode), atau buat baru
                 $district = null;
                 if ($code) {
-                    $district = RefDistrict::where('kemendagri_code', $code)->first();
+                    $district = RefDistrict::whereRaw("REPLACE(kemendagri_code, '.', '') = ?", [$code])->first();
                 }
                 if (! $district) {
                     $district = RefDistrict::where('name', $name)->first();
@@ -234,13 +237,16 @@ class ExcelImportExportService
                 }
 
                 $code = $row['kemendagri_code'] ?? $row['kode_kemendagri'] ?? null;
+                if ($code !== null) {
+                    $code = str_replace('.', '', trim((string) $code));
+                }
                 $type = $row['type'] ?? $row['tipe'] ?? 'Desa';
                 $slug = Str::slug($name);
 
                 // Cari desa yang ada di kecamatan ini
                 $village = null;
                 if ($code) {
-                    $village = RefVillage::where('kemendagri_code', $code)->first();
+                    $village = RefVillage::whereRaw("REPLACE(kemendagri_code, '.', '') = ?", [$code])->first();
                 }
                 if (! $village) {
                     $village = RefVillage::where('district_id', $districtId)->where('name', $name)->first();
