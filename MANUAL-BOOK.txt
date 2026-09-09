@@ -1,0 +1,305 @@
+================================================================================
+          BUKU PANDUAN PENGGUNA (MANUAL BOOK) SISTEM INFORMASI & PORTAL
+                      KARANG TARUNA KABUPATEN BANDUNG
+================================================================================
+Versi Dokumen : 1.0.0
+Tanggal Rilis : September 2026
+Target Pengguna: Superadmin Kabupaten, Verifikator Kabupaten, Admin Kecamatan,
+                 Admin Desa/Kelurahan, dan Masyarakat Umum.
+================================================================================
+
+DAFTAR ISI:
+--------------------------------------------------------------------------------
+1. PENDAHULUAN & PENGENALAN SISTEM
+2. PERAN PENGGUNA & HAK AKSES (ROLES & PERMISSIONS)
+3. PANDUAN AKSES PORTAL PUBLIK (WARGA / MASYARAKAT)
+   3.1. Halaman Beranda & Statistik Pengunjung
+   3.2. Peta Interaktif GIS Unit Karang Taruna
+   3.3. Sub-Site Wilayah (Kecamatan & Desa)
+   3.4. Berita, Program Kerja, Agenda & Galeri
+   3.5. Layanan Pengusulan & Cek Status PPKS Mandiri
+4. PANDUAN LOGIN ADMIN PANEL FILAMENT CMS
+   4.1. Mengakses Halaman Login
+   4.2. Keamanan Login & Validasi Captcha
+5. PANDUAN PENGGUNAAN ADMIN TINGKAT KABUPATEN (SUPERADMIN & VERIFIKATOR)
+   5.1. Manajemen Master Data (Wilayah, Unit Karang Taruna, Kategori PPKS, Sumber Anggaran)
+   5.2. Manajemen Pengguna & Penetapan Role Wilayah
+   5.3. Pengaturan Sistem & Website (Site Settings & Sakelar PPKS)
+   5.4. Moderasi & Workflow Approval Konten (Setujui, Tolak, Minta Revisi)
+   5.5. Verifikasi Usulan Bantuan PPKS Warga
+   5.6. Fitur Impor Excel & Download Template Resmi
+6. PANDUAN PENGGUNAAN ADMIN KECAMATAN & DESA/KELURAHAN
+   6.1. Mengelola Data Profil Unit Karang Taruna Sendiri
+   6.2. Mengelola Struktur Pengurus Unit (Ketua, Sekretaris, Bendahara, dll.)
+   6.3. Membuat & Mengajukan Berita/Artikel (Submit for Approval)
+   6.4. Mengelola Program Kerja & Agenda Kegiatan
+   6.5. Mengunggah Galeri Foto & Dokumen Unduhan
+   6.6. Mengajukan Usulan Warga PPKS (Tingkat Desa)
+   6.7. Memperbaiki Konten yang Berstatus 'Revision Required'
+7. ATURAN & BATASAN SISTEM
+   7.1. Batasan Ukuran Upload Media (Maksimal 512 KB)
+   7.2. Proteksi Data Sensitif (Masking NIK Warga)
+8. PANDUAN INTEGRASI REST API v1
+9. FAQ & PEMECAHAN MASALAH (TROUBLESHOOTING)
+
+================================================================================
+1. PENDAHULUAN & PENGENALAN SISTEM
+================================================================================
+Sistem Informasi & Website Resmi Karang Taruna Kabupaten Bandung adalah platform
+terpadu berbasis web yang menghubungkan Pengurus Tingkat Kabupaten, 31 Karang
+Taruna Kecamatan, dan 280 Karang Taruna Desa/Kelurahan se-Kabupaten Bandung.
+
+Sistem ini memiliki dua antarmuka utama:
+1. Portal Publik: Diakses oleh masyarakat luas untuk memperoleh informasi,
+   melihat peta sebaran unit, agenda pemuda, profil kepengurusan, dan layanan
+   sosial (PPKS).
+2. Panel Admin CMS (Filament): Digunakan oleh pengurus dari tingkat Kabupaten,
+   Kecamatan, hingga Desa untuk mengelola konten, kepengurusan, usulan sosial,
+   dan memoderasi data wilayah masing-masing.
+
+================================================================================
+2. PERAN PENGGUNA & HAK AKSES (ROLES & PERMISSIONS)
+================================================================================
+Sistem menerapkan isolasi data bertingkat (Multi-Tenancy Scoping):
+
+a. SUPERADMIN (Tingkat Kabupaten)
+   - Hak Akses Penuh ke seluruh modul sistem.
+   - Mengelola master wilayah, manajemen user, konfigurasi website.
+   - Menyetujui/menolak/meminta revisi konten dari seluruh kecamatan/desa.
+   - Memverifikasi usulan PPKS seluruh Kabupaten Bandung.
+   - Mengimpor data massal via Excel (.xlsx).
+
+b. VERIFIKATOR (Tingkat Kabupaten)
+   - Memeriksa antrean moderasi konten (Berita, Event, Program Kerja, dll).
+   - Memberikan catatan revisi atau persetujuan terbit.
+   - Memverifikasi kelayakan data usulan PPKS dari desa.
+
+c. ADMIN KECAMATAN
+   - Hanya dapat melihat dan mengelola data di wilayah kecamatannya serta unit
+     desa binaannya.
+   - Mengelola profil unit kecamatan dan daftar pengurus kecamatan.
+   - Membuat warta/agenda kecamatan dan mengajukannya ke Kabupaten.
+
+d. ADMIN DESA / KELURAHAN
+   - Hanya dapat melihat dan mengelola data milik unit desanya sendiri.
+   - Mengelola struktur pengurus desa.
+   - Menginput usulan warga Pemerlu Pelayanan Kesejahteraan Sosial (PPKS).
+   - Membuat warta/agenda kegiatan desa dan mengajukannya ke Kabupaten.
+
+================================================================================
+3. PANDUAN AKSES PORTAL PUBLIK (WARGA / MASYARAKAT)
+================================================================================
+
+3.1. Halaman Beranda & Statistik Pengunjung
+- Buka alamat portal pada browser (misal: https://karangtarunakabbdg.or.id).
+- Halaman beranda menampilkan slider warta terkini, sambutan ketua umum, program
+  kerja unggulan, agenda mendatang, dan peta sebaran unit.
+- Pada bagian footer bawah, tersedia statistik pengunjung realtime (Hari ini,
+  Bulan ini, Total Pengunjung, dan Pengguna Online).
+
+3.2. Peta Interaktif GIS Unit Karang Taruna
+- Akses menu "Peta Unit" atau temukan widget peta pada halaman utama.
+- Fitur Peta GIS:
+  * Pin Merah  : Sekretariat Karang Taruna Kabupaten.
+  * Pin Biru   : Sekretariat Karang Taruna Kecamatan.
+  * Pin Hijau  : Sekretariat Karang Taruna Desa/Kelurahan.
+- Klik pada salah satu pin untuk melihat nama unit, nama ketua, alamat, kontak,
+  dan tombol "Kunjungi Sub-Site" untuk masuk ke halaman profil unit tersebut.
+- Gunakan dropdown filter kecamatan untuk mempersempit pencarian wilayah.
+
+3.3. Sub-Site Wilayah (Kecamatan & Desa)
+- Setiap unit memiliki halaman publik tersendiri:
+  * Kecamatan : /kecamatan/{slug-kecamatan}
+  * Desa      : /desa/{slug-kecamatan}-{slug-desa}
+- Halaman sub-site memuat data khusus unit: Surat Keputusan (SK), visi misi,
+  galeri foto kegiatan lokal, struktur pengurus, warta lokal, dan program kerja.
+
+3.4. Berita, Program Kerja, Agenda & Galeri
+- Warga dapat membaca warta kegiatan kepemudaan, melihat kalender agenda,
+  mengetahui progres program kerja, serta mengunduh dokumen publik.
+
+3.5. Layanan Pengusulan & Cek Status PPKS Mandiri
+- Akses menu "Layanan PPKS" pada portal publik.
+- Formulir Cek Mandiri:
+  1. Masukkan Nomor Induk Kependudukan (NIK) 16 digit.
+  2. Masukkan kode keamanan Captcha yang tampil.
+  3. Klik tombol "Cek Status".
+  4. Sistem akan menampilkan status terkini: (Diajukan / Sedang Diverifikasi /
+     Disetujui / Bantuan Tersalurkan / Ditolak) dengan proteksi data pribadi
+     (NIK disamarkan sebagian, contoh: 320405******0001).
+- Formulir Usulan Mandiri Warga (jika fitur diaktifkan oleh Admin Kabupaten):
+  1. Isi identitas calon penerima (Nama, NIK, KK, Alamat, No Telepon).
+  2. Pilih Kategori Masalah Sosial (PPKS 26 Kategori Kemensos).
+  3. Unggah foto kondisi rumah / KTP pendukung (maks. 512 KB).
+  4. Selesaikan Captcha dan klik "Kirim Usulan".
+
+================================================================================
+4. PANDUAN LOGIN ADMIN PANEL FILAMENT CMS
+================================================================================
+
+4.1. Mengakses Halaman Login
+- Buka tautan /admin pada peramban web (misal: https://karangtarunakabbdg.or.id/admin).
+- Masukkan Email dan Password akun terdaftar.
+
+4.2. Keamanan Login & Validasi Captcha
+- Masukkan kode Captcha 6 karakter yang tertera pada layar login.
+- Klik tombol "Masuk" / "Sign In".
+- Setelah berhasil, sistem akan mengarahkan Anda ke Dashboard sesuai tingkatan
+  wilayah akun masing-masing.
+
+================================================================================
+5. PANDUAN PENGGUNAAN ADMIN KABUPATEN (SUPERADMIN & VERIFIKATOR)
+================================================================================
+
+5.1. Manajemen Master Data
+- Master Wilayah (Kecamatan & Desa): Menu "Wilayah" untuk menambah kode wilayah,
+  nama kecamatan, dan desa/kelurahan.
+- Master Unit Karang Taruna: Menambah unit baru, menetapkan titik koordinat GIS
+  (Latitude, Longitude), alamat sekretariat, nomor SK, dan media sosial.
+- Kategori PPKS: Mengelola 26 jenis kategori pemerlu pelayanan sosial (Anak
+  Terlantar, Lansia Terlantar, Disabilitas, Fakir Miskin, dll).
+- Sumber Anggaran (Budget Sources): Mengelola referensi pendanaan (APBD Kab,
+  APBDes, Kas Karang Taruna, Swadaya, CSR, dll).
+
+5.2. Manajemen Pengguna (Users)
+- Masuk ke menu "Users".
+- Tambah akun pengurus baru, masukkan nama, email, password.
+- Tetapkan Role (Superadmin, Verifikator, Admin Kecamatan, Admin Desa).
+- PENTING: Untuk Admin Kecamatan pilih kecamatan yang dipegang; untuk Admin
+  Desa pilih unit desa bersangkutan agar data terisolasi otomatis.
+
+5.3. Pengaturan Sistem & Website (Site Settings)
+- Mengatur nama portal, logo, favicon, kontak resmi, alamat sekretariat.
+- Sakelar PPKS: Menghidupkan atau mematikan form usulan PPKS publik.
+
+5.4. Moderasi & Workflow Approval Konten
+- Masuk ke menu konten bersangkutan (Berita, Agenda, Program Kerja, dll).
+- Buka tab/filter "Pending Approval" (Menunggu Persetujuan).
+- Klik tombol "Review" pada data yang diajukan oleh pengurus Kecamatan/Desa.
+- Pilih aksi moderasi:
+  * [SETUJUI / APPROVE]: Konten langsung terbit di website dan sub-site publik.
+  * [MINTA REVISI / REVISION]: Masukkan catatan kekurangan pada kolom formulir.
+    Konten kembali ke status 'Revision Required' pada admin pembuat.
+  * [TOLAK / REJECT]: Masukkan alasan penolakan. Konten tidak akan ditayangkan.
+
+5.5. Verifikasi Usulan Bantuan PPKS Warga
+- Masuk ke menu "Penerima Manfaat PPKS" (PPKS Beneficiaries).
+- Tinjau data usulan masuk dari warga atau Admin Desa.
+- Periksa kesesuaian berkas, NIK, dan kondisi lapangan.
+- Ubah status menjadi "Verified" / "Approved", lalu update realisasi jika
+  bantuan telah disalurkan.
+
+5.6. Fitur Impor Excel & Download Template Resmi
+- Pada menu Unit atau Pengurus Unit, tersedia tombol "Import Excel".
+- Klik "Download Template XLSX" resmi dari sistem untuk format yang valid.
+- Isi data tanpa mengubah header kolom template.
+- Unggah file Excel; sistem melakukan Upsert cerdas (memperbarui jika sudah ada,
+  menambah jika baru tanpa duplikasi).
+
+================================================================================
+6. PANDUAN PENGGUNAAN ADMIN KECAMATAN & DESA/KELURAHAN
+================================================================================
+
+6.1. Mengelola Data Profil Unit Karang Taruna Sendiri
+- Buka menu "Unit Karang Taruna".
+- Sistem hanya menampilkan unit wilayah Anda. Klik tombol "Edit".
+- Lengkapi: Visi Misi, Nomor & Tanggal SK Kepengurusan, Alamat Sekretariat,
+  Titik Koordinat (Peta), No HP/WA, dan Tautan Media Sosial (IG, FB, YouTube).
+- Klik "Simpan".
+
+6.2. Mengelola Struktur Pengurus Unit
+- Buka menu "Pengurus Unit" (Unit Members).
+- Klik "Tambah Pengurus".
+- Masukkan Nama Lengkap, Jabatan (Ketua, Wakil, Sekretaris, Bendahara, Bidang),
+  Periode Menjabat, Nomor Kontak, dan Foto Formal (maks 512 KB).
+- Data ini otomatis tampil pada bagan struktur organisasi di sub-site publik.
+
+6.3. Membuat & Mengajukan Berita/Artikel (Submit for Approval)
+- Buka menu "Berita & Artikel" -> Klik "Buat Berita".
+- Isi Judul Berita, Kategori, Ringkasan, dan Konten Lengkap.
+- Unggah Gambar Sampul / Banner (maksimal 512 KB).
+- Pilih Aksi:
+  * "Simpan Sebagai Draft": Konten masih berupa konsep internal.
+  * "Ajukan Persetujuan (Submit)": Mengirimkan artikel ke antrean Verifikator
+    Kabupaten untuk ditinjau.
+
+6.4. Mengelola Program Kerja & Agenda Kegiatan
+- Buka menu "Program Kerja" atau "Agenda Kegiatan".
+- Masukkan nama kegiatan, deskripsi, tanggal pelaksanaan, lokasi, estimasi
+  anggaran, serta sumber pendanaan.
+- Ajukan (Submit) agar muncul di kalender dan halaman program kerja sub-site.
+
+6.5. Mengunggah Galeri Foto & Dokumen Unduhan
+- Buka menu "Galeri Foto" untuk mempublikasikan dokumentasi aksi sosial/kegiatan.
+- Buka menu "Unduhan" untuk membagikan berkas SK, proposal format resmi, atau
+  edukasi kepada anggota.
+
+6.6. Mengajukan Usulan Warga PPKS (Khusus Admin Desa)
+- Buka menu "Usulan PPKS".
+- Klik "Tambah Usulan Baru".
+- Masukkan NIK, Nama Lengkap Warga, Alamat Lengkap (RT/RW), Kategori Masalah
+  Kemensos, Kebutuhan Bantuan, dan Foto Kondisi/KTP.
+- Klik "Kirimkan ke Kabupaten". Usulan akan masuk ke antrean verifikasi Dinsos /
+  Karang Taruna Kabupaten.
+
+6.7. Memperbaiki Konten yang Berstatus 'Revision Required'
+- Jika pengajuan Anda memerlukan perbaikan, sistem akan memberi tanda status
+  "Perlu Revisi" (Revision Required).
+- Buka artikel/kegiatan tersebut, baca catatan perbaikan dari Verifikator
+  Kabupaten pada panel status.
+- Perbaiki isi teks atau foto yang dimaksud.
+- Klik tombol "Kirim Ulang (Resubmit)" untuk ditinjau kembali.
+
+================================================================================
+7. ATURAN & BATASAN SISTEM
+================================================================================
+
+7.1. Batasan Ukuran Upload Media
+- Untuk menjaga performa server dan kecepatan akses pengguna seluler, sistem
+  menerapkan batas ketat ukuran file unggahan: MAKSIMAL 512 KB per berkas.
+- Gunakan alat kompresi gambar (seperti TinyPNG / Squoosh) sebelum mengunggah
+  foto apabila ukuran foto kamera asli terlalu besar.
+
+7.2. Proteksi Data Sensitif (Masking NIK)
+- NIK warga bersifat rahasia. Sistem secara otomatis menyamarkan angka tengah
+  NIK pada semua antarmuka publik dan log aktivitas.
+- Admin wajib menjaga kerahasiaan identitas dan data pribadi warga PPKS.
+
+================================================================================
+8. PANDUAN INTEGRASI REST API v1
+================================================================================
+Aplikasi menyediakan REST API v1 terstruktur untuk keperluan integrasi aplikasi
+mobile atau portal satu data:
+- Base Endpoint: /api/v1/
+- Daftar Endpoint Publik:
+  * GET /api/v1/news (Berita terbit)
+  * GET /api/v1/events (Agenda kegiatan)
+  * GET /api/v1/work-programs (Program kerja)
+  * GET /api/v1/units (Data unit & koordinat GIS)
+  * GET /api/v1/ppks-categories (Kategori masalah sosial)
+  * POST /api/v1/ppks/check-status (Pengecekan NIK aman dengan rate limit)
+- Otentikasi Admin API menggunakan Bearer Token (Laravel Sanctum).
+
+================================================================================
+9. FAQ & PEMECAHAN MASALAH (TROUBLESHOOTING)
+================================================================================
+
+Q1: Mengapa foto gagal diunggah ke form?
+A1: Pastikan ukuran file foto di bawah 512 KB dan berformat .jpg, .png, atau .webp.
+
+Q2: Mengapa berita yang saya buat belum muncul di website publik?
+A2: Pastikan status berita sudah diajukan (Submitted) dan telah disetujui (Approved)
+    oleh Verifikator / Superadmin Kabupaten.
+
+Q3: Mengapa Admin Desa tidak bisa melihat data desa lain?
+A3: Sistem secara otomatis mengisolasi data (Tenant Scoping) sesuai wilayah SK
+    masing-masing demi privasi dan keteraturan data.
+
+Q4: Lupa Password Login Admin CMS?
+A4: Hubungi Superadmin Karang Taruna Kabupaten Bandung untuk melakukan reset
+    kata sandi akun Anda melalui panel manajemen pengguna.
+
+================================================================================
+                 Sekretariat Karang Taruna Kabupaten Bandung
+          Maju Bersama Pemuda, Berkarya Membangun Desa dan Bangsa
+================================================================================
